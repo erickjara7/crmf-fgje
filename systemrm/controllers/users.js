@@ -1,14 +1,9 @@
 const mongoose  = require('mongoose');
 const User  = require('../models/User');
 
-const app = express();
 
 
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(bodyParser.json());
-
-
-app.getUser = (req, res) => {
+const getUser = (req, res) => {
     User.find((err, users) =>{
         err && res.status(500).send(err.message);
 
@@ -17,16 +12,24 @@ app.getUser = (req, res) => {
 }
 
 const getUserId =(req, res) =>{
-    User.findById(req.params.id, (err, user)=>{
+
+    let userid = req.params.userid;
+    User.findById(userid,(err,user)=>{
+        if(err) return res.status(500).send({message: `Error al realizar la peticion:${err}`})
+        if (!user) return res.status(404).send({message:'el usuario no existe'})
+
+        res.status(200).send({user})
+    })
+   /* User.findById(req.params.id, (err, user)=>{
         err && res.status(500).send(err.message);
 
         res.status(200).json(user);
-    })
+    })*/
 }
 
 
   
-app.postUser = (req, res) =>{
+const postUser = (req, res) =>{
     console.log(req.body);
     let user = new User()
         user.nombres = req.body.nombres,
@@ -36,11 +39,13 @@ app.postUser = (req, res) =>{
         user.password = req.body.password,
         user.departamento = req.body.departamento,
         user.userType = req.body.userType
-}
-user.save((err, usrstored) =>{
-    err && res.status(500).sed(err.message);
 
-    res.status(200).send({user: usrstored.req.body})
-    //res.status(200).json(usrstored);
-})
+        user.save((err, usrstored) =>{
+            if(err) res.status(500).send({message:`Error al salvar en la base de datos:${err}`})
+
+            res.status(200).send({user: usrstored})
+            
+        })
+}
+
 module.exports = {getUser, getUserId, postUser};

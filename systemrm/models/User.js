@@ -1,7 +1,8 @@
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({
+const UserSchema =  Schema({
     nombres:{type: String},
     apellidoP:{type: String},
     apellidoM:{type: String},
@@ -11,6 +12,4 @@ const UserSchema = new Schema({
     userType:{type: String, enum: ['Administrador', 'Usuario']}
 });
 
-const User = mongoose.model('User', UserSchema)
-
-export default User
+module.exports = mongoose.model('User', UserSchema)
