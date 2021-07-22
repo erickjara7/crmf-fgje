@@ -50,4 +50,25 @@ const postUser = (req, res) =>{
         })
 }
 
-module.exports = {getUser, getUserId, postUser};
+
+const putUser = (req,res)=>{
+    
+
+}
+
+
+const deleteUser =(req, res) =>{
+    let id = req.params.id;
+
+    User.findById(id,(err,user)=>{
+        if (err) res.status(500).send({message:`Error al eliminar el usuario ${err}`})
+
+        user.remove(err=>{
+            if (err) res.status(500).send({message:`Error al eliminar el usuario ${err}`})
+            res.status(200).send({message:'El usuario se eliminó correctamente'})
+
+        })
+    })
+}
+
+module.exports = {getUser, getUserId, postUser, deleteUser};
