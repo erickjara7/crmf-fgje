@@ -13,10 +13,12 @@ const getUser = (req, res) => {
 
 const getUserId =(req, res) =>{
 
-    let userid = req.params.userid;
-    User.findById(userid,(err,user)=>{
+    let id = req.params.id;
+    console.log(req.body);
+    console.log(res);
+    User.findById(id,(err,user)=>{
         if(err) return res.status(500).send({message: `Error al realizar la peticion:${err}`})
-        if (!user) return res.status(404).send({message:'el usuario no existe'})
+        if (!user) return res.status(404).send({message:`el usuario no existe ${user} y el user id ${id} params ${req.params.userid}`})
 
         res.status(200).send({user})
     })
