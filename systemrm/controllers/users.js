@@ -52,7 +52,15 @@ const postUser = (req, res) =>{
 
 
 const putUser = (req,res)=>{
-    
+    let id = req.params.id;
+    let update = req.body;
+
+    User.findByIdAndUpdate(id, update, (err, userupdated)=>{
+        if (err) res.status(500).send({mesage:`Error al actualizar el usuario: ${err}`})
+        
+        res.status(200).send({user: userupdated})
+    })
+
 
 }
 
@@ -71,4 +79,4 @@ const deleteUser =(req, res) =>{
     })
 }
 
-module.exports = {getUser, getUserId, postUser, deleteUser};
+module.exports = {getUser, getUserId, postUser, deleteUser, putUser};

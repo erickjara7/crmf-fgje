@@ -7,15 +7,17 @@ const { useParams } = require("react-router-dom");
 const { useReducer } = require("react");
 const Users = require("./api/users");
 //const User = require('./models/User');
+const cors = require('cors');
 
 const app = express();
+
 const port = process.env.PORT || 4000
 
-
+app.use(cors());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
-app.use("/api/users", Users);
+app.use("/users", Users);
 //-------------------------------------------------------------
 /*app.get('http://localhost:4000/api/users',(req,res)=>{
     User.find({},(err, users)=>{
