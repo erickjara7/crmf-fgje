@@ -32,15 +32,9 @@ class Login extends Component{
 
 //METODO INICIAR SESION 
     iniciarSesion=async()=>{
-       // window.location.href="./materiales";
-       /* alert("Bienvenido");
-        if(this.state.form.username=="juan"){
-            window.location.href="./materiales";
-        }else{
-            window.location.href="./materialesodep";
-        }*/
-        await axios.get(loginurl, {params:{username: this.state.form.username, password:this.state.form.password}})
         
+        await axios.get(loginurl, {Params: {username: this.state.form.username, password:this.state.form.password}})
+
         .then(response=>{
            // response.username == this.state.form.username && response.password == this.state.form.password
             console.log(response.data)
@@ -50,7 +44,7 @@ class Login extends Component{
             if(response.length > 0){
                 
                 var respuesta = response[0];
-              //  console.log(respuesta);
+                console.log(respuesta);
           
                 cookies.set('nombres',respuesta.nombres,{path:"/"});
                 cookies.set('apellidoP',respuesta.apellidoP,{path:"/"});
@@ -59,6 +53,11 @@ class Login extends Component{
                 cookies.set('departamento',respuesta.departamento,{path:"/"});
                 cookies.set('userType',respuesta.userType,{path:"/"});
                 alert(`Bienvenido ${respuesta.nombres} ${respuesta.apellidoP} ${response.length}`)
+                if(respuesta.userType == 'Administrador'){
+                    window.location.href="./materiales";
+                }else{
+                    window.location.href="./materialesodep";
+                }
 
             }else{
                 alert('El usuario y/o contraseña son incorrectos');

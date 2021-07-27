@@ -3,7 +3,7 @@
     padding: 0;
     background-size: cover;
     height: 100vh;
-    background: url(../img/FisSystem.png) no-repeat center top; 
+    background: url(../img/imagenLogos.png) no-repeat center top; 
 
 }
 
@@ -12,14 +12,14 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    color: white;
+    color: rgb(12, 12, 12);
     margin-top: 40px;
     border: none;
     padding:80px 40px;
     width: 400px;
     height: auto;
     box-sizing: border-box;
-    background-color: rgba(63, 16, 16, 0.514);
+    background-color: rgba(217, 250, 135, 0.514);
  
 }
 

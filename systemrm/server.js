@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const { useParams } = require("react-router-dom");
 const { useReducer } = require("react");
 const Users = require("./api/users");
+const Materiales = require("./api/materiales");
 //const User = require('./models/User');
 const cors = require('cors');
 
@@ -18,6 +19,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
 app.use("/users", Users);
+app.use("/materiales", Materiales);
 //-------------------------------------------------------------
 /*app.get('http://localhost:4000/api/users',(req,res)=>{
     User.find({},(err, users)=>{
@@ -77,7 +79,7 @@ app.delete('/api/users/:userid',(req,res)=>{
 //---------------------------------------------------------------------
 
 mongoose.connect(
-    "mongodb://localhost/usuarios",
+    "mongodb://localhost/CRMF",
     //useUnifiedTopology:true, 
     {useUnifiedTopology:true, useNewUrlParser:true},
     (err, res) => {

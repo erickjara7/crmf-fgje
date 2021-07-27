@@ -1,5 +1,6 @@
 import React, {Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 import {Table, Button, Container, Modal,ModalBody, ModalHeader, FormGroup, ModalFooter} from 'reactstrap';
 import '../css/Materiales.css';
 import '../img/logofiscalia.png';
@@ -7,9 +8,32 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
 
 
+const vermaterial = "http://localhost:4000/materiales/getmaterial";
+const aggmaterial = "http://localhost:4000/materiales/add";
+const dpsidmaterial = "";
+
+
+
 class MaterialesV1RM extends Component{
 
+state={
+    data:[],
+    modalInsertar: false,
+}
 
+peticionGet = () =>{
+    axios.get(vermaterial).then(response =>{
+        this.setState({data:response.data});
+    })
+}
+
+modalInsertar = () =>{
+
+}
+
+componentDidMount(){
+    this.peticionGet();
+}
 
 
 
@@ -58,39 +82,40 @@ class MaterialesV1RM extends Component{
 
                     <thead>
                         <tr class="tablaencabezado">
+                            
                             <th>Nombre</th>
                             <th>Existencia</th>
                             <th>Unidad de medida</th>
                             <th>Categoria</th>
+                            <th>Acciones</th>
                             
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Hola Blanca carta</td>
-                            <td>123</td>
-                            <td>Paquete</td>
-                            <td>Papelería</td>
-                        </tr>
-                        <tr>
-                            <td>Pluma azul</td>
-                            <td>1234</td>
-                            <td>Unidades</td>
-                            <td>Papelería</td>
-                        </tr>
-                        <tr>
-                            <td>Limpiador Multiuso</td>
-                            <td>78</td>
-                            <td>Unidades</td>
-                            <td>Limpieza</td>
-                        </tr>
+                        {this.state.data.map(material =>{
+                            return(
+                                <tr>
+                                    
+                                    <td>{material.nombre}</td>
+                                    <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                    <td>{material.unidadMedida}</td>
+                                    <td>{material.categoria}</td>
+                                    <td>
+                                        
+                                        <Button color="primary">Editar</Button>
+                                    </td>
+                                </tr>
+                            )
+
+                        })}
+                        
+                        
                     </tbody>
 
                 </table>
 
                 <Button color="success">Agregar</Button>
-                <Button color="primary">Editar</Button>
-
+                
                 
                 
             </div>
