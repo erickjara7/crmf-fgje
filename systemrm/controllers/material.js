@@ -11,11 +11,11 @@ const getMaterial =(req, res) =>{
 }
 
 const getMaterialId =(req, res) =>{
-    let id = req.params.id;
+    let _id = req.params._id;
     console.log(req.body);
     console.log(res);
-    Materiales.findById(id,(err,material)=>{
-        if(err) return res.status(500).send({message: `Error al realizar la peticion:${err}`})
+    Materiales.findById(_id,(err,material)=>{
+        if(err) return res.status(500).send({message: `Error al realizar la peticion:${material}`})
         if (!material) return res.status(404).send({message:`El material no existe ${material}`})
 
         res.status(200).send({material})

@@ -10,7 +10,7 @@ import {faSearch} from "@fortawesome/free-solid-svg-icons";
 
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 const aggmaterial = "http://localhost:4000/materiales/add";
-const dpsidmaterial = "";
+const dpsidmaterial = "http://localhost:4000/materiales/";
 
 
 
@@ -19,6 +19,14 @@ class MaterialesV1RM extends Component{
 state={
     data:[],
     modalInsertar: false,
+    form:{
+        _id:'',
+        nombre:'',
+        existencia:'',
+        unidadMedida:'',
+        categoria:'',
+        tipoModal:'',
+    }
 }
 
 peticionGet = () =>{
@@ -27,8 +35,59 @@ peticionGet = () =>{
     })
 }
 
-modalInsertar = () =>{
+peticionPost=async()=>{
+    await axios.post(aggmaterial, this.state.form).then(response=>{
+        this.modalInsertar();
+        this.peticionGet();
+    }).catch(error=>{
+        console.log(error.message);
+    })
+}
 
+peticionPut=()=>{
+    axios.put(dpsidmaterial+this.state.form._id, this.state.form).then(response=>{
+        this.modalInsertar();
+        this.peticionGet();
+
+    })
+}
+
+modalInsertar = () =>{
+    this.setState({modalInsertar: !this.state.modalInsertar})
+}
+
+seleccionarMaterial = (material) =>{ 
+    this.setState({
+        tipoModal:'actualizar',
+        form:{
+            _id: material._id,
+            nombre: material.nombre,
+            existencia: material.existencia,
+            unidadMedida: material.unidadMedida,
+            categoria: material.categoria,
+
+        }
+    })
+    
+}
+
+/*nuevoExis = () => {
+    var nuevaexistencia = this.setState.existencia.value + this.state.form.existencia.value;
+    console.log(this.setState.existenciaexistencia);
+    console.log(this.state.form.existencia);
+    console.log(nuevaexistencia);
+
+}*/
+
+handleChange = async e =>{
+    e.persist();
+    await this.setState({
+        form:{
+            ...this.state.form,
+            [e.target.name]: e.target.value
+        }
+    });
+    console.log(this.state.form);
 }
 
 componentDidMount(){
@@ -39,6 +98,9 @@ componentDidMount(){
 
 
     render(){
+
+        const {form} = this.state;
+
         return(
             <div class="container">
                 <div class="navbar">
@@ -82,7 +144,7 @@ componentDidMount(){
 
                     <thead>
                         <tr class="tablaencabezado">
-                            
+                            <th>Identificador</th>
                             <th>Nombre</th>
                             <th>Existencia</th>
                             <th>Unidad de medida</th>
@@ -95,14 +157,15 @@ componentDidMount(){
                         {this.state.data.map(material =>{
                             return(
                                 <tr>
-                                    
+                                    <td>{material._id}</td>
                                     <td>{material.nombre}</td>
                                     <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
                                     <td>{material.unidadMedida}</td>
                                     <td>{material.categoria}</td>
                                     <td>
                                         
-                                        <Button color="primary">Editar</Button>
+                                        <Button color="btn btn-primary btn-sm" onClick={ () => {this.seleccionarMaterial(material); this.modalInsertar()}}>Editar</Button>
+                                        <Button color="btn btn-success btn-sm">Agregar</Button>
                                     </td>
                                 </tr>
                             )
@@ -114,13 +177,55 @@ componentDidMount(){
 
                 </table>
 
-                <Button color="success">Agregar</Button>
+                <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Agregar nuevo material</Button>
+
+                <Modal isOpen={this.state.modalInsertar}>
+                    <ModalHeader style={{display: 'block'}}>
+                        <span style={{float:'left'}}>Agregar Material</span>  
+                    </ModalHeader>
+
+                    <ModalBody>
+                        <div>
+                            <label htmlFor="nombre">Nombre:</label>
+                            <input className="form-control" type="text" name="nombre" id="nombre" onChange={this.handleChange} value={form?form.nombre:''}/>
+                            <br/>
+
+                            <label htmlFor="existencia">Existencia:</label>
+                            {this.state.tipoModal == 'insertar'?
+                                <input className="form-control" type="text" name="existencia" id="existencia"  onChange={this.handleChange} value={form?form.existencia:''}/>:
+                                <input className="form-control" type="text" name="existencia" id="existencia"  onChange={this.handleChange} value={form?form.existencia:''}/>
+                                
+                            }
+
+                            <br/>
+
+                            <label htmlFor="unidadMedida">Unidad de medida:</label>
+                            <input className="form-control" type="text" name="unidadMedida" id="unidadMedida" onChange={this.handleChange} value={form?form.unidadMedida:''}/>
+                            <br/>
+
+                            <label htmlFor="categoria">Categoría</label>
+                            <input className="form-control" type="text" name="categoria" id="categoria" onChange={this.handleChange} value={form?form.categoria:''}/>
+                            <br/>
+                        </div>
+                    </ModalBody>
+
+                    <ModalFooter>
+                        {this.state.tipoModal == 'insertar'?
+                            <button className="btn btn-success" onClick={ () => this.peticionPost()}>Insertar</button>:
+                            <button className="btn btn-primary" onClick={ () => {this.peticionPut()}}>Actualizar</button>
+                        }
+                        <button className="btn btn-danger" onClick={ () => this.modalInsertar()}>Cancelar</button>
+                    </ModalFooter>
+
+                </Modal>
                 
                 
                 
             </div>
             
         );
+        
     }
+    
 }
 export default MaterialesV1RM;
