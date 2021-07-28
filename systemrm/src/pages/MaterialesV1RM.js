@@ -18,21 +18,28 @@ class MaterialesV1RM extends Component{
 
 state={
     data:[],
+    datamedida:['','Paquete','Pieza','Caja'],
+    datacategoria:['','Consumible','Limpieza','Embalaje','Reactivos y material químicos','Material de Id. Humana','Material de oficina','Tintas y toner'],
+    modalAggmaterial: false,
     modalInsertar: false,
     form:{
         _id:'',
         nombre:'',
-        existencia:'',
+        existencia:0,
         unidadMedida:'',
         categoria:'',
         tipoModal:'',
+        cantidadaggmate:0,
+        existencianueva:0,
     }
+    
 }
 
 peticionGet = () =>{
     axios.get(vermaterial).then(response =>{
         this.setState({data:response.data});
     })
+    
 }
 
 peticionPost=async()=>{
@@ -52,8 +59,25 @@ peticionPut=()=>{
     })
 }
 
+peticionPut2 =()=>{
+    axios.put(dpsidmaterial+this.state.form._id, this.state.form).then(response=>{
+        this.peticionGet();
+    })
+}
+peticionaggmaterial=async()=>{
+        this.modalAggmaterial();
+        this.state.form.existencianueva = this.state.form.existencia + this.state.form.cantidadaggmate;
+        alert (`existencia= ${this.state.form.existencia} +  valor a agg = ${this.state.form.cantidadaggmate}=  valor nuevo : ${this.state.form.existencianueva}`);
+        this.state.form.existencia = this.state.form.existencianueva;
+        this.peticionPut2();
+}
+
 modalInsertar = () =>{
     this.setState({modalInsertar: !this.state.modalInsertar})
+}
+
+modalAggmaterial = () =>{
+    this.setState({modalAggmaterial: !this.state.modalAggmaterial})
 }
 
 seleccionarMaterial = (material) =>{ 
@@ -165,7 +189,7 @@ componentDidMount(){
                                     <td>
                                         
                                         <Button color="btn btn-primary btn-sm" onClick={ () => {this.seleccionarMaterial(material); this.modalInsertar()}}>Editar</Button>
-                                        <Button color="btn btn-success btn-sm">Agregar</Button>
+                                        <Button color="btn btn-success btn-sm" onClick ={() => {this.seleccionarMaterial(material); this.modalAggmaterial()}}>Agregar</Button>
                                     </td>
                                 </tr>
                             )
@@ -181,31 +205,41 @@ componentDidMount(){
 
                 <Modal isOpen={this.state.modalInsertar}>
                     <ModalHeader style={{display: 'block'}}>
-                        <span style={{float:'left'}}>Agregar Material</span>  
+                    {this.state.tipoModal == 'insertar'?
+                        <span style={{float:'left'}}>Agregar Material</span>:
+                        <span style={{float:'left'}}>Editar Material</span>
+                    }
                     </ModalHeader>
 
                     <ModalBody>
                         <div>
                             <label htmlFor="nombre">Nombre:</label>
-                            <input className="form-control" type="text" name="nombre" id="nombre" onChange={this.handleChange} value={form?form.nombre:''}/>
+                            <input className="form-control" type="text"  name="nombre" id="nombre" onChange={this.handleChange} value={form?form.nombre:''}/>
                             <br/>
 
                             <label htmlFor="existencia">Existencia:</label>
                             {this.state.tipoModal == 'insertar'?
-                                <input className="form-control" type="text" name="existencia" id="existencia"  onChange={this.handleChange} value={form?form.existencia:''}/>:
-                                <input className="form-control" type="text" name="existencia" id="existencia"  onChange={this.handleChange} value={form?form.existencia:''}/>
-                                
+                                <input className="form-control" type="number" placeholder="Solo números, sin comas ni puntos" name="existencia" id="existencia"  onChange={this.handleChange} value={form?form.existencia:''}/>:
+                                <input className="form-control" type="number" placeholder="Solo números, sin comas ni puntos" name="existencia" id="existencia" readOnly onChange={this.handleChange} value={form?form.existencia:''}/>   
                             }
-
-                            <br/>
+                             <br/>
 
                             <label htmlFor="unidadMedida">Unidad de medida:</label>
-                            <input className="form-control" type="text" name="unidadMedida" id="unidadMedida" onChange={this.handleChange} value={form?form.unidadMedida:''}/>
+                            <select className="form-control" type="text" name="unidadMedida" id="unidadMedida" onChange={this.handleChange} value={form?form.unidadMedida:''}>
+                                {this.state.datamedida.map(elementoo =>(
+                                    <option>{elementoo}</option>
+                                ))}
+                            </select>
                             <br/>
 
                             <label htmlFor="categoria">Categoría</label>
-                            <input className="form-control" type="text" name="categoria" id="categoria" onChange={this.handleChange} value={form?form.categoria:''}/>
+                            <select className="form-control" type="text" name="categoria" id="categoria" onChange={this.handleChange} value={form?form.categoria:''}>
+                                {this.state.datacategoria.map(elemento =>(
+                                    <option>{elemento}</option>
+                                ))}
+                            </select>
                             <br/>
+
                         </div>
                     </ModalBody>
 
@@ -216,6 +250,51 @@ componentDidMount(){
                         }
                         <button className="btn btn-danger" onClick={ () => this.modalInsertar()}>Cancelar</button>
                     </ModalFooter>
+
+                </Modal>
+
+                <Modal isOpen ={this.state.modalAggmaterial}>
+
+                    <ModalHeader style={{display: 'block'}}>
+                        <span style={{float:'left'}}>Agregar existencia</span>
+                    </ModalHeader>
+
+                    <ModalBody>
+                        <div>
+                            <label htmlFor="nombre">Nombre:</label>
+                            <input className="form-control" type="text"  name="nombre" id="nombre" readOnly onChange={this.handleChange} value={form && form.nombre}/>
+                            <br/>
+
+                            <label htmlFor="categoria">Categoría</label>
+                            <input className="form-control" type="text" name="categoria" id="categoria" readOnly onChange={this.handleChange} value={form && form.categoria}/>
+                            <br/>
+
+                            <label htmlFor="unidadMedida">Unidad de medida:</label>
+                            <input className="form-control" type="text" name="unidadMedida" id="unidadMedida" readOnly onChange={this.handleChange} value={form && form.unidadMedida}/>
+                            <br/>
+
+                            <label htmlFor="existencia">Existencia:</label>
+                            <input className="form-control" type="number" placeholder="Solo números, sin comas ni puntos" name="existencia" id="existencia" readOnly onChange={this.handleChange} value={form && form.existencia}/> 
+                            <br/>
+
+                            <label>Cantidad a agregar:</label>
+                            <input  className="form-control"
+                                type="number"
+                                className="form-control"
+                                name="cantidadaggmate"
+                                onChange={this.handleChange}/>
+
+
+
+
+                        </div>
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <button className="btn btn-success" onClick={()=> this.peticionaggmaterial()} >Agregar</button>
+                        <button className="btn btn-danger" onClick={()=>this.modalAggmaterial()} >Cancelar</button>
+                    </ModalFooter>
+
 
                 </Modal>
                 

@@ -19,9 +19,11 @@
     width: 400px;
     height: auto;
     box-sizing: border-box;
-    background-color: rgba(217, 250, 135, 0.514);
+    background-color: rgba(224, 223, 222, 0.637);
  
+
 }
+/*rgba(217, 250, 135, 0.514);]*/
 
 .containerSecundario{
     text-align: left;   
