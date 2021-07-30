@@ -1,4 +1,4 @@
-import React, {Component } from 'react';
+import React, {Component, useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import {Table, Button, Container, Modal,ModalBody, ModalHeader, FormGroup, ModalFooter} from 'reactstrap';
@@ -12,11 +12,14 @@ const vermaterial = "http://localhost:4000/materiales/getmaterial";
 const aggmaterial = "http://localhost:4000/materiales/add";
 const dpsidmaterial = "http://localhost:4000/materiales/";
 
+var existencianueva = 0;
 
 
 class MaterialesV1RM extends Component{
 
+
 state={
+    busqueda:'',
     data:[],
     datamedida:['','Paquete','Pieza','Caja'],
     datacategoria:['','Consumible','Limpieza','Embalaje','Reactivos y material químicos','Material de Id. Humana','Material de oficina','Tintas y toner'],
@@ -30,17 +33,26 @@ state={
         categoria:'',
         tipoModal:'',
         cantidadaggmate:0,
-        existencianueva:0,
+        
     }
-    
 }
 
-peticionGet = () =>{
-    axios.get(vermaterial).then(response =>{
+/*state={
+    busqueda:'',
+}*/
+
+ 
+
+peticionGet = async() =>{
+   await  axios.get(vermaterial).then(response =>{
         this.setState({data:response.data});
+        //setMaterial(response.data);
+        //setTablaMateriales(response.data);
+        
+        
     })
-    
 }
+
 
 peticionPost=async()=>{
     await axios.post(aggmaterial, this.state.form).then(response=>{
@@ -66,9 +78,9 @@ peticionPut2 =()=>{
 }
 peticionaggmaterial=async()=>{
         this.modalAggmaterial();
-        this.state.form.existencianueva = this.state.form.existencia + this.state.form.cantidadaggmate;
-        alert (`existencia= ${this.state.form.existencia} +  valor a agg = ${this.state.form.cantidadaggmate}=  valor nuevo : ${this.state.form.existencianueva}`);
-        this.state.form.existencia = this.state.form.existencianueva;
+        existencianueva = this.state.form.existencia + this.state.form.cantidadaggmate;
+        alert (`existencia= ${this.state.form.existencia} +  valor a agg = ${this.state.form.cantidadaggmate}=  valor nuevo : ${existencianueva}`);
+        this.state.form.existencia = existencianueva;
         this.peticionPut2();
 }
 
@@ -106,13 +118,49 @@ seleccionarMaterial = (material) =>{
 handleChange = async e =>{
     e.persist();
     await this.setState({
+        
         form:{
             ...this.state.form,
             [e.target.name]: e.target.value
         }
+        
     });
-    console.log(this.state.form);
+ //   this.filtrar(e.target.value);
+    console.log(this.state.form.busqueda);
+   // console.log(this.state.busqueda);
 }
+
+filtrar = async(busqueda)=>{
+    await axios.get(vermaterial, {Params: {nombre: this.state.form.busqueda}})
+
+    .then(response=>{
+       // response.username == this.state.form.username && response.password == this.state.form.password
+       // console.log(this.state.form.busqueda)
+        return response.data;
+    })
+    
+}
+    
+ /*   var resultadosBusqueda = this.setState.form.filter((elemento)=>{
+        if(elemento.nombre.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
+        ){
+            return elemento;
+        }
+
+    });*/
+
+
+    
+    
+
+
+/*busquedaChange = async e =>{
+    e.persist();
+   
+    console.log("busqueda:"+ e.target.value);
+}*/
+
+
 
 componentDidMount(){
     this.peticionGet();
@@ -155,16 +203,17 @@ componentDidMount(){
                             placeholder="Buscar"
                             className="textField"
                             name="busqueda"
-                            //value
+                            onChange={this.handleChange}
+                            //value ={this.state.form.busqueda}
                         />
-                        <button type="button" className="btnBuscar">
-                            {" "}
+                        <button type="button" className="btnBuscar"onClick ={()=>this.filtrar()} >
+                            {""}
                             <FontAwesomeIcon icon={faSearch}/>
                         </button>
                     </div>
                 </div>
                
-                <table class="table table-bordered">
+                <table class="table table-bordered" >
 
                     <thead>
                         <tr class="tablaencabezado">
@@ -180,6 +229,7 @@ componentDidMount(){
                     <tbody>
                         {this.state.data.map(material =>{
                             return(
+                    
                                 <tr>
                                     <td>{material._id}</td>
                                     <td>{material.nombre}</td>
@@ -282,7 +332,9 @@ componentDidMount(){
                                 type="number"
                                 className="form-control"
                                 name="cantidadaggmate"
-                                onChange={this.handleChange}/>
+                                onChange={this.handleChange}
+                               // value ={this.state.form.cantidadaggmate}
+                               />
 
 
 

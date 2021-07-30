@@ -1,12 +1,36 @@
 import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 import {Table, Button, Container, Modal,ModalBody, ModalHeader, FormGroup, ModalFooter} from 'reactstrap';
 import '../css/Materiales.css';
 import '../img/logofiscalia.png';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
 
+const vermaterial = "http://localhost:4000/materiales/getmaterial";
+
+
+
+
 class MaterialesV1OD extends Component{
+
+
+    state={
+        data:[]
+    }
+
+    peticionGet = async() =>{
+        await  axios.get(vermaterial).then(response =>{
+             this.setState({data:response.data});
+             
+         })
+     }
+    
+    componentDidMount(){
+        this.peticionGet();
+    }
+
+
     render(){
         return(
             <div class="container">
@@ -25,7 +49,9 @@ class MaterialesV1OD extends Component{
             <br></br>
             <h2>Materiales disponibles</h2>
             <br></br>
+            <br></br>
             <div>
+            <Button color="primary" href="./materialesodep">Actualizar</Button>
                 <div class="barraBusqueda">
                     <input
                         type="text"
@@ -45,6 +71,7 @@ class MaterialesV1OD extends Component{
 
                     <thead>
                         <tr class="tablaencabezado">
+                           
                             <th>Nombre</th>
                             <th>Existencia</th>
                             <th>Unidad de medida</th>
@@ -54,29 +81,24 @@ class MaterialesV1OD extends Component{
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td><Button color="danger">Agregar</Button></td>
-                            
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td><Button color="danger">Agregar</Button></td>
-                            
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td><Button color="danger">Agregar</Button></td>
-                        </tr>
+                    {this.state.data.map(material =>{
+                            return(
+                    
+                                <tr>
+                                    
+                                    <td>{material.nombre}</td>
+                                    <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                    <td>{material.unidadMedida}</td>
+                                    <td>{material.categoria}</td>
+                                    <td>
+                                        <Button color="danger">Agregar</Button>
+                                    </td>
+                                </tr>
+                            )
+
+                        })}
+
+            
                     </tbody>
 
                 </table>
@@ -87,7 +109,7 @@ class MaterialesV1OD extends Component{
                 <br></br>
                 <br></br>
                 <Button color="success">Enviar</Button>
-                <Button color="primary">Actualizar</Button>
+                <Button color="primary" href="./materialesodep">Actualizar</Button>
                 <br></br>
                 <br></br>
                 

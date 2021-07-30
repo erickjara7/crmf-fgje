@@ -1,13 +1,103 @@
 import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 import {Table, Button, Container, Modal,ModalBody, ModalHeader, FormGroup, ModalFooter} from 'reactstrap';
 import '../css/Materiales.css';
 import '../img/logofiscalia.png';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
 
+const usersurl="http://localhost:4000/users/getuser";
+const agguser = "http://localhost:4000/users/add";
+const deleteuser = "http://localhost:4000/users/";
+
 class ConfigRM extends Component{
+
+    state={
+        data:[],
+        datausertype:['','Administrador','Usuario'],
+        modalInsertar: false,
+        modalEliminar: false,
+        form:{
+            _id:'',
+            nombres:'',
+            apellidoP:'',
+            apellidoM:'',
+            username:'',
+            password:'',
+            departamento:'',
+            userType:'',
+        }
+    }
+
+    peticionGet = async() =>{
+        await  axios.get(usersurl).then(response =>{
+             this.setState({data:response.data});
+             
+         })
+     }
+
+    
+    peticionPost=async()=>{
+        await axios.post(agguser, this.state.form).then(response=>{
+            this.modalInsertar();
+            this.peticionGet();
+        }).catch(error=>{
+            console.log(error.message);
+        })
+    }
+
+    peticionDelete=()=>{
+        axios.delete(deleteuser+this.state.form._id).then(response =>{
+            this.setState({modalEliminar:false});
+            this.peticionGet()       
+         })
+    }
+    
+    modalInsertar=()=>{
+        this.setState({modalInsertar: !this.state.modalInsertar});
+    }
+
+
+
+    seleccionarUsuario = (usuario)=>{
+        this.setState({
+            tipoModal:'actualizar',
+            form:{
+                _id: usuario._id,
+                nombres: usuario.nombres,
+                apellidoP:usuario.apellidoP,
+                apellidoM:usuario.apellidoM,
+                username: usuario.username,
+                password: usuario.password,
+                departamento: usuario.departamento,
+                userType: ususario.userType,
+    
+            }
+        })
+    }
+
+    handleChange = async e =>{
+        e.persist();
+        await this.setState({
+            
+            form:{
+                ...this.state.form,
+                [e.target.name]: e.target.value
+            }
+            
+        });
+        console.log(this.state.form);
+    }
+
+    componentDidMount(){
+        this.peticionGet();
+    }
+
+
+
     render(){
+        const {form} = this.state;
         return(
             <div class="container">
                 <div class="navbar">
@@ -52,51 +142,102 @@ class ConfigRM extends Component{
                             <th>Apellido Paterno</th>
                             <th>Apellido Materno</th>
                             <th>Nombre de Usuario</th>
-                            <th>Contraseña</th>
+                            
                             <th>Departamento</th>
                             <th>Tipo de Usuario</th>
+                            <th>algoxd</th>
                             
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                        {this.state.data.map(usuarios =>{
+                            return(
+                    
+                                <tr>
+                                    
+                                    <td>{usuarios.nombres}</td>
+                                    <td>{usuarios.apellidoP}</td>
+                                    <td>{usuarios.apellidoM}</td>
+                                    <td>{usuarios.username}</td>
+                                    <td>{usuarios.departamento}</td>
+                                    <td>{usuarios.userType}</td>
+                                    <td>
+                                        <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuario); this.setState({modalEliminar :true})}} >Eliminar</Button>
+                                    </td>
+                                </tr>
+                            )
+
+                        })}
+
                     </tbody>
 
                 </table>
 
+                <Button color="success" onClick={()=> this.modalInsertar()}>Agregar</Button>
 
+                <Modal isOpen={this.state.modalInsertar}>
+                    <ModalHeader style={{display: 'block'}} >
+                        <span style={{float:'left'}}>Registrar nuevo usuario</span>
+                    </ModalHeader>
 
+                    <ModalBody>
+                        <div classname="form-group" >
+                            <label htmlFor='nombres'>Nombres:</label><br/>
+                            <input classname="form-control" type="text" name="nombres" id="nombres" onChange ={this.handleChange} value={form.nombres}></input>
+                            <br/>
 
-                <Button color="success">Agregar</Button>
-                <Button color="primary">Editar</Button>
-                <Button color="danger">Eliminar</Button>
+                            <label htmlFor='apellidoP'>Apellido Paterno:</label><br/>
+                            <input classname="form-control" type="text" name="apellidoP" id="apellidoP" onChange ={this.handleChange} value={form.apellidoP}></input>
+                            <br/>
+
+                            <label htmlFor='apellidoM'>Apellido Materno:</label><br/>
+                            <input classname="form-control" type="text" name="apellidoM" id="apellidoM" onChange ={this.handleChange} value={form.apellidoM}></input>
+                            <br/>
+                            <br/>
+                            <br/>                        
+
+                            <label htmlFor='username'>Nombre de usuario:</label><br/>
+                            <input classname="form-control" type="text" name="username" id="username"onChange ={this.handleChange} value={form.username} ></input>
+                            <br/>
+
+                            <label htmlFor='password'>Contraseña:</label><br/>
+                            <input classname="form-control" type="text" name="password" id="password" onChange ={this.handleChange} value={form.password}></input>
+                            <br/>
+
+                            <label htmlFor='departamento'>Departamento:</label><br/>
+                            <input classname="form-control" type="text" name="departamento" id="departamento" onChange ={this.handleChange} value={form.departamento}></input>
+                            <br/>
+
+                            <label htmlFor='userType'>Tipo de usuario:</label><br/>
+                            <select classname="form-control" type="text" name="userType" id="userType" onChange ={this.handleChange} value={form.userType}>
+                            {this.state.datausertype.map(elemento =>(
+                                    <option>{elemento}</option>
+                                ))}
+
+                            </select>
+                            <br/>
+                        </div>
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <button className="btn btn-success" onClick={ () => this.peticionPost()}>Insertar</button>
+                        <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>Cancelar</button>
+                    </ModalFooter>
+                </Modal>
+
+                <Modal isOpen={this.state.modalEliminar}>
+                    <ModalBody>
+                        ¿Estás seguro que deseas eliminar al usuario ?
+                    </ModalBody>
+
+                    <ModalFooter>
+                    <button className="btn btn-success" onClick={ () => this.peticionPost()}>Si</button>
+                    <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>No</button>
+
+                    </ModalFooter>
+                </Modal>
+
+                
                
             
             </div>

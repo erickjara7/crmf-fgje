@@ -8,6 +8,7 @@ import Cookies from 'universal-cookie';
 //VARIABLE URL API LOGIN
 const loginurl="http://localhost:4000/users/getuser";
 const cookies = new Cookies();
+
 //Login
 class Login extends Component{
 //ESTADO LOGIN PARA GUARDAR LOS VALORES
@@ -37,7 +38,7 @@ class Login extends Component{
 
         .then(response=>{
            // response.username == this.state.form.username && response.password == this.state.form.password
-            console.log(response.data)
+            console.log(this.state.form.username)
             return response.data;
         })
         .then(response=>{
@@ -52,7 +53,7 @@ class Login extends Component{
                 cookies.set('username',respuesta.username,{path:"/"});
                 cookies.set('departamento',respuesta.departamento,{path:"/"});
                 cookies.set('userType',respuesta.userType,{path:"/"});
-                alert(`Bienvenido ${respuesta.nombres} ${respuesta.apellidoP} ${response.length}`)
+                alert(`Bienvenido ${respuesta.nombres} ${respuesta.apellidoP} ${response.length} ${this.state.form.username}`)
                 if(respuesta.userType == 'Administrador'){
                     window.location.href="./materiales";
                 }else{
