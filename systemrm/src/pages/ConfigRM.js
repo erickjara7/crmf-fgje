@@ -58,6 +58,10 @@ class ConfigRM extends Component{
         this.setState({modalInsertar: !this.state.modalInsertar});
     }
 
+    modalEliminar=()=>{
+        this.setState({modalEliminar: !this.state.modalEliminar});
+    }
+
 
 
     seleccionarUsuario = (usuario)=>{
@@ -71,7 +75,7 @@ class ConfigRM extends Component{
                 username: usuario.username,
                 password: usuario.password,
                 departamento: usuario.departamento,
-                userType: ususario.userType,
+                userType: usuario.userType,
     
             }
         })
@@ -162,7 +166,7 @@ class ConfigRM extends Component{
                                     <td>{usuarios.departamento}</td>
                                     <td>{usuarios.userType}</td>
                                     <td>
-                                        <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuario); this.setState({modalEliminar :true})}} >Eliminar</Button>
+                                        <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
                                     </td>
                                 </tr>
                             )
@@ -173,7 +177,7 @@ class ConfigRM extends Component{
 
                 </table>
 
-                <Button color="success" onClick={()=> this.modalInsertar()}>Agregar</Button>
+                <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Agregar</Button>
 
                 <Modal isOpen={this.state.modalInsertar}>
                     <ModalHeader style={{display: 'block'}} >
@@ -181,35 +185,35 @@ class ConfigRM extends Component{
                     </ModalHeader>
 
                     <ModalBody>
-                        <div classname="form-group" >
+                        <div className="form-group" >
                             <label htmlFor='nombres'>Nombres:</label><br/>
-                            <input classname="form-control" type="text" name="nombres" id="nombres" onChange ={this.handleChange} value={form.nombres}></input>
+                            <input class="form-control" type="text" name="nombres" id="nombres" onChange ={this.handleChange} value={form?form.nombres:''}></input>
                             <br/>
 
                             <label htmlFor='apellidoP'>Apellido Paterno:</label><br/>
-                            <input classname="form-control" type="text" name="apellidoP" id="apellidoP" onChange ={this.handleChange} value={form.apellidoP}></input>
+                            <input class="form-control" type="text" name="apellidoP" id="apellidoP" onChange ={this.handleChange} value={form?form.apellidoP:''}></input>
                             <br/>
 
                             <label htmlFor='apellidoM'>Apellido Materno:</label><br/>
-                            <input classname="form-control" type="text" name="apellidoM" id="apellidoM" onChange ={this.handleChange} value={form.apellidoM}></input>
+                            <input class="form-control" type="text" name="apellidoM" id="apellidoM" onChange ={this.handleChange} value={form?form.apellidoM:''}></input>
+                            <label htmlFor='departamento'>Departamento:</label><br/>
+                            <input class="form-control" type="text" name="departamento" id="departamento" onChange ={this.handleChange} value={form?form.departamento:''}></input>
                             <br/>
                             <br/>
-                            <br/>                        
+                                                   
 
                             <label htmlFor='username'>Nombre de usuario:</label><br/>
-                            <input classname="form-control" type="text" name="username" id="username"onChange ={this.handleChange} value={form.username} ></input>
+                            <input class="form-control" type="text" name="username" id="username"onChange ={this.handleChange} value={form?form.username:''} ></input>
                             <br/>
 
                             <label htmlFor='password'>Contraseña:</label><br/>
-                            <input classname="form-control" type="text" name="password" id="password" onChange ={this.handleChange} value={form.password}></input>
+                            <input class="form-control" type="password" name="password" id="password" onChange ={this.handleChange} value={form?form.password:''}></input>
                             <br/>
 
-                            <label htmlFor='departamento'>Departamento:</label><br/>
-                            <input classname="form-control" type="text" name="departamento" id="departamento" onChange ={this.handleChange} value={form.departamento}></input>
-                            <br/>
+                           
 
                             <label htmlFor='userType'>Tipo de usuario:</label><br/>
-                            <select classname="form-control" type="text" name="userType" id="userType" onChange ={this.handleChange} value={form.userType}>
+                            <select className="form-control" type="text" name="userType" id="userType" onChange ={this.handleChange} value={form?form.userType:''}>
                             {this.state.datausertype.map(elemento =>(
                                     <option>{elemento}</option>
                                 ))}
@@ -225,14 +229,16 @@ class ConfigRM extends Component{
                     </ModalFooter>
                 </Modal>
 
+
+
                 <Modal isOpen={this.state.modalEliminar}>
                     <ModalBody>
                         ¿Estás seguro que deseas eliminar al usuario ?
                     </ModalBody>
 
                     <ModalFooter>
-                    <button className="btn btn-success" onClick={ () => this.peticionPost()}>Si</button>
-                    <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>No</button>
+                    <button className="btn btn-success" onClick={ () => this.peticionDelete()}>Si</button>
+                    <button className="btn btn-danger" onClick={()=> this.modalEliminar()}>No</button>
 
                     </ModalFooter>
                 </Modal>

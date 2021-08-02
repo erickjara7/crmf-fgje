@@ -270,7 +270,7 @@ componentDidMount(){
                             <label htmlFor="existencia">Existencia:</label>
                             {this.state.tipoModal == 'insertar'?
                                 <input className="form-control" type="number" placeholder="Solo números, sin comas ni puntos" name="existencia" id="existencia"  onChange={this.handleChange} value={form?form.existencia:''}/>:
-                                <input className="form-control" type="number" placeholder="Solo números, sin comas ni puntos" name="existencia" id="existencia" readOnly onChange={this.handleChange} value={form?form.existencia:''}/>   
+                                <input className="form-control is-invalid" type="number" placeholder="Solo números, sin comas ni puntos" name="existencia" id="existencia" readOnly onChange={this.handleChange} value={form?form.existencia:''}/>   
                             }
                              <br/>
 
@@ -328,9 +328,9 @@ componentDidMount(){
                             <br/>
 
                             <label>Cantidad a agregar:</label>
-                            <input  className="form-control"
+                            <input  className="form-control is-valid"
                                 type="number"
-                                className="form-control"
+                                
                                 name="cantidadaggmate"
                                 onChange={this.handleChange}
                                // value ={this.state.form.cantidadaggmate}

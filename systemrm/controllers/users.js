@@ -18,15 +18,11 @@ const getUserId =(req, res) =>{
     console.log(res);
     User.findById(id,(err,user)=>{
         if(err) return res.status(500).send({message: `Error al realizar la peticion:${err}`})
-        if (!user) return res.status(404).send({message:`el usuario no existe ${user} y el user id ${id} params ${req.params.userid}`})
+        if (!user) return res.status(404).send({message:`el usuario no existe ${err}`})
 
         res.status(200).send({user})
     })
-   /* User.findById(req.params.id, (err, user)=>{
-        err && res.status(500).send(err.message);
-
-        res.status(200).json(user);
-    })*/
+  
 }
 
 
@@ -63,6 +59,7 @@ const putUser = (req,res)=>{
 
 
 }
+
 
 
 const deleteUser =(req, res) =>{

@@ -7,6 +7,7 @@ const { useParams } = require("react-router-dom");
 const { useReducer } = require("react");
 const Users = require("./api/users");
 const Materiales = require("./api/materiales");
+const Solicitud = require ("./api/solicitud");
 //const User = require('./models/User');
 const cors = require('cors');
 
@@ -20,6 +21,7 @@ app.use(bodyParser.json());
 
 app.use("/users", Users);
 app.use("/materiales", Materiales);
+app.use("/solicitud", Solicitud);
 //-------------------------------------------------------------
 /*app.get('http://localhost:4000/api/users',(req,res)=>{
     User.find({},(err, users)=>{
@@ -84,7 +86,7 @@ mongoose.connect(
     {useUnifiedTopology:true, useNewUrlParser:true},
     (err, res) => {
         err && console.log("Error de conexión con la base de datos");
-        app.listen(4000,() => {
+        app.listen(port,() => {
             //console.log("Servidor está corriendo en el puerto 4000");
             console.log(`Api rest corriendo en http://localhost:${port}`)
 
