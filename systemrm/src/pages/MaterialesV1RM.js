@@ -79,7 +79,7 @@ peticionPut2 =()=>{
 peticionaggmaterial=async()=>{
         this.modalAggmaterial();
         existencianueva =  this.state.form.existencia + + this.state.form.cantidadaggmate;
-        alert (`existencia= ${this.state.form.existencia} +  valor a agg = ${this.state.form.cantidadaggmate}=  valor nuevo : ${existencianueva}`);
+        alert (`La existencia de: ${this.state.form.nombre} se actualizó exitosamente.`);
         this.state.form.existencia = existencianueva;
         this.peticionPut2();
 }
@@ -175,7 +175,7 @@ componentDidMount(){
                         
                     </div>
                 </div>
-               
+               <br></br>
                 <table class="table table-bordered" >
 
                     <thead>

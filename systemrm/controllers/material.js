@@ -25,7 +25,7 @@ const getMaterialId =(req, res) =>{
 }
 
 
-const postMaterial = (req, res) =>{b 
+const postMaterial = (req, res) =>{
     console.log(req.body);
     let material = new Materiales ()
         material.nombre = req.body.nombre,
