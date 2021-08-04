@@ -1,6 +1,6 @@
 const mongoose  = require('mongoose');
 const Materiales = require('../models/Materiales');
-const User  = require('../models/Materiales');
+//const User  = require('../models/Materiales');
 
 const getMaterial =(req, res) =>{
     Materiales.find((err,material)=>{
@@ -9,6 +9,8 @@ const getMaterial =(req, res) =>{
         res.status(200).json(material);
     })
 }
+
+
 
 const getMaterialId =(req, res) =>{
     let _id = req.params._id;
@@ -23,7 +25,7 @@ const getMaterialId =(req, res) =>{
 }
 
 
-const postMaterial = (req, res) =>{
+const postMaterial = (req, res) =>{b 
     console.log(req.body);
     let material = new Materiales ()
         material.nombre = req.body.nombre,
@@ -62,5 +64,7 @@ const deleteMaterial = (req,res) => {
         })
     })
 }
+
+
 
 module.exports = {getMaterial,getMaterialId,postMaterial,deleteMaterial, putMaterial};

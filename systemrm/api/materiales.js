@@ -6,8 +6,9 @@ const router = express.Router();
 
 router.post("/add",MaterialController.postMaterial);
 router.get("/getmaterial", MaterialController.getMaterial);
-router.get("/:_id", MaterialController.getMaterialId);
+//router.get("/:_id", MaterialController.getMaterialId);
 router.delete("/:id", MaterialController.deleteMaterial);
 router.put("/:id", MaterialController.putMaterial);
+router.get("/:texto",MaterialController.getFiltro);
 
 module.exports = router;

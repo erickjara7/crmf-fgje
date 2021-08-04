@@ -1,21 +1,26 @@
 import React, {Component} from 'react';
+import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import {Table, Button, Container, Modal,ModalBody, ModalHeader, FormGroup, ModalFooter} from 'reactstrap';
 import '../css/Materiales.css';
 import '../img/logofiscalia.png';
+
+
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
+//import 'https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css';
 
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 
-
+//const [searchTerm,SetSearchTerm] = useState('');
 
 
 class MaterialesV1OD extends Component{
 
 
     state={
+        busqueda:'',
         data:[]
     }
 
@@ -23,12 +28,20 @@ class MaterialesV1OD extends Component{
         await  axios.get(vermaterial).then(response =>{
              this.setState({data:response.data});
              
+            // console.log(`busqueda=${this.state.busqueda}`);
+             
          })
      }
     
+     onChange = async e =>{
+         e.persist();
+         await this.setState({busqueda: e.target.value});
+         console.log(`busqueda=${this.state.busqueda}`);
+     }
     componentDidMount(){
         this.peticionGet();
     }
+
 
 
     render(){
@@ -50,26 +63,30 @@ class MaterialesV1OD extends Component{
             <h2>Materiales disponibles</h2>
             <br></br>
             <br></br>
-            <div>
+            <div >
             <Button color="primary" href="./materialesodep">Actualizar</Button>
-                <div class="barraBusqueda">
-                    <input
+                <br></br> <br></br>
+                 <div>
+                   <input
                         type="text"
                         placeholder="Buscar"
-                        className="textField"
                         name="busqueda"
-                        //value
+                        class="form-control" 
+                    
+                        value = {this.state.busqueda}
+                        onChange = {this.onChange}
+                       // onChange={event => {this.setState(event.target.busqueda)}}
+                        
                     />
-                    <button type="button" className="btnBuscar">
-                        {" "}
-                        <FontAwesomeIcon icon={faSearch}/>
-                    </button>
                 </div>
+                <br></br>
+
             </div>
 
-                 <table class="table table-bordered">
+                 <table class="table table-striped table-bordered" id="dev-table">
 
                     <thead>
+                        
                         <tr class="tablaencabezado">
                            
                             <th>Nombre</th>
@@ -81,7 +98,40 @@ class MaterialesV1OD extends Component{
                         </tr>
                     </thead>
                     <tbody>
-                    {this.state.data.map(material =>{
+                    {this.state.data.filter((material)=>{
+                        if (this.state.busqueda == "") {
+                            return(
+                                <tr>
+                                    
+                                <td>{material.nombre}</td>
+                                <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                <td>{material.unidadMedida}</td>
+                                <td>{material.categoria}</td>
+                                <td>
+                                    <Button color="danger">Agregar</Button>
+                                </td>
+                            </tr>
+                            )
+                            
+                        }else if (material.nombre.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                  material.unidadMedida.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                  material.categoria.toLowerCase().includes(this.state.busqueda.toLowerCase()))
+                        {
+                            return(
+                                <tr>
+                                    
+                                <td>{material.nombre}</td>
+                                <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                <td>{material.unidadMedida}</td>
+                                <td>{material.categoria}</td>
+                                <td>
+                                    <Button color="danger">Agregar</Button>
+                                </td>
+                            </tr>
+                            )
+                        }
+
+                    }).map(material =>{
                             return(
                     
                                 <tr>

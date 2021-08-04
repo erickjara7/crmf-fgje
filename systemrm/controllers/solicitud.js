@@ -33,9 +33,6 @@ const postSolicitud =(req,res)=>{
         solicitud.solicitante = req.body.solicitante,
         solicitud.departamentosoli = req.body.departamentosoli,
         solicitud.tipoSolicitud = req.body.tipoSolicitud,
-        solicitud.materialesSolicitados.nombrematerial = req.body.nombrematerial,
-        solicitud.materialesSolicitados.unidadMedidaMate = req.body.unidadMedidaMate,
-        solicitud.materialesSolicitados.cantidadsolicitada = req.body.cantidadsolicitada,
         solicitud.estado = req.body.estado,
 
         solicitud.save((err,soliStored)=>{
@@ -63,7 +60,7 @@ const putSolicitud =(req,res)=>{
 const deleteSolicitud =(req,res) =>{
     let _id = req.params._id;
 
-    Solicitud.findById(_id, (err, solicitud)=>{s
+    Solicitud.findById(_id, (err, solicitud)=>{
         if (err) res.status(500).send({message:`Error al eliminar la solicitud ${err}`})
 
         solicitud.remove(err=>{

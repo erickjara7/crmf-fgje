@@ -78,7 +78,7 @@ peticionPut2 =()=>{
 }
 peticionaggmaterial=async()=>{
         this.modalAggmaterial();
-        existencianueva = this.state.form.existencia + this.state.form.cantidadaggmate;
+        existencianueva =  this.state.form.existencia + + this.state.form.cantidadaggmate;
         alert (`existencia= ${this.state.form.existencia} +  valor a agg = ${this.state.form.cantidadaggmate}=  valor nuevo : ${existencianueva}`);
         this.state.form.existencia = existencianueva;
         this.peticionPut2();
@@ -107,58 +107,23 @@ seleccionarMaterial = (material) =>{
     
 }
 
-/*nuevoExis = () => {
-    var nuevaexistencia = this.setState.existencia.value + this.state.form.existencia.value;
-    console.log(this.setState.existenciaexistencia);
-    console.log(this.state.form.existencia);
-    console.log(nuevaexistencia);
-
-}*/
 
 handleChange = async e =>{
     e.persist();
     await this.setState({
-        
         form:{
             ...this.state.form,
             [e.target.name]: e.target.value
-        }
-        
+        }   
     });
- //   this.filtrar(e.target.value);
-    console.log(this.state.form.busqueda);
-   // console.log(this.state.busqueda);
 }
 
-filtrar = async(busqueda)=>{
-    await axios.get(vermaterial, {Params: {nombre: this.state.form.busqueda}})
-
-    .then(response=>{
-       // response.username == this.state.form.username && response.password == this.state.form.password
-       // console.log(this.state.form.busqueda)
-        return response.data;
-    })
-    
-}
-    
- /*   var resultadosBusqueda = this.setState.form.filter((elemento)=>{
-        if(elemento.nombre.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-        ){
-            return elemento;
-        }
-
-    });*/
-
-
-    
-    
-
-
-/*busquedaChange = async e =>{
+onChange = async e =>{
     e.persist();
-   
-    console.log("busqueda:"+ e.target.value);
-}*/
+    await this.setState({busqueda: e.target.value});
+    console.log(`busqueda=${this.state.busqueda}`);
+
+}
 
 
 
@@ -197,19 +162,17 @@ componentDidMount(){
                 <h2>Materiales</h2>
                 <br></br>
                 <div>
-                    <div class="barraBusqueda">
+                    <div>
                         <input
                             type="text"
-                            placeholder="Buscar"
-                            className="textField"
+                            placeholder="Buscar..."
+                            class="form-control"
                             name="busqueda"
-                            onChange={this.handleChange}
+                            value = {this.state.busqueda}
+                            onChange={this.onChange}
                             //value ={this.state.form.busqueda}
                         />
-                        <button type="button" className="btnBuscar"onClick ={()=>this.filtrar()} >
-                            {""}
-                            <FontAwesomeIcon icon={faSearch}/>
-                        </button>
+                        
                     </div>
                 </div>
                
@@ -227,7 +190,39 @@ componentDidMount(){
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.data.map(material =>{
+                        {this.state.data.filter((material)=>{
+                            if (this.state.busqueda == "") {
+                                return(
+                                    <tr>
+                                        
+                                    <td>{material.nombre}</td>
+                                    <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                    <td>{material.unidadMedida}</td>
+                                    <td>{material.categoria}</td>
+                                    <td>
+                                        <Button color="danger">Agregar</Button>
+                                    </td>
+                                </tr>
+                                )
+                                
+                            }else if (material.nombre.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                      material.unidadMedida.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                      material.categoria.toLowerCase().includes(this.state.busqueda.toLowerCase()))
+                            {
+                                return(
+                                    <tr>
+                                        
+                                    <td>{material.nombre}</td>
+                                    <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                    <td>{material.unidadMedida}</td>
+                                    <td>{material.categoria}</td>
+                                    <td>
+                                        <Button color="danger">Agregar</Button>
+                                    </td>
+                                </tr>
+                                )
+                            }
+                        }).map(material =>{
                             return(
                     
                                 <tr>
