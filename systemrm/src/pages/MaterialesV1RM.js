@@ -1,4 +1,4 @@
-import React, {Component, useState, useEffect } from 'react';
+ import React, {Component, useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import {Table, Button, Container, Modal,ModalBody, ModalHeader, FormGroup, ModalFooter} from 'reactstrap';
@@ -175,8 +175,13 @@ componentDidMount(){
                         
                     </div>
                 </div>
+                <br></br>
+
+                <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Agregar nuevo material</Button>
+
                <br></br>
-                <table class="table table-bordered" >
+               <br></br>
+                <table class="table table-striped table-bordered" >
 
                     <thead>
                         <tr class="tablaencabezado">
@@ -246,7 +251,7 @@ componentDidMount(){
 
                 </table>
 
-                <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Agregar nuevo material</Button>
+               
 
                 <Modal isOpen={this.state.modalInsertar}>
                     <ModalHeader style={{display: 'block'}}>

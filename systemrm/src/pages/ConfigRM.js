@@ -14,6 +14,7 @@ const deleteuser = "http://localhost:4000/users/";
 class ConfigRM extends Component{
 
     state={
+        busqueda:'',
         data:[],
         datausertype:['','Administrador','Usuario'],
         modalInsertar: false,
@@ -94,6 +95,13 @@ class ConfigRM extends Component{
         console.log(this.state.form);
     }
 
+    onChange = async e =>{
+        e.persist();
+        await this.setState({busqueda: e.target.value});
+        console.log(`busqueda=${this.state.busqueda}`);
+    
+    }
+
     componentDidMount(){
         this.peticionGet();
     }
@@ -126,19 +134,20 @@ class ConfigRM extends Component{
                     <div class="barraBusqueda">
                         <input
                             type="text"
-                            placeholder="Buscar"
-                            className="textField"
+                            placeholder="Buscar..."
+                            className="form-control"
                             name="busqueda"
+                            value = {this.state.busqueda}
+                            onChange={this.onChange}
+
                             //value
                         />
-                        <button type="button" className="btnBuscar">
-                            {" "}
-                            <FontAwesomeIcon icon={faSearch}/>
-                        </button>
                     </div>
                 </div>
 
-                <table class="table table-bordered">
+                <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Agregar</Button>
+
+                <table class="table table-striped table-bordered">
 
                     <thead>
                         <tr class="tablaencabezado">
@@ -154,7 +163,45 @@ class ConfigRM extends Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.data.map(usuarios =>{
+                        {this.state.data.filter((usuarios)=>{
+                            if(this.state.busqueda ==""){
+                                return(
+                                    <tr>
+                                        <td>{usuarios.nombres}</td>
+                                        <td>{usuarios.apellidoP}</td>
+                                        <td>{usuarios.apellidoM}</td>
+                                        <td>{usuarios.username}</td>
+                                        <td>{usuarios.departamento}</td>
+                                        <td>{usuarios.userType}</td>
+                                        <td>
+                                            <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
+                                        </td>
+                                    </tr>  
+                                )
+                            }else if (usuarios.nombres.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                      usuarios.apellidoP.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                      usuarios.apellidoM.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                      usuarios.username.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                      usuarios.departamento.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                      usuarios.userType.toLowerCase().includes(this.state.busqueda.toLowerCase()))
+                            {
+                                return(
+                                    <tr>
+                                        <td>{usuarios.nombres}</td>
+                                        <td>{usuarios.apellidoP}</td>
+                                        <td>{usuarios.apellidoM}</td>
+                                        <td>{usuarios.username}</td>
+                                        <td>{usuarios.departamento}</td>
+                                        <td>{usuarios.userType}</td>
+                                        <td>
+                                            <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
+                                        </td>
+                                    </tr>  
+                                )
+
+
+                            }
+                        }).map(usuarios =>{
                             return(
                     
                                 <tr>
@@ -177,7 +224,7 @@ class ConfigRM extends Component{
 
                 </table>
 
-                <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Agregar</Button>
+               
 
                 <Modal isOpen={this.state.modalInsertar}>
                     <ModalHeader style={{display: 'block'}} >
