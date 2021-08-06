@@ -33,39 +33,54 @@ class Login extends Component{
 
 //METODO INICIAR SESION 
     iniciarSesion=async()=>{
-        
-        await axios.get(loginurl, {Params: {username: this.state.form.username, password:this.state.form.password}})
-
+        //Params: {username: this.state.form.username, password:this.state.form.password}
+        await axios.get(loginurl)
         .then(response=>{
-           // response.username == this.state.form.username && response.password == this.state.form.password
-            console.log(this.state.form.username)
-            return response.data;
-        })
-        .then(response=>{
-            if(response.length > 0){
-                
-                var respuesta = response[0];
-                console.log(respuesta);
-          
-                cookies.set('nombres',respuesta.nombres,{path:"/"});
-                cookies.set('apellidoP',respuesta.apellidoP,{path:"/"});
-                cookies.set('apellidoM',respuesta.apellidoM,{path:"/"});
-                cookies.set('username',respuesta.username,{path:"/"});
-                cookies.set('departamento',respuesta.departamento,{path:"/"});
-                cookies.set('userType',respuesta.userType,{path:"/"});
-                alert(`Bienvenido ${respuesta.nombres} ${respuesta.apellidoP} ${response.length} ${this.state.form.username}`)
-                if(respuesta.userType == 'Administrador'){
-                    window.location.href="./materiales";
-                }else{
-                    window.location.href="./materialesodep";
-                }
+            if(this.state.form.username == "" || this.state.form.password == ""){
+                alert("Favor de llenar todos los campos")
 
             }else{
-                alert('El usuario y/o contraseña son incorrectos');
-
+                {response.data.map(usuarios=>{
+                    if (usuarios.username.includes(this.state.form.username)  && usuarios.password.includes(this.state.form.password)){
+                    response[0] = usuarios;
+                    response.length = 0;
+                    response.data = response[0];
+                    }
+                    
+                }) }    
             }
+            return response;
+            
         })
+        .then(response=>{
+           
+                if(response.length == 0){
+                   
+                    var respuesta = response[0];
+                    
+                    cookies.set('_id',respuesta._id,{path:"/"});
+                    cookies.set('nombres',respuesta.nombres,{path:"/"});
+                    cookies.set('apellidoP',respuesta.apellidoP,{path:"/"});
+                    cookies.set('apellidoM',respuesta.apellidoM,{path:"/"});
+                    cookies.set('username',respuesta.username,{path:"/"});
+                    cookies.set('departamento',respuesta.departamento,{path:"/"});
+                    cookies.set('userType',respuesta.userType,{path:"/"});
+                    alert(`Bienvenido(a)  ${respuesta.nombres} ${respuesta.apellidoP}`)
+                    if(respuesta.userType == 'Administrador'){
+                        window.location.href="./materiales";
+                    }else{
+                        window.location.href="./materialesodep";
+                    }
 
+                }else{
+                    if(this.state.form.username == "" || this.state.form.password == ""){
+
+                    }else{
+                        alert('El usuario y/o contraseña son incorrectos');
+                    }
+                    
+                }
+        })
         .catch(error=>{
             console.log(error);
         })
@@ -73,11 +88,17 @@ class Login extends Component{
 
     
     aunnotengocuenta=async()=>{
-       alert("Favor de pasar al departamento de Recursos Materiales a registrarse.");
+        alert("Favor de pasar al departamento de Recursos Materiales a registrarse.");
     }
     olvidecontraseña=async()=>{
-    alert("Favor de pasar al departamento de Recursos Materiales a solicitar la información correspondiente.");
+        alert("Favor de pasar al departamento de Recursos Materiales a solicitar la información correspondiente.");
    
+    }
+    componentDidMount(){
+        if (cookies.get('username') && cookies.get('userType') == 'usuario'){
+            window.location.href="./materialesodep";
+        }
+
     }
 
     render(){
@@ -102,7 +123,7 @@ class Login extends Component{
                                 placeholder="Ingresa tu nombre de usuario"
                                 name="username"
                                 onChange={this.handleChange}
-                            />
+                            required/>
                             <br/>
                             <label>Contraseña:</label>
                             <br/>
@@ -113,7 +134,7 @@ class Login extends Component{
                                 placeholder="Ingresa tu contraseña"
                                 name="password"
                                 onChange={this.handleChange}
-                            />
+                            required/>
                         
                             <button className="buttoncss" onClick={()=> this.iniciarSesion() }>Iniciar Sesión</button>
                             <br/> <br/>

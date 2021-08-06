@@ -250,17 +250,17 @@ class ConfigRM extends Component{
                                                    
 
                             <label htmlFor='username'>Nombre de usuario:</label><br/>
-                            <input class="form-control" type="text" name="username" id="username"onChange ={this.handleChange} value={form?form.username:''} ></input>
+                            <input class="form-control form-control-sm" type="text" name="username" id="username"onChange ={this.handleChange} value={form?form.username:''} ></input>
                             <br/>
 
                             <label htmlFor='password'>Contraseña:</label><br/>
-                            <input class="form-control" type="password" name="password" id="password" onChange ={this.handleChange} value={form?form.password:''}></input>
+                            <input class="form-control form-control-sm" type="password" name="password" id="password" onChange ={this.handleChange} value={form?form.password:''}></input>
                             <br/>
 
                            
 
                             <label htmlFor='userType'>Tipo de usuario:</label><br/>
-                            <select className="form-control" type="text" name="userType" id="userType" onChange ={this.handleChange} value={form?form.userType:''}>
+                            <select className="form-control form-control-sm" type="text" name="userType" id="userType" onChange ={this.handleChange} value={form?form.userType:''}>
                             {this.state.datausertype.map(elemento =>(
                                     <option>{elemento}</option>
                                 ))}
