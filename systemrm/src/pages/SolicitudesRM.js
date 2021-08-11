@@ -1,6 +1,36 @@
 import React, {Component} from 'react';
+import Cookies from 'universal-cookie';
+
+
+const cookies = new Cookies();
+
+
 
 class SolicitudesRM extends Component{
+
+
+
+    cerrarSesion =() =>{
+        cookies.remove('_id',{path:"/"});
+        cookies.remove('nombres',{path:"/"});
+        cookies.remove('apellidoP',{path:"/"});
+        cookies.remove('apellidoM',{path:"/"});
+        cookies.remove('username',{path:"/"});
+        cookies.remove('departamento',{path:"/"});
+        cookies.remove('userType',{path:"/"});
+        window.location.href='./';
+    }
+
+    componentDidMount(){
+        if (!cookies.get('username')){
+            window.location.href="./";
+        }else if(cookies.get('userType') === 'Usuario'){
+            alert('Página no permitida, favor de autenticarse nuevamente.');
+            this.cerrarSesion(); 
+        }
+    }
+
+
     render(){
         return(
             <div class="container">
@@ -13,7 +43,7 @@ class SolicitudesRM extends Component{
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
                         <li><a href="./configuracion">Configuración</a></li>
-                        <li><a href="./">Cerrar Sesión</a></li>
+                        <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
                 </div>

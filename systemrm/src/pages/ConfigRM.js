@@ -1,15 +1,17 @@
 import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-import {Table, Button, Container, Modal,ModalBody, ModalHeader, FormGroup, ModalFooter} from 'reactstrap';
+import { Button,  Modal,ModalBody, ModalHeader, ModalFooter} from 'reactstrap';
 import '../css/Materiales.css';
 import '../img/logofiscalia.png';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSearch} from "@fortawesome/free-solid-svg-icons";
+import Cookies from 'universal-cookie';
+
 
 const usersurl="http://localhost:4000/users/getuser";
 const agguser = "http://localhost:4000/users/add";
 const deleteuser = "http://localhost:4000/users/";
+
+const cookies = new Cookies();
 
 class ConfigRM extends Component{
 
@@ -102,8 +104,25 @@ class ConfigRM extends Component{
     
     }
 
+    cerrarSesion =() =>{
+        cookies.remove('_id',{path:"/"});
+        cookies.remove('nombres',{path:"/"});
+        cookies.remove('apellidoP',{path:"/"});
+        cookies.remove('apellidoM',{path:"/"});
+        cookies.remove('username',{path:"/"});
+        cookies.remove('departamento',{path:"/"});
+        cookies.remove('userType',{path:"/"});
+        window.location.href='./';
+    }
+
     componentDidMount(){
         this.peticionGet();
+        if (!cookies.get('username')){
+            window.location.href="./";
+        }else if(cookies.get('userType') === 'Usuario'){
+            alert('Página no permitida, favor de autenticarse nuevamente.');
+            this.cerrarSesion(); 
+        }
     }
 
 
@@ -121,7 +140,7 @@ class ConfigRM extends Component{
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
                         <li><a href="./configuracion">Configuración</a></li>
-                        <li><a href="./">Cerrar Sesión</a></li>
+                        <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
                 </div>
@@ -164,7 +183,7 @@ class ConfigRM extends Component{
                     </thead>
                     <tbody>
                         {this.state.data.filter((usuarios)=>{
-                            if(this.state.busqueda ==""){
+                            if(this.state.busqueda ===""){
                                 return(
                                     <tr>
                                         <td>{usuarios.nombres}</td>

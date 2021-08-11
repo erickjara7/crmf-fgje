@@ -36,7 +36,7 @@ class Login extends Component{
         //Params: {username: this.state.form.username, password:this.state.form.password}
         await axios.get(loginurl)
         .then(response=>{
-            if(this.state.form.username == "" || this.state.form.password == ""){
+            if(this.state.form.username === "" || this.state.form.password === ""){
                 alert("Favor de llenar todos los campos")
 
             }else{
@@ -54,7 +54,7 @@ class Login extends Component{
         })
         .then(response=>{
            
-                if(response.length == 0){
+                if(response.length === 0){
                    
                     var respuesta = response[0];
                     
@@ -66,14 +66,14 @@ class Login extends Component{
                     cookies.set('departamento',respuesta.departamento,{path:"/"});
                     cookies.set('userType',respuesta.userType,{path:"/"});
                     alert(`Bienvenido(a)  ${respuesta.nombres} ${respuesta.apellidoP}`)
-                    if(respuesta.userType == 'Administrador'){
+                    if(respuesta.userType === 'Administrador'){
                         window.location.href="./materiales";
                     }else{
                         window.location.href="./materialesodep";
                     }
 
                 }else{
-                    if(this.state.form.username == "" || this.state.form.password == ""){
+                    if(this.state.form.username === "" || this.state.form.password === ""){
 
                     }else{
                         alert('El usuario y/o contraseña son incorrectos');
@@ -95,8 +95,17 @@ class Login extends Component{
    
     }
     componentDidMount(){
-        if (cookies.get('username') && cookies.get('userType') == 'usuario'){
-            window.location.href="./materialesodep";
+        //cookies.get('username') && cookies.get('userType') == 'usuario'
+        if (cookies.get('username')){
+            if(cookies.get('userType') === 'Usuario'){
+                window.location.href="./materialesodep";
+                console.log('entre al if');
+            }else if(cookies.get('userType') === 'Administrador'){
+                window.location.href="./materiales";
+                console.log('entre al else');  
+            }
+              
+            //window.location.href="./materialesodep"; 
         }
 
     }
