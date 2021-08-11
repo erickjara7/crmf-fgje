@@ -32,6 +32,7 @@ const postSolicitud =(req,res)=>{
         solicitud.fecha = req.body.fecha,
         solicitud.solicitante = req.body.solicitante,
         solicitud.departamentosoli = req.body.departamentosoli,
+        solicitud.area = req.body.area,
         solicitud.tipoSolicitud = req.body.tipoSolicitud,
         solicitud.estado = req.body.estado,
 
