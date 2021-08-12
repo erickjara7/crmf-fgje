@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import Cookies from 'universal-cookie';
+import jsPDF from 'jspdf';
+import { Button} from 'reactstrap';
 
 
 const cookies = new Cookies();
@@ -7,6 +9,7 @@ const cookies = new Cookies();
 
 
 class SolicitudesRM extends Component{
+
 
 
 
@@ -29,6 +32,9 @@ class SolicitudesRM extends Component{
             this.cerrarSesion(); 
         }
     }
+
+    
+
 
 
     render(){
@@ -55,9 +61,15 @@ class SolicitudesRM extends Component{
 
                 <h2>Solicitudes</h2>
                 <br></br>
-               
+                <br></br>
+                            <label>Solicitante: {cookies.get('nombres')} {cookies.get('apellidoP')}</label>
+                            <br>
+                            </br>
 
-                <button type="button"  class="btn-sm">Agregar</button>
+                    
+               <a href="./Pdf" target="_blank"><Button type="button"  class="btn-sm" >Pdf</Button></a>
+
+
                 <button type="button"  class="btn-sm">Editar</button>
             
             </div>
