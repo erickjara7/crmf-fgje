@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import'../css/Login.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';  
+import md5 from 'md5';
 import Cookies from 'universal-cookie';
 
 
@@ -41,7 +42,7 @@ class Login extends Component{
 
             }else{
                 {response.data.map(usuarios=>{
-                    if (usuarios.username.includes(this.state.form.username)  && usuarios.password.includes(this.state.form.password)){
+                    if (usuarios.username.includes(this.state.form.username)  && usuarios.password.includes(md5(this.state.form.password))){
                     response[0] = usuarios;
                     response.length = 0;
                     response.data = response[0];
@@ -136,15 +137,18 @@ class Login extends Component{
                             <br/>
                             <label>Contraseña:</label>
                             <br/>
-                            <input
-                                className="inputPassUs"
-                                type="password"
-                                className="form-control"
-                                placeholder="Ingresa tu contraseña"
-                                name="password"
-                                onChange={this.handleChange}
-                            required/>
-                        
+
+                              
+                                <input
+                                    className="inputPassUs"
+                                    type="password"
+                                    className="form-control"
+                                    placeholder="Ingresa tu contraseña"
+                                    name="password"
+                                    onChange={this.handleChange} 
+                                required/>
+                               
+                            
                             <button className="buttoncss" onClick={()=> this.iniciarSesion() }>Iniciar Sesión</button>
                             <br/> <br/>
                             <a href="" onClick={()=> this.aunnotengocuenta()}>Aún no tengo una cuenta</a>

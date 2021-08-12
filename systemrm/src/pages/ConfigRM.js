@@ -4,7 +4,9 @@ import axios from 'axios';
 import { Button,  Modal,ModalBody, ModalHeader, ModalFooter} from 'reactstrap';
 import '../css/Materiales.css';
 import '../img/logofiscalia.png';
+
 import Cookies from 'universal-cookie';
+import md5 from 'md5';
 
 
 const usersurl="http://localhost:4000/users/getuser";
@@ -27,7 +29,7 @@ class ConfigRM extends Component{
             apellidoP:'',
             apellidoM:'',
             username:'',
-            password:'',
+            password: '',
             departamento:'',
             userType:'',
         }
@@ -63,6 +65,10 @@ class ConfigRM extends Component{
 
     modalEliminar=()=>{
         this.setState({modalEliminar: !this.state.modalEliminar});
+    }
+
+    convertirmd5password=()=>{
+        this.state.form.password = md5(this.state.form.password)
     }
 
 
@@ -273,7 +279,9 @@ class ConfigRM extends Component{
                             <br/>
 
                             <label htmlFor='password'>Contraseña:</label><br/>
-                            <input class="form-control form-control-sm" type="password" name="password" id="password" onChange ={this.handleChange} value={form?form.password:''}></input>
+                            <input class="form-control form-control-sm" type="password" name="password" id="password" onChange ={this.handleChange} value= {form?form.password:''}>
+                               
+                            </input>
                             <br/>
 
                            
@@ -290,7 +298,7 @@ class ConfigRM extends Component{
                     </ModalBody>
 
                     <ModalFooter>
-                        <button className="btn btn-success" onClick={ () => this.peticionPost()}>Insertar</button>
+                        <button className="btn btn-success" onClick={ () => {this.convertirmd5password(); this.peticionPost() }}>Insertar</button>
                         <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>Cancelar</button>
                     </ModalFooter>
                 </Modal>

@@ -3,6 +3,9 @@ const User  = require('../models/User');
 
 
 
+
+
+
 const getUser = (req, res) => {
     User.find((err, users) =>{
         err && res.status(500).send(err.message);
