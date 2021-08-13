@@ -7,6 +7,7 @@ import ReportesRM from '../pages/ReportesRM';
 import ConfigRM from '../pages/ConfigRM';
 import MaterialesV1OD from '../pages/MaterialesV1OD';
 import Pdf from '../pages/Pdf';
+import SolicitudesOD from '../pages/SolicitudesOD';
 
 
 function Routess() {
@@ -19,6 +20,7 @@ function Routess() {
       <Route exact path="/reportes" component={ReportesRM} />
       <Route exact path="/configuracion" component={ConfigRM} />
       <Route exact path="/materialesodep" component={MaterialesV1OD}/>
+      <Route exact path="/solicitudesodep" component={SolicitudesOD}/>
       <Route exact path="/Pdf" component={Pdf}/>
     </Switch>
     </BrowserRouter>
