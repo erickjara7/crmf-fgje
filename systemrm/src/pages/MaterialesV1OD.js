@@ -2,25 +2,16 @@ import React, {Component} from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-import { Button, Modal,ModalBody, ModalHeader, FormGroup, ModalFooter} from 'reactstrap';
+import { Button} from 'reactstrap';
 import '../css/Materiales.css';
 import '../img/logofiscalia.png';
 import Cookies from 'universal-cookie';
 
 
-
-
-//import 'https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css';
-
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 
-const aggsolicitud = "http://localhost:4000/solicitud/add";
-
 const cookies = new Cookies();
-//const [searchTerm,SetSearchTerm] = useState('');
 
-const today = new Date(),
- date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate() +': ' + today.getHours() +':' + today.getMinutes() ;
 
 class MaterialesV1OD extends Component{
     
@@ -28,43 +19,16 @@ class MaterialesV1OD extends Component{
 
     state={
         busqueda:'',
-        datatiposoli:['','Requisición','Préstamo'],
-        
-        data:[],
-        modalInsertar: false,
-        form:{
-            _id:'',
-            fecha:date,
-            solicitante: cookies.get('nombres') +' '+ cookies.get('apellidoP') +' '+ cookies.get('apellidoM'),
-            departamentosoli: cookies.get('departamento'),
-            area:'',
-            tipoSolicitud:'',
-            estado:'Iniciada'
-        }
+        data:[]
     }
 
     peticionGet = async() =>{
         await  axios.get(vermaterial).then(response =>{
              this.setState({data:response.data});
-             console.log(this.state.form.fecha);
-             
-            // console.log(`busqueda=${this.state.busqueda}`);
              
          })
      }
-     peticionPost =async()=>{
-        await axios.post(aggsolicitud, this.state.form).then(response=>{
-            this.modalInsertar();
-            alert(`Se ha creado la solicitud, proceda a elegir los materiales`);
-            this.peticionGet();
-        }).catch(error=>{
-            console.log(error.message);
-        })
-
-     }
-     modalInsertar = () =>{
-        this.setState({modalInsertar: !this.state.modalInsertar})
-    }
+    
 
     handleChange = async e =>{
         e.persist();
@@ -111,8 +75,6 @@ class MaterialesV1OD extends Component{
 
 
     render(){
-
-        const {form} = this.state;
 
         console.log(cookies.get('_id'));
         console.log(cookies.get('nombres'));

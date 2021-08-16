@@ -70,7 +70,7 @@ class Login extends Component{
                     if(respuesta.userType === 'Administrador'){
                         window.location.href="./materiales";
                     }else{
-                        window.location.href="./materialesodep";
+                        window.location.href="./solicitudesodep";
                     }
 
                 }else{

@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { Button, Modal,ModalBody, ModalHeader, FormGroup, ModalFooter} from 'reactstrap';
+import {Card, Accordion} from 'react-bootstrap';
 import '../css/Materiales.css';
 import '../img/logofiscalia.png';
 import Cookies from 'universal-cookie';
@@ -10,17 +11,20 @@ import Cookies from 'universal-cookie';
 
 
 
-//import 'https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css';
+
 
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 
 const aggsolicitud = "http://localhost:4000/solicitud/add";
+
+const versolicitud = "http://localhost:4000/solicitud/getsoli";
 
 const cookies = new Cookies();
 //const [searchTerm,SetSearchTerm] = useState('');
 
 const today = new Date(),
 date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate() +': ' + today.getHours() +':' + today.getMinutes() ;
+
 
 class SolicitudesOD extends Component{
     
@@ -29,7 +33,7 @@ class SolicitudesOD extends Component{
     state={
         busqueda:'',
         datatiposoli:['','Requisición','Préstamo'],
-        
+        modalAggmaterial: false,
         data:[],
         modalInsertar: false,
         form:{
@@ -44,9 +48,10 @@ class SolicitudesOD extends Component{
     }
 
     peticionGet = async() =>{
-        await  axios.get(vermaterial).then(response =>{
+        await  axios.get(versolicitud).then(response =>{
              this.setState({data:response.data});
-             console.log(this.state.form.fecha);
+             console.log(this.state.data);
+            
              
             // console.log(`busqueda=${this.state.busqueda}`);
              
@@ -55,15 +60,29 @@ class SolicitudesOD extends Component{
      peticionPost =async()=>{
         await axios.post(aggsolicitud, this.state.form).then(response=>{
             this.modalInsertar();
-            alert(`Se ha creado la solicitud, proceda a elegir los materiales`);
+            this.modalAggmaterial();
+           
             this.peticionGet();
         }).catch(error=>{
             console.log(error.message);
         })
 
      }
+
+     validaciónmodal =()=>{
+         if ((this.state.form.area === '') || (this.state.form.tipoSolicitud === '')){
+             alert('Favor de llenar todos los campos');
+         }else{
+             this.peticionPost();
+         }
+     }
+
      modalInsertar = () =>{
         this.setState({modalInsertar: !this.state.modalInsertar})
+    }
+
+    modalAggmaterial = () =>{
+        this.setState({modalAggmaterial: !this.state.modalAggmaterial})
     }
 
     handleChange = async e =>{
@@ -94,6 +113,7 @@ class SolicitudesOD extends Component{
         cookies.remove('username',{path:"/"});
         cookies.remove('departamento',{path:"/"});
         cookies.remove('userType',{path:"/"});
+
         window.location.href='./';
     }
 
@@ -121,6 +141,8 @@ class SolicitudesOD extends Component{
         console.log(cookies.get('username'));
         console.log(cookies.get('departamento'));
         console.log(cookies.get('userType'));
+       
+       
 
 
         return(
@@ -157,15 +179,105 @@ class SolicitudesOD extends Component{
                             <Button color="success" onClick={()=>{ this.modalInsertar()}}>Crear Solicitud</Button>
                             <br/>
                             
-                            <label>Solicitante: {cookies.get('nombres')} {cookies.get('apellidoP')}</label>
+                            
                             <br>
                             </br>
+                            <br>
+                            </br>
+
+                            {this.state.data.map((solicitudes,index)  =>{
+
+                                if(solicitudes.estado === 'Iniciada' && (solicitudes.solicitante === cookies.get('nombres') +' '+ cookies.get('apellidoP') +' '+ cookies.get('apellidoM'))){
+                                    return(
+                                        <Accordion key={index}>
+                                            <Card  >
+                                                <Accordion.Toggle as={Card.Header} eventKey={solicitudes}>
+                                                    {solicitudes.departamentosoli + ' / ' + solicitudes.area + ' -- ' + solicitudes.fecha}
+                                                   
+                                                    
+                                                </Accordion.Toggle>
+    
+                                                <Accordion.Collapse eventKey={solicitudes}>
+                                                
+                                                    
+                                                    <Card.Body>
+                                                        
+                                                        <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
+                                                        <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
+                                                        <label><b>Departamento: </b>{solicitudes.departamentosoli}</label><br/>
+                                                        <label><b>Área:</b> {solicitudes.area}</label><br/>
+                                                        <label><b>Tipo de solicitud: </b>{solicitudes.tipoSolicitud}</label><br/>
+                                                        <label><b>Estado de la solicitud:</b> {solicitudes.estado}</label><br/>
+                                                       { cookies.set('_idsolicitud',solicitudes._id,{path:"/"}),
+                                                         console.log(cookies.get('_idsolicitud'))
+                                                       
+                                                       }
+                                                       <label>{cookies.get('_idsolicitud')}</label><br/>
+                                                       <br/><br/>
+                                                       <h5>Materiales:</h5>
+                                                       <table className="table table-bordered">
+                                                           <thead>
+                                                               <tr>
+                                                                   <th>Nombre</th>
+                                                                   <th>Cantidad</th>
+                                                                   <th>Unidad de medida</th>
+                                                               </tr>
+                                                           </thead>
+                                                           <tbody>
+                                                               <tr>
+                                                                   <td>holi</td>
+                                                                   <td>holi</td>
+                                                                   <td>holi</td>
+                                                               </tr>
+
+                                                           </tbody>
+                                                       </table>
+
+                                                    
+                                                    
+                                                        
+                                                        <Button color="primary" href="./materialesodep">Agregar Material</Button>
+                                                        <Button color="success">Enviar</Button>
+                                                        
+                                                    
+    
+                                                    </Card.Body>
+                                                </Accordion.Collapse>
+                                            </Card>
+                                        </Accordion>
+                                    )
+
+                                }
+                                
+                            })}
+
+
+                            
+
+                          {/*}  <div id="accordion">
+                                <div class="card">
+                                    <div class="card-header" id="headingOne">
+                                    <h5 class="mb-0">
+                                        <button className="btn btn-link" data-toggle="collapse.show" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Collapsible Group Item #1
+                                        </button>
+                                    </h5>
+                                    </div>
+
+                                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                    <div class="card-body">
+                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                    </div>
+                                    </div>
+                                </div>
+                              
+                            </div>*/}
 
 
 
                            
-                            <Button color="success">Enviar</Button>
-                            <Button color="primary" href="./materialesodep">Actualizar</Button>
+                           
+                           
                             <br></br>
                             <br></br>
                        
@@ -209,11 +321,28 @@ class SolicitudesOD extends Component{
                              </ModalBody>
 
                              <ModalFooter>
-                                <button className="btn btn-success" onClick={ () => {this.peticionPost() }}>Es correcto</button>
+                                <button className="btn btn-success" onClick={ () => {this.validaciónmodal() }}>Es correcto</button>
                                 <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>Cancelar</button>
 
                              </ModalFooter>
 
+                         </Modal>
+
+                         <Modal isOpen={this.state.modalAggmaterial}>
+                             
+                             <ModalBody>
+                                Se ha creado la solicitud, proceda a elegir los materiales.
+                                
+                             </ModalBody>
+                             <ModalFooter>
+                             <Button color="primary" href="./materialesodep">si</Button>
+                             <button className="btn btn-danger" onClick={()=> this.modalAggmaterial()}>No</button>
+
+                            
+                                 
+                             </ModalFooter>
+
+                            
                          </Modal>
                             
 
