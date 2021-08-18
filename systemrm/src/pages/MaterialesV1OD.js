@@ -2,13 +2,16 @@ import React, {Component} from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-import { Button} from 'reactstrap';
+import { Button,Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import '../css/Materiales.css';
 import '../img/logofiscalia.png';
 import Cookies from 'universal-cookie';
 
 
+
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
+const aggmatesoli = "http://localhost:4000/materialsolicitado/add";
+
 
 const cookies = new Cookies();
 
@@ -19,15 +22,40 @@ class MaterialesV1OD extends Component{
 
     state={
         busqueda:'',
-        data:[]
+        modalInsertar: false,
+        data:[],
+        form:{
+            idSolicitud:cookies.get('isolicitud'),
+            idMaterial: '',
+            nombreMaterial:'',
+            unidadMedidaMS:'',
+            cantidadsolicitada:''
+        }
     }
 
     peticionGet = async() =>{
         await  axios.get(vermaterial).then(response =>{
-             this.setState({data:response.data});
-             
+             this.setState({data:response.data});  
          })
      }
+
+     peticionPostms  = async() =>{
+        await axios.post(aggmatesoli, this.state.form).then(response=>{
+            this.modalInsertar();
+            alert('Material agregado exitosamente');
+           
+            //this.peticionGet();
+        }).catch(error=>{
+            alert('Error al guardar, intentelo nuevamente');
+            //console.log(error.message);
+        })
+
+
+     }
+
+     modalInsertar = () =>{
+        this.setState({modalInsertar: !this.state.modalInsertar})
+    }
     
 
     handleChange = async e =>{
@@ -48,6 +76,12 @@ class MaterialesV1OD extends Component{
          await this.setState({busqueda: e.target.value});
          console.log(`busqueda=${this.state.busqueda}`);
      }
+
+     listo =()=>{
+        cookies.remove('isolicitud',{path:"/"});
+      
+    }
+
     
 
     cerrarSesion=()=>{
@@ -58,6 +92,7 @@ class MaterialesV1OD extends Component{
         cookies.remove('username',{path:"/"});
         cookies.remove('departamento',{path:"/"});
         cookies.remove('userType',{path:"/"});
+        cookies.remove('isolicitud',{path:"/"});
         window.location.href='./';
     }
 
@@ -75,6 +110,7 @@ class MaterialesV1OD extends Component{
 
 
     render(){
+        const {form} = this.state;
 
         console.log(cookies.get('_id'));
         console.log(cookies.get('nombres'));
@@ -83,6 +119,9 @@ class MaterialesV1OD extends Component{
         console.log(cookies.get('username'));
         console.log(cookies.get('departamento'));
         console.log(cookies.get('userType'));
+        //cookies.remove('isolicitud',{path:"/"});
+       
+        console.log(cookies.get('isolicitud'));
 
 
         return(
@@ -112,7 +151,7 @@ class MaterialesV1OD extends Component{
                 <h2>Materiales disponibles</h2>
                 <br></br>
                 <br></br>
-                <Button color="primary" href="./materialesodep">Actualizar</Button>
+                <Button color="primary" href="./solicitudesodep" onClick={this.listo()}>Listo</Button>
                 <br></br> 
                 <br></br>
 
@@ -162,7 +201,7 @@ class MaterialesV1OD extends Component{
                                     <td>{material.unidadMedida}</td>
                                     <td>{material.categoria}</td>
                                     <td>
-                                        <Button color="danger">Agregar</Button>
+                                        <Button color="danger" onClick={()=> this.modalInsertar()}>Agregar</Button>
                                     </td>
                                 </tr>
                                 )
@@ -179,7 +218,7 @@ class MaterialesV1OD extends Component{
                                     <td>{material.unidadMedida}</td>
                                     <td>{material.categoria}</td>
                                     <td>
-                                        <Button color="danger">Agregar</Button>
+                                        <Button color="danger" onClick={()=> this.modalInsertar()}>Agregar</Button>
                                     </td>
                                 </tr>
                                 )
@@ -198,7 +237,7 @@ class MaterialesV1OD extends Component{
                                         <td>{material.unidadMedida}</td>
                                         <td>{material.categoria}</td>
                                         <td>
-                                            <Button color="danger">Agregar</Button>
+                                            <Button color="danger" onClick={()=> this.modalInsertar()}>Agregar</Button>
                                         </td>
                                     </tr>
                                 )
@@ -209,6 +248,42 @@ class MaterialesV1OD extends Component{
                         </tbody>
 
                     </table>
+
+
+                    <Modal isOpen={this.state.modalInsertar}>
+
+                         <ModalHeader style={{display: 'block'}} >
+                            <span style={{float:'left'}}>Llene los campos área y tipo de solicitud</span>
+                        </ModalHeader>
+
+                        <ModalBody>
+                            <div>
+                                <label htmlFor='idSolicitud'>Número de solicitud:</label><br/>
+                                <input class="form-control" type="text" name="idSolicitud" id="idSolicitud" readOnly  value={form.idSolicitud}></input>
+                                
+                                <label htmlFor='idMaterial'>idmaterial:</label><br/>
+                                <input class="form-control" type="text" name="idMaterial" id="idMaterial" readOnly  value={this.state.data._id}></input>
+
+                                <label htmlFor='nombreMaterial'>Nombre:</label><br/>
+                                <input class="form-control" type="text" name="nombreMaterial" id="nombreMaterial" onChange ={this.handleChange} readOnly  value={form.nombre}></input>
+
+                                <label htmlFor='unidadMedidaMS'>unidadMedida:</label><br/>
+                                <input class="form-control" type="text" name="unidadMedidaMS" id="unidadMedidaMS" readOnly  value={form.unidadMedida}></input>
+
+
+                                
+                                
+                            </div>
+
+                        </ModalBody>
+
+                        <ModalFooter>
+                                <button className="btn btn-success" onClick={()=>this.peticionPostms()}>Es correcto</button>
+                                <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>Cancelar</button>
+
+                        </ModalFooter>
+
+                    </Modal>
                     
             </div>
 

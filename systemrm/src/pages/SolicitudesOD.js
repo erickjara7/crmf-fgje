@@ -19,6 +19,8 @@ const aggsolicitud = "http://localhost:4000/solicitud/add";
 
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
 
+const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
+
 const cookies = new Cookies();
 //const [searchTerm,SetSearchTerm] = useState('');
 
@@ -32,8 +34,9 @@ class SolicitudesOD extends Component{
 
     state={
         busqueda:'',
+        solicitudid:'',
         datatiposoli:['','Requisición','Préstamo'],
-        modalAggmaterial: false,
+        datamate:[],
         data:[],
         modalInsertar: false,
         form:{
@@ -50,21 +53,29 @@ class SolicitudesOD extends Component{
     peticionGet = async() =>{
         await  axios.get(versolicitud).then(response =>{
              this.setState({data:response.data});
-             console.log(this.state.data);
+             //console.log(this.state.data);
             
              
             // console.log(`busqueda=${this.state.busqueda}`);
              
          })
      }
+
+     peticiongetmatesoli = async() =>{
+         await axios.get(vermaterialsoli).then(response =>{
+             this.setState({datamate:response.data});
+            
+         })
+     }
      peticionPost =async()=>{
         await axios.post(aggsolicitud, this.state.form).then(response=>{
             this.modalInsertar();
-            this.modalAggmaterial();
+            alert('Se ha creado la solicitud, proceda a elegir los materiales.');
            
             this.peticionGet();
         }).catch(error=>{
-            console.log(error.message);
+            alert('Error al guardar, intentelo nuevamente');
+            //console.log(error.message);
         })
 
      }
@@ -81,10 +92,20 @@ class SolicitudesOD extends Component{
         this.setState({modalInsertar: !this.state.modalInsertar})
     }
 
-    modalAggmaterial = () =>{
-        this.setState({modalAggmaterial: !this.state.modalAggmaterial})
+    seleccionarsolicitud =(solicitudes)=>{
+        cookies.set('isolicitud',solicitudes._id,{path:"/"})
+        this.setState({
+            
+            form:{
+                
+                _id: cookies.get('isolicitud')
+            }
+        })
+          
     }
 
+    
+    
     handleChange = async e =>{
         e.persist();
         await this.setState({
@@ -119,6 +140,7 @@ class SolicitudesOD extends Component{
 
     componentDidMount(){
         this.peticionGet();
+        this.peticiongetmatesoli();
         if (!cookies.get('username')){
             window.location.href="./";
         }else if(cookies.get('userType') === 'Administrador'){
@@ -187,7 +209,7 @@ class SolicitudesOD extends Component{
 
                             {this.state.data.map((solicitudes,index)  =>{
 
-                                if(solicitudes.estado === 'Iniciada' && (solicitudes.solicitante === cookies.get('nombres') +' '+ cookies.get('apellidoP') +' '+ cookies.get('apellidoM'))){
+                                if((solicitudes.estado === 'Iniciada') && (solicitudes.solicitante === cookies.get('nombres') +' '+ cookies.get('apellidoP') +' '+ cookies.get('apellidoM'))){
                                     return(
                                         <Accordion key={index}>
                                             <Card  >
@@ -208,11 +230,11 @@ class SolicitudesOD extends Component{
                                                         <label><b>Área:</b> {solicitudes.area}</label><br/>
                                                         <label><b>Tipo de solicitud: </b>{solicitudes.tipoSolicitud}</label><br/>
                                                         <label><b>Estado de la solicitud:</b> {solicitudes.estado}</label><br/>
-                                                       { cookies.set('_idsolicitud',solicitudes._id,{path:"/"}),
-                                                         console.log(cookies.get('_idsolicitud'))
+                                                       { /*cookies.set('isolicitud',solicitudes._id,{path:"/"})}
+                                                         {/*console.log(cookies.get('isolicitud')) */}
                                                        
-                                                       }
-                                                       <label>{cookies.get('_idsolicitud')}</label><br/>
+                                                      {}
+                                                       <label><b>idd:</b> {cookies.get('isolicitud')}</label><br/>
                                                        <br/><br/>
                                                        <h5>Materiales:</h5>
                                                        <table className="table table-bordered">
@@ -224,11 +246,17 @@ class SolicitudesOD extends Component{
                                                                </tr>
                                                            </thead>
                                                            <tbody>
-                                                               <tr>
-                                                                   <td>holi</td>
-                                                                   <td>holi</td>
-                                                                   <td>holi</td>
-                                                               </tr>
+                                                               { this.state.datamate.map(material =>{
+                                                                   return(
+                                                                        <tr>
+                                                                            <td>{material.nombreMaterial}</td>
+                                                                            <td>{material.cantidadsolicitada}</td>
+                                                                            <td>{material.unidadMedidaMS}</td>
+                                                                        </tr>
+
+                                                                   )
+                                                               })}
+                                                            
 
                                                            </tbody>
                                                        </table>
@@ -236,14 +264,16 @@ class SolicitudesOD extends Component{
                                                     
                                                     
                                                         
-                                                        <Button color="primary" href="./materialesodep">Agregar Material</Button>
+                                                        <Button color="primary" href="./materialesodep" onClick={()=>this.seleccionarsolicitud()} >Agregar Material</Button>
                                                         <Button color="success">Enviar</Button>
                                                         
                                                     
     
                                                     </Card.Body>
+                                                    
                                                 </Accordion.Collapse>
                                             </Card>
+                                           
                                         </Accordion>
                                     )
 
@@ -252,31 +282,6 @@ class SolicitudesOD extends Component{
                             })}
 
 
-                            
-
-                          {/*}  <div id="accordion">
-                                <div class="card">
-                                    <div class="card-header" id="headingOne">
-                                    <h5 class="mb-0">
-                                        <button className="btn btn-link" data-toggle="collapse.show" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        Collapsible Group Item #1
-                                        </button>
-                                    </h5>
-                                    </div>
-
-                                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                                    <div class="card-body">
-                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                    </div>
-                                    </div>
-                                </div>
-                              
-                            </div>*/}
-
-
-
-                           
-                           
                            
                             <br></br>
                             <br></br>
@@ -328,22 +333,7 @@ class SolicitudesOD extends Component{
 
                          </Modal>
 
-                         <Modal isOpen={this.state.modalAggmaterial}>
-                             
-                             <ModalBody>
-                                Se ha creado la solicitud, proceda a elegir los materiales.
-                                
-                             </ModalBody>
-                             <ModalFooter>
-                             <Button color="primary" href="./materialesodep">si</Button>
-                             <button className="btn btn-danger" onClick={()=> this.modalAggmaterial()}>No</button>
 
-                            
-                                 
-                             </ModalFooter>
-
-                            
-                         </Modal>
                             
 
 
