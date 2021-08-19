@@ -90,6 +90,7 @@ class Login extends Component{
     
     aunnotengocuenta=async()=>{
         alert("Favor de pasar al departamento de Recursos Materiales a registrarse.");
+        
     }
     olvidecontraseña=async()=>{
         alert("Favor de pasar al departamento de Recursos Materiales a solicitar la información correspondiente.");

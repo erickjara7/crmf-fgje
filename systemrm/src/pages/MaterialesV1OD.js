@@ -82,6 +82,19 @@ class MaterialesV1OD extends Component{
       
     }
 
+    seleccionarmaterial = (material) =>{
+        this.setState({
+            tipoModal:'actualizar',
+            form:{
+            idMaterial:material._id,
+            nombreMaterial:material.nombreMaterial,
+            unidadMedidaMS:material.unidadMedidaMS,
+            cantidadsolicitada:material.cantidadsolicitada,
+            }
+        })
+
+    }
+
     
 
     cerrarSesion=()=>{
@@ -92,7 +105,7 @@ class MaterialesV1OD extends Component{
         cookies.remove('username',{path:"/"});
         cookies.remove('departamento',{path:"/"});
         cookies.remove('userType',{path:"/"});
-        cookies.remove('isolicitud',{path:"/"});
+        
         window.location.href='./';
     }
 
@@ -134,7 +147,7 @@ class MaterialesV1OD extends Component{
 
                     <ul>
 
-                        <li><a href="./solicitudesodep">Solicitudes</a></li>
+                        
                         <li><a href="./materialesodep">Materiales</a></li>
                         <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
@@ -201,7 +214,7 @@ class MaterialesV1OD extends Component{
                                     <td>{material.unidadMedida}</td>
                                     <td>{material.categoria}</td>
                                     <td>
-                                        <Button color="danger" onClick={()=> this.modalInsertar()}>Agregar</Button>
+                                        <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
                                     </td>
                                 </tr>
                                 )
@@ -218,7 +231,7 @@ class MaterialesV1OD extends Component{
                                     <td>{material.unidadMedida}</td>
                                     <td>{material.categoria}</td>
                                     <td>
-                                        <Button color="danger" onClick={()=> this.modalInsertar()}>Agregar</Button>
+                                        <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
                                     </td>
                                 </tr>
                                 )
@@ -237,7 +250,7 @@ class MaterialesV1OD extends Component{
                                         <td>{material.unidadMedida}</td>
                                         <td>{material.categoria}</td>
                                         <td>
-                                            <Button color="danger" onClick={()=> this.modalInsertar()}>Agregar</Button>
+                                            <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
                                         </td>
                                     </tr>
                                 )
@@ -262,13 +275,16 @@ class MaterialesV1OD extends Component{
                                 <input class="form-control" type="text" name="idSolicitud" id="idSolicitud" readOnly  value={form.idSolicitud}></input>
                                 
                                 <label htmlFor='idMaterial'>idmaterial:</label><br/>
-                                <input class="form-control" type="text" name="idMaterial" id="idMaterial" readOnly  value={this.state.data._id}></input>
+                                <input class="form-control" type="text" name="idMaterial" id="idMaterial"   value={form.idMaterial}></input>
 
                                 <label htmlFor='nombreMaterial'>Nombre:</label><br/>
-                                <input class="form-control" type="text" name="nombreMaterial" id="nombreMaterial" onChange ={this.handleChange} readOnly  value={form.nombre}></input>
+                                <input class="form-control" type="text" name="nombreMaterial" id="nombreMaterial" onChange ={this.handleChange}   value={form.nombre}></input>
 
                                 <label htmlFor='unidadMedidaMS'>unidadMedida:</label><br/>
-                                <input class="form-control" type="text" name="unidadMedidaMS" id="unidadMedidaMS" readOnly  value={form.unidadMedida}></input>
+                                <input class="form-control" type="text" name="unidadMedidaMS" id="unidadMedidaMS"   value={form.unidadMedida}></input>
+
+                                <label htmlFor='cantidadsolicitada'>Cantidad requerida:</label><br/>
+                                <input class="form-control" type="text" name="cantidadsolicitada" id="cantidadsolicitada"   value={form.cantidadsolicitada}></input>
 
 
                                 

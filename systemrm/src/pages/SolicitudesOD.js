@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { Button, Modal,ModalBody, ModalHeader, FormGroup, ModalFooter} from 'reactstrap';
-import {Card, Accordion} from 'react-bootstrap';
+import {Card, Accordion, ThemeProvider} from 'react-bootstrap';
 import '../css/Materiales.css';
 import '../img/logofiscalia.png';
 import Cookies from 'universal-cookie';
@@ -93,14 +93,20 @@ class SolicitudesOD extends Component{
     }
 
     seleccionarsolicitud =(solicitudes)=>{
-        cookies.set('isolicitud',solicitudes._id,{path:"/"})
+       
         this.setState({
             
             form:{
-                
-                _id: cookies.get('isolicitud')
+                _id: solicitudes._id
             }
+            
         })
+       cookies.set('isolicitud',this.state.form._id,{path:"/"})
+       console.log(`log: ${this.state.form._id}`)
+       if(cookies.get('isolicitud')){
+        window.location.href="./materialesodep";
+       }
+       
           
     }
 
@@ -178,7 +184,7 @@ class SolicitudesOD extends Component{
                     <ul>
                         
                         <li><a href="./solicitudesodep">Solicitudes</a></li>
-                        <li><a href="./materialesodep">Materiales</a></li>
+                        
                         
                         <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
@@ -220,7 +226,7 @@ class SolicitudesOD extends Component{
                                                 </Accordion.Toggle>
     
                                                 <Accordion.Collapse eventKey={solicitudes}>
-                                                
+                                              
                                                     
                                                     <Card.Body>
                                                         
@@ -230,11 +236,23 @@ class SolicitudesOD extends Component{
                                                         <label><b>Área:</b> {solicitudes.area}</label><br/>
                                                         <label><b>Tipo de solicitud: </b>{solicitudes.tipoSolicitud}</label><br/>
                                                         <label><b>Estado de la solicitud:</b> {solicitudes.estado}</label><br/>
-                                                       { /*cookies.set('isolicitud',solicitudes._id,{path:"/"})}
-                                                         {/*console.log(cookies.get('isolicitud')) */}
+                                                       { /* 
+                                                       solicitudes = solicitudes,
+                                                       this.state.solicitudid = solicitudes._id
                                                        
-                                                      {}
-                                                       <label><b>idd:</b> {cookies.get('isolicitud')}</label><br/>
+
+                                                       
+                                                       
+
+                                                                                   
+                                                       
+                                                       
+                                                       /*cookies.set('isolicitud',solicitudes._id,{path:"/"})}
+                                                       console.log(cookies.get('isolicitud')) */}
+                                                       
+                                                      
+                                                       <label><b>idd:</b> {solicitudes._id}</label><br/>
+                                                       
                                                        <br/><br/>
                                                        <h5>Materiales:</h5>
                                                        <table className="table table-bordered">
@@ -261,23 +279,28 @@ class SolicitudesOD extends Component{
                                                            </tbody>
                                                        </table>
 
-                                                    
-                                                    
-                                                        
-                                                        <Button color="primary" href="./materialesodep" onClick={()=>this.seleccionarsolicitud()} >Agregar Material</Button>
+                                                       <Button color="primary" onClick={()=>this.seleccionarsolicitud(solicitudes)} >Agregar Material</Button>
                                                         <Button color="success">Enviar</Button>
+                                                    
                                                         
+                                                       
                                                     
     
                                                     </Card.Body>
                                                     
                                                 </Accordion.Collapse>
+                                               
+                                                        
                                             </Card>
                                            
                                         </Accordion>
+                                        
                                     )
+                                    
 
                                 }
+                                
+                                
                                 
                             })}
 
