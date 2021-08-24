@@ -67,7 +67,16 @@ class SolicitudesOD extends Component{
             
          })
      }
-     peticionPost =async()=>{
+
+     peticionPost=async()=>{
+        await axios.post(aggsolicitud, this.state.form).then(response=>{
+            this.modalInsertar();
+            this.peticionGet();
+        }).catch(error=>{
+            console.log(error.message);
+        })
+    }
+    /* peticionPost = async()=>{
         await axios.post(aggsolicitud, this.state.form).then(response=>{
             this.modalInsertar();
             alert('Se ha creado la solicitud, proceda a elegir los materiales.');
@@ -78,7 +87,7 @@ class SolicitudesOD extends Component{
             //console.log(error.message);
         })
 
-     }
+     }*/
 
      validaciónmodal =()=>{
          if ((this.state.form.area === '') || (this.state.form.tipoSolicitud === '')){
@@ -330,11 +339,11 @@ class SolicitudesOD extends Component{
                                     <input class="form-control" type="text" name="departamentosoli" id="departamentosoli" readOnly onChange ={this.handleChange} value={form.departamentosoli}></input>
                                     <br/>
                                     <label htmlFor='area'>Area:</label><br/>
-                                    <input class="form-control" type="text" name="area" id="area" onChange ={this.handleChange} value={form?form.area:''}></input>
+                                    <input class="form-control" type="text" name="area" id="area" onChange ={this.handleChange} value={form.area}></input>
                                     <br/>
 
                                     <label htmlFor='tipoSolicitud'>Tipo de Solicitud:</label><br/>
-                                    <select class="form-control" type="text" name="tipoSolicitud" id="tipoSolicitud" onChange ={this.handleChange} value={form?form.tipoSolicitud:''}>
+                                    <select class="form-control" type="text" name="tipoSolicitud" id="tipoSolicitud" onChange ={this.handleChange} value={form.tipoSolicitud}>
                                         {this.state.datatiposoli.map(elemento =>(
                                         <option>{elemento}</option>
                                             ))}
@@ -349,7 +358,7 @@ class SolicitudesOD extends Component{
                              </ModalBody>
 
                              <ModalFooter>
-                                <button className="btn btn-success" onClick={ () => {this.validaciónmodal() }}>Es correcto</button>
+                                <button className="btn btn-success" onClick={ () => {this.peticionPost() }}>Es correcto</button>
                                 <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>Cancelar</button>
 
                              </ModalFooter>
@@ -364,7 +373,8 @@ class SolicitudesOD extends Component{
             </div>
            
        
-        );
+     
+           );
     }
 }
 export default SolicitudesOD;
