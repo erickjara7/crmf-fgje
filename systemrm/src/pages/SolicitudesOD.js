@@ -13,11 +13,13 @@ import Cookies from 'universal-cookie';
 
 
 
-const vermaterial = "http://localhost:4000/materiales/getmaterial";
+
 
 const aggsolicitud = "http://localhost:4000/solicitud/add";
 
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
+
+const putsoli = "http://localhost:4000/solicitud/";
 
 const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 
@@ -39,6 +41,7 @@ class SolicitudesOD extends Component{
         datamate:[],
         data:[],
         modalInsertar: false,
+        modalEnviarsoli: false,
         form:{
             _id:'',
             fecha:date,
@@ -47,6 +50,8 @@ class SolicitudesOD extends Component{
             area:'',
             tipoSolicitud:'',
             estado:'Iniciada'
+           
+
         }
     }
 
@@ -68,14 +73,17 @@ class SolicitudesOD extends Component{
          })
      }
 
-     peticionPost=async()=>{
-        await axios.post(aggsolicitud, this.state.form).then(response=>{
-            this.modalInsertar();
-            this.peticionGet();
-        }).catch(error=>{
-            console.log(error.message);
-        })
-    }
+     peticionPutestadoSoli = ()=>{
+         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
+             this.modalEnviarsoli();
+             this.peticionGet();
+         })
+            
+         
+
+     }
+
+ 
     /* peticionPost = async()=>{
         await axios.post(aggsolicitud, this.state.form).then(response=>{
             this.modalInsertar();
@@ -101,6 +109,28 @@ class SolicitudesOD extends Component{
         this.setState({modalInsertar: !this.state.modalInsertar})
     }
 
+    modalEnviarsoli =()=>{
+        this.setState({modalEnviarsoli: !this.state.modalEnviarsoli})
+
+    }
+
+    seleccionarsoliput =(solicitudes)=>{
+        this.setState({
+            form:{
+                _id:solicitudes._id,
+                estado:'Pendiente'
+            }
+        })
+        console.log(this.state.form._id)
+        if(this.state.form._id === ''){
+
+        }else{
+            this.setState({modalEnviarsoli :true})
+            //alert('elsee');
+        }
+
+    }
+
     seleccionarsolicitud =(solicitudes)=>{
        
         this.setState({
@@ -112,9 +142,11 @@ class SolicitudesOD extends Component{
         })
        cookies.set('isolicitud',this.state.form._id,{path:"/"})
        console.log(`log: ${this.state.form._id}`)
-       if(cookies.get('isolicitud')){
+       if(cookies.get('isolicitud') && solicitudes.estado==='Iniciada'){
         window.location.href="./materialesodep";
        }
+
+       
        
           
     }
@@ -224,7 +256,7 @@ class SolicitudesOD extends Component{
 
                             {this.state.data.map((solicitudes,index)  =>{
 
-                                if((solicitudes.estado === 'Iniciada') && (solicitudes.solicitante === cookies.get('nombres') +' '+ cookies.get('apellidoP') +' '+ cookies.get('apellidoM'))){
+                                if((solicitudes.estado === 'Iniciada' || solicitudes.estado ==='Pendiente') && (solicitudes.solicitante === cookies.get('nombres') +' '+ cookies.get('apellidoP') +' '+ cookies.get('apellidoM'))){
                                     return(
                                         <Accordion key={index}>
                                             <Card  >
@@ -274,14 +306,18 @@ class SolicitudesOD extends Component{
                                                            </thead>
                                                            <tbody>
                                                                { this.state.datamate.map(material =>{
-                                                                   return(
-                                                                        <tr>
-                                                                            <td>{material.nombreMaterial}</td>
-                                                                            <td>{material.cantidadsolicitada}</td>
-                                                                            <td>{material.unidadMedidaMS}</td>
-                                                                        </tr>
+                                                                   if (material.idSolicitud === solicitudes._id){
 
-                                                                   )
+                                                                        return(
+                                                                            <tr>
+                                                                                <td>{material.nombreMaterial}</td>
+                                                                                <td>{material.cantidadsolicitada}</td>
+                                                                                <td>{material.unidadMedidaMS}</td>
+                                                                            </tr>
+
+                                                                    )
+                                                                   }
+                                                                  
                                                                })}
                                                             
 
@@ -289,7 +325,7 @@ class SolicitudesOD extends Component{
                                                        </table>
 
                                                        <Button color="primary" onClick={()=>this.seleccionarsolicitud(solicitudes)} >Agregar Material</Button>
-                                                        <Button color="success">Enviar</Button>
+                                                        <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}} >Enviar</Button>
                                                     
                                                         
                                                        
@@ -364,6 +400,24 @@ class SolicitudesOD extends Component{
                              </ModalFooter>
 
                          </Modal>
+
+            {/*MODAL SEGURO QUE DESEA ENVIAR ESTA SOLICITUD???*/}
+                        <Modal isOpen={this.state.modalEnviarsoli}>
+                            <ModalBody>
+                                He verificado mis datos y terminé de elegir materiales.
+
+                                Estoy seguro de enviar esta solicitud.
+                                
+
+                            </ModalBody>
+                            <ModalFooter>
+                                <button className="btn btn-success" onClick={()=>this.peticionPutestadoSoli()}>Si</button>
+                                <button className="btn btn-danger" onClick={()=> this.modalEnviarsoli()}>No</button>
+                            </ModalFooter>
+
+
+                        </Modal>
+
 
 
                             

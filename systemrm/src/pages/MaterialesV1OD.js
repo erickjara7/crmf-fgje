@@ -25,11 +25,16 @@ class MaterialesV1OD extends Component{
         modalInsertar: false,
         data:[],
         form:{
+            _id:'',
+            nombre:'',
+            existencia:'',
+            unidadMedida:'',
+            categoria:'',
+
             idSolicitud:cookies.get('isolicitud'),
-            idMaterial: '',
-            nombreMaterial:'',
-            unidadMedidaMS:'',
-            cantidadsolicitada:''
+
+            idMaterial:'',
+            
         }
     }
 
@@ -87,9 +92,10 @@ class MaterialesV1OD extends Component{
             tipoModal:'actualizar',
             form:{
             idMaterial:material._id,
-            nombreMaterial:material.nombreMaterial,
-            unidadMedidaMS:material.unidadMedidaMS,
-            cantidadsolicitada:material.cantidadsolicitada,
+            nombreMaterial:material.nombre,
+            unidadMedidaMS:material.unidadMedida,
+            idSolicitud: this.state.form.idSolicitud
+            
             }
         })
 
@@ -194,7 +200,8 @@ class MaterialesV1OD extends Component{
                         <thead>
                             
                             <tr class="tablaencabezado">
-                            
+
+                                
                                 <th>Nombre</th>
                                 <th>Existencia</th>
                                 <th>Unidad de medida</th>
@@ -208,7 +215,7 @@ class MaterialesV1OD extends Component{
                             if (this.state.busqueda === "") {
                                 return(
                                     <tr>
-                                        
+                                    
                                     <td>{material.nombre}</td>
                                     <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
                                     <td>{material.unidadMedida}</td>
@@ -225,7 +232,7 @@ class MaterialesV1OD extends Component{
                             {
                                 return(
                                     <tr>
-                                        
+                                      
                                     <td>{material.nombre}</td>
                                     <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
                                     <td>{material.unidadMedida}</td>
@@ -244,13 +251,13 @@ class MaterialesV1OD extends Component{
                         
                                     <tr>
                                     
-                                        
+                                       
                                         <td>{material.nombre}</td>
                                         <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
                                         <td>{material.unidadMedida}</td>
                                         <td>{material.categoria}</td>
                                         <td>
-                                            <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
+                                            <Button color="danger" onClick={()=> {this.seleccionarmaterial(material); this.modalInsertar()} }>Agregar</Button>
                                         </td>
                                     </tr>
                                 )
@@ -266,25 +273,31 @@ class MaterialesV1OD extends Component{
                     <Modal isOpen={this.state.modalInsertar}>
 
                          <ModalHeader style={{display: 'block'}} >
-                            <span style={{float:'left'}}>Llene los campos área y tipo de solicitud</span>
+                            <span style={{float:'left'}}>Usted ha elegido:</span>
                         </ModalHeader>
 
                         <ModalBody>
                             <div>
-                                <label htmlFor='idSolicitud'>Número de solicitud:</label><br/>
-                                <input class="form-control" type="text" name="idSolicitud" id="idSolicitud" readOnly  value={form.idSolicitud}></input>
+                               {/* <label htmlFor='idSolicitud'>Número de solicitud:</label><br/>
+                                <input class="form-control" type="text" name="idSolicitud" id="idSolicitud" readOnly  value={form?form.idSolicitud:''}></input>
+
+                              
                                 
                                 <label htmlFor='idMaterial'>idmaterial:</label><br/>
-                                <input class="form-control" type="text" name="idMaterial" id="idMaterial"   value={form.idMaterial}></input>
+                                <input class="form-control" type="text" name="idMaterial" id="idMaterial" readOnly  value={form?form.idMaterial:''}></input>
 
                                 <label htmlFor='nombreMaterial'>Nombre:</label><br/>
-                                <input class="form-control" type="text" name="nombreMaterial" id="nombreMaterial" onChange ={this.handleChange}   value={form.nombre}></input>
+                                <input class="form-control" type="text" name="nombreMaterial" id="nombreMaterial" readOnly  value={form?form.nombreMaterial:''}></input>
 
                                 <label htmlFor='unidadMedidaMS'>unidadMedida:</label><br/>
-                                <input class="form-control" type="text" name="unidadMedidaMS" id="unidadMedidaMS"   value={form.unidadMedida}></input>
+                                <input class="form-control" type="text" name="unidadMedidaMS" id="unidadMedidaMS"  readOnly value={form?form.unidadMedidaMS:''}></input>*/}
+
+                                
+
+                                <label><b>{form?form.nombreMaterial:''} por {form?form.unidadMedidaMS:''}</b></label><br/> 
 
                                 <label htmlFor='cantidadsolicitada'>Cantidad requerida:</label><br/>
-                                <input class="form-control" type="text" name="cantidadsolicitada" id="cantidadsolicitada"   value={form.cantidadsolicitada}></input>
+                                <input class="form-control" type="number" name="cantidadsolicitada" id="cantidadsolicitada"  onChange ={this.handleChange}  value={form.cantidadsolicitada}></input>
 
 
                                 
