@@ -1,15 +1,83 @@
 import React, {Component} from 'react';
 import Cookies from 'universal-cookie';
 import jsPDF from 'jspdf';
-import { Button} from 'reactstrap';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
+import {Card, Accordion} from 'react-bootstrap';
+import axios from 'axios';
+
 
 
 const cookies = new Cookies();
 
+const versolicitud = "http://localhost:4000/solicitud/getsoli";
+const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
+const putsoli = "http://localhost:4000/solicitud/";
 
 
 class SolicitudesRM extends Component{
 
+    state={
+        
+        data:[],
+        datamate:[],
+        modalEntregarMaterial: false,
+        form:{
+            _id:''
+        }
+    }
+
+    peticiongetsoli = async()=>{
+        await axios.get(versolicitud).then(response=>{
+            this.setState({data:response.data})
+        })
+        console.log(this.state.data);
+
+    }
+
+    peticiongetmatesoli = async()=>{
+        await axios.get(vermaterialsoli).then(response=>{
+            this.setState({datamate: response.data});
+        })
+
+    }
+
+    peticionPutestadoSoli = ()=>{
+        axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
+            this.modalEntregarMaterial();
+            this.peticiongetsoli();
+        })
+           
+    }
+
+    modalEntregarMaterial =()=>{
+        this.setState({modalEntregarMaterial: !this.state.modalEntregarMaterial})
+
+    }
+
+    seleccionarsoliput =(solicitudes)=>{
+        this.setState({
+            form:{
+                _id:solicitudes._id,
+                estado:'Entregada'
+            }
+        })
+        console.log(this.state.form._id)
+        if(this.state.form._id === ''){
+
+        }else{
+           // if(solicitudes.estado === 'Iniciada'){
+                this.setState({modalEntregarMaterial :true})
+            //}else{
+
+            //}
+            //alert('elsee');
+        }
+
+    }
+
+
+
+    
 
 
 
@@ -25,6 +93,8 @@ class SolicitudesRM extends Component{
     }
 
     componentDidMount(){
+        this.peticiongetmatesoli();
+        this.peticiongetsoli();
         if (!cookies.get('username')){
             window.location.href="./";
         }else if(cookies.get('userType') === 'Usuario'){
@@ -62,6 +132,117 @@ class SolicitudesRM extends Component{
                 <h2>Solicitudes</h2>
                 <br></br>
                 <br></br>
+                
+
+
+                <br/>
+                <br/>
+
+                {this.state.data.map((solicitudes,index)=>{
+                    if(solicitudes.estado === 'Pendiente'){
+                        return(
+                            <Accordion key={index}>
+                                <Card>
+                                    <Accordion.Toggle as={Card.Header} eventKey={solicitudes}>
+                                        {solicitudes.departamentosoli + ' / ' + solicitudes.area + ' -- ' + solicitudes.fecha}
+                                    </Accordion.Toggle>
+
+                                    <Accordion.Collapse eventKey={solicitudes}>
+                                        <Card.Body>
+                                            <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
+                                            <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
+                                            <label><b>Departamento: </b>{solicitudes.departamentosoli}</label><br/>
+                                            <label><b>Área:</b> {solicitudes.area}</label><br/>
+                                            <label><b>Tipo de solicitud: </b>{solicitudes.tipoSolicitud}</label><br/>
+                                            <label><b>Estado de la solicitud:</b> {solicitudes.estado}</label><br/>
+
+                                            <label><b>idd:</b> {solicitudes._id}</label><br/>
+                                                       
+                                            <br/><br/>
+                                            <h5>Materiales:</h5>
+
+                                            <table className="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nombre</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Unidad de medida</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {this.state.datamate.map(material=>{
+                                                        if(material.idSolicitud === solicitudes._id){
+                                                            return(
+                                                                <tr>
+                                                                    <td>{material.nombreMaterial}</td>
+                                                                    <td>{material.cantidadsolicitada}</td>
+                                                                    <td>{material.unidadMedidaMS}</td>
+                                                                 </tr>
+                                                            )
+                                                        }
+                                                    })}
+                                                    
+
+                                                </tbody>
+                                            </table>
+
+                                            <Button color="success" onClick={()=>this.seleccionarsoliput(solicitudes)}>Entregar</Button>
+                                            <Button color="success">Imprimir</Button>
+
+                                        </Card.Body>
+                                    </Accordion.Collapse>
+                                </Card>
+                            </Accordion>
+                            
+
+                        )
+
+                    }
+
+                })}
+
+
+                <Modal isOpen={this.state.modalEntregarMaterial}>
+                    <ModalBody>
+                        ¿Esta solicitud ya fue entregada?
+                    </ModalBody>
+                    <ModalFooter>
+                        <button className="btn btn-success" onClick={()=> this.peticionPutestadoSoli()}>Si</button>
+                        <button className="btn btn-danger" onClick={()=> this.modalEntregarMaterial()}>No</button>
+
+                    </ModalFooter>
+
+
+                </Modal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/*------------------------------------------------------------------------------------------------------------------------------------------------*/}
+                            <br/><br/><br/><br/><br/>
                             <label>Solicitante: {cookies.get('nombres')} {cookies.get('apellidoP')}</label>
                             <br>
                             </br>

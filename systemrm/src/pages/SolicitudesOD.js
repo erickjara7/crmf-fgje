@@ -35,7 +35,7 @@ class SolicitudesOD extends Component{
 
 
     state={
-        busqueda:'',
+       
         solicitudid:'',
         datatiposoli:['','Requisición','Préstamo'],
         datamate:[],
@@ -73,6 +73,8 @@ class SolicitudesOD extends Component{
          })
      }
 
+     
+
      peticionPutestadoSoli = ()=>{
          axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
              this.modalEnviarsoli();
@@ -83,9 +85,20 @@ class SolicitudesOD extends Component{
 
      }
 
+
+     peticionpostsoli = async()=>{
+         await axios.post(aggsolicitud,this.state.form).then(respuesta=>{
+             this.modalInsertar();
+             this.peticionGet();
+         })
+         .catch(error=>{
+             alert('error en la peticion')
+         })
+     }
+
  
-    /* peticionPost = async()=>{
-        await axios.post(aggsolicitud, this.state.form).then(response=>{
+     /*peticionPost = ()=>{
+         axios.post(aggsolicitud, this.state.form).then(response=>{
             this.modalInsertar();
             alert('Se ha creado la solicitud, proceda a elegir los materiales.');
            
@@ -101,7 +114,7 @@ class SolicitudesOD extends Component{
          if ((this.state.form.area === '') || (this.state.form.tipoSolicitud === '')){
              alert('Favor de llenar todos los campos');
          }else{
-             this.peticionPost();
+             this.peticionpostsoli();
          }
      }
 
@@ -125,7 +138,11 @@ class SolicitudesOD extends Component{
         if(this.state.form._id === ''){
 
         }else{
-            this.setState({modalEnviarsoli :true})
+            if(solicitudes.estado === 'Iniciada'){
+                this.setState({modalEnviarsoli :true})
+            }else{
+
+            }
             //alert('elsee');
         }
 
@@ -166,11 +183,7 @@ class SolicitudesOD extends Component{
         console.log(this.state.form);
     }
     
-     onChange = async e =>{
-         e.persist();
-         await this.setState({busqueda: e.target.value});
-         console.log(`busqueda=${this.state.busqueda}`);
-     }
+
     
 
     cerrarSesion=()=>{
@@ -314,15 +327,20 @@ class SolicitudesOD extends Component{
                                                                                 <td>{material.cantidadsolicitada}</td>
                                                                                 <td>{material.unidadMedidaMS}</td>
                                                                             </tr>
+                                                                        
 
                                                                     )
                                                                    }
-                                                                  
+                                                                
                                                                })}
                                                             
 
                                                            </tbody>
+
                                                        </table>
+                                                       
+
+                                                       
 
                                                        <Button color="primary" onClick={()=>this.seleccionarsolicitud(solicitudes)} >Agregar Material</Button>
                                                         <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}} >Enviar</Button>
@@ -394,7 +412,7 @@ class SolicitudesOD extends Component{
                              </ModalBody>
 
                              <ModalFooter>
-                                <button className="btn btn-success" onClick={ () => {this.peticionPost() }}>Es correcto</button>
+                                <button className="btn btn-success" onClick={ () => {this.validaciónmodal() }}>Es correcto</button>
                                 <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>Cancelar</button>
 
                              </ModalFooter>
