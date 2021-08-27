@@ -12,17 +12,25 @@ const cookies = new Cookies();
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
 const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 const putsoli = "http://localhost:4000/solicitud/";
+const vermaterial = "http://localhost:4000/materiales/getmaterial";
+const dpsidmaterial = "http://localhost:4000/materiales/";
+
 
 
 class SolicitudesRM extends Component{
 
     state={
-        
-        data:[],
         datamate:[],
+        data:[],
+        datamatesoli:[],
         modalEntregarMaterial: false,
-        form:{
+        form:{ 
             _id:''
+        },
+        form2:{
+            _id:'',
+            existencia:''
+
         }
     }
 
@@ -36,11 +44,12 @@ class SolicitudesRM extends Component{
 
     peticiongetmatesoli = async()=>{
         await axios.get(vermaterialsoli).then(response=>{
-            this.setState({datamate: response.data});
+            this.setState({datamatesoli: response.data});
         })
 
     }
 
+  
     peticionPutestadoSoli = ()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEntregarMaterial();
@@ -53,6 +62,44 @@ class SolicitudesRM extends Component{
         this.setState({modalEntregarMaterial: !this.state.modalEntregarMaterial})
 
     }
+
+    /*  peticionGetMateriales = async() =>{
+        await  axios.get(vermaterial).then(response =>{
+             this.setState({datamate:response.data});
+         })
+     }
+   cambiarexistencia=()=>{
+        
+
+    }
+
+    selecMaterialaCambiar=(materiales,materialsoli)=>{
+        this.setState({
+            form2:{
+                _id: materiales._id,
+                existencia: materiales.existencia - materialsoli.cantidadsolicitada
+            }
+        })
+        if(this.state.form._id === ''){
+            this.peticionPutExistencia();
+        }else{
+           
+        }
+        console.log(`form id:${this.state.form2.existencia}`);
+        console.log(`existenciamaterial:${materiales.existencia}`);
+        console.log(`solicita: ${materialsoli.cantidadsolicitada}`);
+       
+    }
+
+
+    peticionPutExistencia=()=>{
+        axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
+            this.peticiongetsoli();
+        })
+        console.log(`form id:${this.state.form2.existencia}`);
+        
+        
+    }*/
 
     seleccionarsoliput =(solicitudes)=>{
         this.setState({
@@ -77,10 +124,6 @@ class SolicitudesRM extends Component{
 
 
 
-    
-
-
-
     cerrarSesion =() =>{
         cookies.remove('_id',{path:"/"});
         cookies.remove('nombres',{path:"/"});
@@ -95,6 +138,7 @@ class SolicitudesRM extends Component{
     componentDidMount(){
         this.peticiongetmatesoli();
         this.peticiongetsoli();
+        
         if (!cookies.get('username')){
             window.location.href="./";
         }else if(cookies.get('userType') === 'Usuario'){
@@ -126,17 +170,10 @@ class SolicitudesRM extends Component{
             
                 <div class="raya"/>
 
-
-                <br></br>
-
+                <br/>
                 <h2>Solicitudes</h2>
-                <br></br>
-                <br></br>
+                <br/> <br/><br/><br/>
                 
-
-
-                <br/>
-                <br/>
 
                 {this.state.data.map((solicitudes,index)=>{
                     if(solicitudes.estado === 'Pendiente'){
@@ -171,23 +208,32 @@ class SolicitudesRM extends Component{
                                                 </thead>
 
                                                 <tbody>
-                                                    {this.state.datamate.map(material=>{
-                                                        if(material.idSolicitud === solicitudes._id){
+                                                    {axios.get.datamatesoli.map(materialsoli=>{
+                                                        if(materialsoli.idSolicitud === solicitudes._id){
                                                             return(
                                                                 <tr>
-                                                                    <td>{material.nombreMaterial}</td>
-                                                                    <td>{material.cantidadsolicitada}</td>
-                                                                    <td>{material.unidadMedidaMS}</td>
+                                                                    <td>{materialsoli.nombreMaterial}</td>
+                                                                    <td>{materialsoli.cantidadsolicitada}</td>
+                                                                    <td>{materialsoli.unidadMedidaMS}</td>
                                                                  </tr>
                                                             )
                                                         }
+                                                        //recorrerlos materiales y comparar con id de materiales de la solicitud para luego eliminar
+
+                                                       /* this.state.datamate.map(materiales=>{
+                                                            if(materialsoli.idMaterial === materiales._id){
+                                                                this.selecMaterialaCambiar(materiales,materialsoli);
+                                                            }
+                                                        })*/
+
+                
                                                     })}
                                                     
 
                                                 </tbody>
                                             </table>
 
-                                            <Button color="success" onClick={()=>this.seleccionarsoliput(solicitudes)}>Entregar</Button>
+                                            <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}}>Entregar</Button>
                                             <Button color="success">Imprimir</Button>
 
                                         </Card.Body>
@@ -208,36 +254,14 @@ class SolicitudesRM extends Component{
                         ¿Esta solicitud ya fue entregada?
                     </ModalBody>
                     <ModalFooter>
-                        <button className="btn btn-success" onClick={()=> this.peticionPutestadoSoli()}>Si</button>
+                    {/*this.peticionPutExistencia();*/}
+                        <button className="btn btn-success" onClick={()=> {      this.peticionPutestadoSoli()}}>Si</button>
                         <button className="btn btn-danger" onClick={()=> this.modalEntregarMaterial()}>No</button>
 
                     </ModalFooter>
 
 
                 </Modal>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

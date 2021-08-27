@@ -141,7 +141,7 @@ class SolicitudesOD extends Component{
             if(solicitudes.estado === 'Iniciada'){
                 this.setState({modalEnviarsoli :true})
             }else{
-
+                cookies.remove('isolicitud',{path:"/"});
             }
             //alert('elsee');
         }
@@ -161,6 +161,8 @@ class SolicitudesOD extends Component{
        console.log(`log: ${this.state.form._id}`)
        if(cookies.get('isolicitud') && solicitudes.estado==='Iniciada'){
         window.location.href="./materialesodep";
+       }else{
+
        }
 
        
@@ -208,6 +210,7 @@ class SolicitudesOD extends Component{
             this.cerrarSesion();
            
         }
+        
     }
 
 

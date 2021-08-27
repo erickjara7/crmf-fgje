@@ -45,15 +45,21 @@ class MaterialesV1OD extends Component{
      }
 
      peticionPostms  = async() =>{
-        await axios.post(aggmatesoli, this.state.form).then(response=>{
-            this.modalInsertar();
-            alert('Material agregado exitosamente');
-           
-            //this.peticionGet();
-        }).catch(error=>{
-            alert('Error al guardar, intentelo nuevamente');
-            //console.log(error.message);
-        })
+
+
+        if(cookies.get('isolicitud')){
+            await axios.post(aggmatesoli, this.state.form).then(response=>{
+                this.modalInsertar();
+                alert('Material agregado exitosamente');
+            
+                //this.peticionGet();
+            }).catch(error=>{
+                alert('Error al guardar, intentelo nuevamente');
+                //console.log(error.message);
+            })
+        }else{
+            alert('No ha seleccionado ninguna solicitud')
+        }
 
 
      }
@@ -124,6 +130,8 @@ class MaterialesV1OD extends Component{
             this.cerrarSesion();
            
         }
+
+        
     }
 
 
