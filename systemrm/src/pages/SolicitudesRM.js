@@ -15,7 +15,8 @@ const putsoli = "http://localhost:4000/solicitud/";
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 const dpsidmaterial = "http://localhost:4000/materiales/";
 
-
+var materialesSolicitados = [];
+var solicitudID = 0;
 
 class SolicitudesRM extends Component{
 
@@ -63,12 +64,51 @@ class SolicitudesRM extends Component{
 
     }
 
+    selecMaterialaCambiar=async(materialesSolicitados)=>{
+        
+        console.log(`solicitudID: ${solicitudID}`);
+        
+        if(solicitudID != ''){
+            await axios.get(vermaterial)
+            .then(response=>{
+                if(materialesSolicitados.idSolicitud === solicitudID){
+                    this.state.form2._id = materialesSolicitados.idMaterial;
+                    response.data.map(materiales=>{
+                        if(materiales._id === materialesSolicitados.idMaterial){
+                            this.state.form2.existencia = materiales.existencia;   
+                        }
+                        
+
+                    })
+
+
+                    console.log(`idMate: ${this.state.form2._id} cantidad: ${materialesSolicitados.cantidadsolicitada} soli:${materialesSolicitados.idSolicitud} exis:${this.state.form2.existencia}`);
+                 // console.log(`ids: ${materialesSolicitados.idMaterial} cantidad: ${materialesSolicitados.cantidadsolicitada} soli:${materialesSolicitados.idSolicitud}`);
+                }
+                
+
+            })
+                
+        }  
+    }
+    
+
+  /*  peticionPutExistencia=()=>{
+        axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
+            this.peticiongetsoli();
+        })
+        console.log(`form id:${this.state.form2.existencia}`);
+        
+        
+    }*/
+   // ------------------------------------------------------------------------------------
+
     /*  peticionGetMateriales = async() =>{
         await  axios.get(vermaterial).then(response =>{
              this.setState({datamate:response.data});
          })
      }
-   cambiarexistencia=()=>{
+   cambiarexistencia=()=>{ 
         
 
     }
@@ -108,12 +148,13 @@ class SolicitudesRM extends Component{
                 estado:'Entregada'
             }
         })
+        solicitudID = this.state.form._id;
         console.log(this.state.form._id)
         if(this.state.form._id === ''){
 
         }else{
            // if(solicitudes.estado === 'Iniciada'){
-                this.setState({modalEntregarMaterial :true})
+        //        this.setState({modalEntregarMaterial :true})
             //}else{
 
             //}
@@ -208,26 +249,38 @@ class SolicitudesRM extends Component{
                                                 </thead>
 
                                                 <tbody>
-                                                    {axios.get.datamatesoli.map(materialsoli=>{
+                                                    {this.state.datamatesoli.map(materialsoli=>{
                                                         if(materialsoli.idSolicitud === solicitudes._id){
+                                                            
+                                                            materialesSolicitados = materialsoli;
+                                                            this.selecMaterialaCambiar(materialesSolicitados);
                                                             return(
                                                                 <tr>
                                                                     <td>{materialsoli.nombreMaterial}</td>
                                                                     <td>{materialsoli.cantidadsolicitada}</td>
                                                                     <td>{materialsoli.unidadMedidaMS}</td>
                                                                  </tr>
+                                                                
                                                             )
+                                                            
+                                                
+                                                            
                                                         }
-                                                        //recorrerlos materiales y comparar con id de materiales de la solicitud para luego eliminar
-
-                                                       /* this.state.datamate.map(materiales=>{
-                                                            if(materialsoli.idMaterial === materiales._id){
+                                                        //this.selecMaterialaCambiar(materialesSolicitados);
+                                                       
+                                                        
+                                                        
+                                                        
+                                                        
+                                                         /*   if(materialsoli.idMaterial === materiales._id){
                                                                 this.selecMaterialaCambiar(materiales,materialsoli);
                                                             }
                                                         })*/
+                                                       
 
                 
                                                     })}
+                                                    
                                                     
 
                                                 </tbody>
@@ -281,4 +334,4 @@ class SolicitudesRM extends Component{
         );
     }
 }
-export default SolicitudesRM;
+export default SolicitudesRM;     
