@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import Cookies from 'universal-cookie';
 import jsPDF from 'jspdf';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
@@ -15,8 +15,19 @@ const putsoli = "http://localhost:4000/solicitud/";
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 const dpsidmaterial = "http://localhost:4000/materiales/";
 
+
+
+
 var materialesSolicitados = [];
-var solicitudID = 0;
+var solicitudID = '';
+var estadosoli = '';
+var vector =[];
+var vecMateid='';
+var vecMatexis='';
+
+
+
+ 
 
 class SolicitudesRM extends Component{
 
@@ -65,42 +76,85 @@ class SolicitudesRM extends Component{
     }
 
     selecMaterialaCambiar=async(materialesSolicitados)=>{
-        
-        console.log(`solicitudID: ${solicitudID}`);
-        
+       
+        console.log(`solicitudID: ${solicitudID} estado:${estadosoli}`);
+      
         if(solicitudID != ''){
             await axios.get(vermaterial)
             .then(response=>{
                 if(materialesSolicitados.idSolicitud === solicitudID){
                     this.state.form2._id = materialesSolicitados.idMaterial;
                     response.data.map(materiales=>{
-                        if(materiales._id === materialesSolicitados.idMaterial){
-                            this.state.form2.existencia = materiales.existencia;   
-                        }
+                      
+                            if(materiales._id === materialesSolicitados.idMaterial){
+                                console.log(`existencia real: ${materiales.existencia}`);
+                                this.state.form2.existencia = materiales.existencia - materialesSolicitados.cantidadsolicitada; 
+                                vecMateid = this.state.form2._id;
+                                vecMatexis = this.state.form2.existencia;
+                              //  this.aggavector();
+                                
+                               // console.log(`vector: ${vector}`);
+                                //GUARDAR TODOS LOS REGISTROS AQUI Y LUEGO MANDARLO A LA PETICION PUT .MAP Y  VAYA HACIENDO LA PETICON CUANDO PRECIONE EL BOTON ENTREGAR
+                               // this.peticionPutExistencia();
+                               // axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
+                                   // this.peticiongetsoli();
+                               // }) 
+                            }
+                            
+
+                        
+
+                       
                         
 
                     })
+                    console.log(`[${vecMateid}, ${vecMatexis}]`);
 
 
-                    console.log(`idMate: ${this.state.form2._id} cantidad: ${materialesSolicitados.cantidadsolicitada} soli:${materialesSolicitados.idSolicitud} exis:${this.state.form2.existencia}`);
+                    //console.log(`idMate: ${this.state.form2._id} cantidad: ${materialesSolicitados.cantidadsolicitada} soli:${materialesSolicitados.idSolicitud} exis:${this.state.form2.
+                    //existencia}`); 
+                   
+                    
                  // console.log(`ids: ${materialesSolicitados.idMaterial} cantidad: ${materialesSolicitados.cantidadsolicitada} soli:${materialesSolicitados.idSolicitud}`);
                 }
+                
                 
 
             })
                 
-        }  
+        } 
+        
     }
     
+   /* aggavector = ()=>{
+        const [ArrIdsExismate,setExis] = this.setState([]);
+      
+            const  newvector ={
+                idmaterialvec: vecMateid,
+                exismatevec: vecMatexis,
+            }
+            vector = setExis([...ArrIdsExismate, newvector]);
+  
+    }*/
+    
 
-  /*  peticionPutExistencia=()=>{
-        axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
+    peticionPutExistencia=()=>{
+
+        vector.map((materialesvec)=>{
+
+            console.log(`vector: ${materialesvec.idMaterial, materialesvec.exismatevec}`);
+          //  axios.put(dpsidmaterial+materialesvec.vecMateid, materialesvec.vecMatexis).then(response=>{
+
+           // })
+        })
+
+      /*  axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
             this.peticiongetsoli();
         })
-        console.log(`form id:${this.state.form2.existencia}`);
+        console.log(`existencia:${this.state.form2.existencia}`);
+        */
         
-        
-    }*/
+    }
    // ------------------------------------------------------------------------------------
 
     /*  peticionGetMateriales = async() =>{
@@ -149,15 +203,16 @@ class SolicitudesRM extends Component{
             }
         })
         solicitudID = this.state.form._id;
+      //  estadosoli = solicitudes.estado;
         console.log(this.state.form._id)
-        if(this.state.form._id === ''){
+        if(solicitudID === ''){
 
         }else{
-           // if(solicitudes.estado === 'Iniciada'){
-        //        this.setState({modalEntregarMaterial :true})
-            //}else{
+            if(solicitudes.estado === 'Pendiente'){
+                this.setState({modalEntregarMaterial :true})
+            }else{
 
-            //}
+            }
             //alert('elsee');
         }
 
@@ -286,7 +341,7 @@ class SolicitudesRM extends Component{
                                                 </tbody>
                                             </table>
 
-                                            <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}}>Entregar</Button>
+                                            <Button color="success" onClick={()=>{ this.seleccionarsoliput(solicitudes)}}>Entregar</Button>
                                             <Button color="success">Imprimir</Button>
 
                                         </Card.Body>
@@ -307,8 +362,8 @@ class SolicitudesRM extends Component{
                         ¿Esta solicitud ya fue entregada?
                     </ModalBody>
                     <ModalFooter>
-                    {/*this.peticionPutExistencia();*/}
-                        <button className="btn btn-success" onClick={()=> {      this.peticionPutestadoSoli()}}>Si</button>
+                    {/*this.peticionPutExistencia();                onClick={()=> {  this.peticionPutExistencia();     this.peticionPutestadoSoli()}}*/}
+                        <button className="btn btn-success" onClick={()=> {  this.peticionPutExistencia()}}>Si</button>
                         <button className="btn btn-danger" onClick={()=> this.modalEntregarMaterial()}>No</button>
 
                     </ModalFooter>
