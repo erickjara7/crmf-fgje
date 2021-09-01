@@ -44,10 +44,12 @@ class MaterialesV1OD extends Component{
          })
      }
 
+
+     //SIEMPRE SE VA AL ELSE
+
      peticionPostms  = async() =>{
 
-
-        if(cookies.get('isolicitud')){
+        if(cookies.get('isolicitud') ){
             await axios.post(aggmatesoli, this.state.form).then(response=>{
                 this.modalInsertar();
                 alert('Material agregado exitosamente');
@@ -58,7 +60,9 @@ class MaterialesV1OD extends Component{
                 //console.log(error.message);
             })
         }else{
-            alert('No ha seleccionado ninguna solicitud')
+            
+                alert('No ha seleccionado ninguna solicitud');               
+           
         }
 
 
@@ -148,7 +152,7 @@ class MaterialesV1OD extends Component{
         console.log(cookies.get('userType'));
         //cookies.remove('isolicitud',{path:"/"});
        
-        console.log(cookies.get('isolicitud'));
+        console.log(`solicitud:${cookies.get('isolicitud')}`);
 
 
         return(

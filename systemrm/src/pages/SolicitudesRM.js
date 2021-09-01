@@ -21,7 +21,7 @@ const dpsidmaterial = "http://localhost:4000/materiales/";
 var materialesSolicitados = [];
 var solicitudID = '';
 var estadosoli = '';
-var vector =[];
+const vector =[];
 var vecMateid='';
 var vecMatexis='';
 
@@ -65,13 +65,14 @@ class SolicitudesRM extends Component{
     peticionPutestadoSoli = ()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEntregarMaterial();
-            this.peticiongetsoli();
+            window.location.href='./solicitudes';
         })
            
     }
 
     modalEntregarMaterial =()=>{
-        this.setState({modalEntregarMaterial: !this.state.modalEntregarMaterial})
+        this.setState({modalEntregarMaterial: !this.state.modalEntregarMaterial});
+        window.location.href='./solicitudes';
 
     }
 
@@ -91,6 +92,15 @@ class SolicitudesRM extends Component{
                                 this.state.form2.existencia = materiales.existencia - materialesSolicitados.cantidadsolicitada; 
                                 vecMateid = this.state.form2._id;
                                 vecMatexis = this.state.form2.existencia;
+                               
+
+                                //SI YA INSERTÓ UN MATERIAL SOLICITADO QUE NO LO INSERTE DE NUEVO
+
+
+                    
+
+
+
                               //  this.aggavector();
                                 
                                // console.log(`vector: ${vector}`);
@@ -101,6 +111,11 @@ class SolicitudesRM extends Component{
                                // }) 
                             }
                             
+                           // console.log(`[${vecMateid}, ${vecMatexis}]`);
+                          //  axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
+                                // this.peticiongetsoli();
+                         //   }) 
+                            
 
                         
 
@@ -108,7 +123,8 @@ class SolicitudesRM extends Component{
                         
 
                     })
-                    console.log(`[${vecMateid}, ${vecMatexis}]`);
+                    vector.push({vecMateid,vecMatexis});
+                    
 
 
                     //console.log(`idMate: ${this.state.form2._id} cantidad: ${materialesSolicitados.cantidadsolicitada} soli:${materialesSolicitados.idSolicitud} exis:${this.state.form2.
@@ -140,13 +156,28 @@ class SolicitudesRM extends Component{
 
     peticionPutExistencia=()=>{
 
-        vector.map((materialesvec)=>{
+       // axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
 
-            console.log(`vector: ${materialesvec.idMaterial, materialesvec.exismatevec}`);
+        // })
+       // vector.reduce((allmate, mate)=>{
+        //   return Array.from(new Set([allmate, ...mate.vecMateid]))
+       // },[]);
+      // vector.reduce((allmate, mate)=>{
+       // return Array.from(new Set([allmate, [mate]]))
+      //},[])
+
+
+        console.log(vector
+            
+        );
+
+        //vector.map((materialesvec)=>{
+
+           // console.log(`vector: ${materialesvec.idMaterial, materialesvec.exismatevec}`);
           //  axios.put(dpsidmaterial+materialesvec.vecMateid, materialesvec.vecMatexis).then(response=>{
 
            // })
-        })
+       // })
 
       /*  axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
             this.peticiongetsoli();
@@ -194,8 +225,10 @@ class SolicitudesRM extends Component{
         
         
     }*/
+   
 
     seleccionarsoliput =(solicitudes)=>{
+        
         this.setState({
             form:{
                 _id:solicitudes._id,
@@ -204,7 +237,7 @@ class SolicitudesRM extends Component{
         })
         solicitudID = this.state.form._id;
       //  estadosoli = solicitudes.estado;
-        console.log(this.state.form._id)
+        console.log(solicitudID)
         if(solicitudID === ''){
 
         }else{
@@ -215,6 +248,7 @@ class SolicitudesRM extends Component{
             }
             //alert('elsee');
         }
+        
 
     }
 
@@ -341,7 +375,7 @@ class SolicitudesRM extends Component{
                                                 </tbody>
                                             </table>
 
-                                            <Button color="success" onClick={()=>{ this.seleccionarsoliput(solicitudes)}}>Entregar</Button>
+                                            <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}}>Entregar</Button>
                                             <Button color="success">Imprimir</Button>
 
                                         </Card.Body>
@@ -363,7 +397,7 @@ class SolicitudesRM extends Component{
                     </ModalBody>
                     <ModalFooter>
                     {/*this.peticionPutExistencia();                onClick={()=> {  this.peticionPutExistencia();     this.peticionPutestadoSoli()}}*/}
-                        <button className="btn btn-success" onClick={()=> {  this.peticionPutExistencia()}}>Si</button>
+                        <button className="btn btn-success" onClick={()=> {this.peticionPutExistencia() }}>Si</button>
                         <button className="btn btn-danger" onClick={()=> this.modalEntregarMaterial()}>No</button>
 
                     </ModalFooter>

@@ -86,14 +86,14 @@ class SolicitudesOD extends Component{
      }
 
 
-     peticionpostsoli = async()=>{
-         await axios.post(aggsolicitud,this.state.form).then(respuesta=>{
+     peticionpostsoli = ()=>{
+        axios.post(aggsolicitud,this.state.form).then(response=>{
              this.modalInsertar();
              this.peticionGet();
-         })
-         .catch(error=>{
-             alert('error en la peticion')
-         })
+        })
+        .catch(error=>{
+            alert('error en la peticion')
+        })
      }
 
  
