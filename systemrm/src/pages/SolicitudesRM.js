@@ -21,7 +21,9 @@ const dpsidmaterial = "http://localhost:4000/materiales/";
 var materialesSolicitados = [];
 var solicitudID = '';
 var estadosoli = '';
+var vecIdMatesoli ='';
 const vector =[];
+
 var vecMateid='';
 var vecMatexis='';
 
@@ -90,9 +92,12 @@ class SolicitudesRM extends Component{
                             if(materiales._id === materialesSolicitados.idMaterial){
                                 console.log(`existencia real: ${materiales.existencia}`);
                                 this.state.form2.existencia = materiales.existencia - materialesSolicitados.cantidadsolicitada; 
+                                vecIdMatesoli = materialesSolicitados._id;
                                 vecMateid = this.state.form2._id;
                                 vecMatexis = this.state.form2.existencia;
-                               
+                                vector.push({vecIdMatesoli, vecMateid,vecMatexis});
+
+                                
 
                                 //SI YA INSERTÓ UN MATERIAL SOLICITADO QUE NO LO INSERTE DE NUEVO
 
@@ -123,7 +128,8 @@ class SolicitudesRM extends Component{
                         
 
                     })
-                    vector.push({vecMateid,vecMatexis});
+                    
+
                     
 
 
@@ -133,6 +139,7 @@ class SolicitudesRM extends Component{
                     
                  // console.log(`ids: ${materialesSolicitados.idMaterial} cantidad: ${materialesSolicitados.cantidadsolicitada} soli:${materialesSolicitados.idSolicitud}`);
                 }
+                
                 
                 
 
@@ -156,19 +163,28 @@ class SolicitudesRM extends Component{
 
     peticionPutExistencia=()=>{
 
+      let newvector = vector.reduce((a,e)=>{
+            if(!a.find(d => d == e.vecIdMatesoli)){
+                a.push(e)
+            }
+            return a;
+        },{})
+
+        console.log(newvector);
+
        // axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
 
         // })
        // vector.reduce((allmate, mate)=>{
-        //   return Array.from(new Set([allmate, ...mate.vecMateid]))
-       // },[]);
+       //    return Array.from(new Set([allmate, ...mate]))
+      //  },[]);
       // vector.reduce((allmate, mate)=>{
        // return Array.from(new Set([allmate, [mate]]))
       //},[])
 
 
         console.log(vector
-            
+   
         );
 
         //vector.map((materialesvec)=>{
