@@ -23,7 +23,8 @@ var solicitudID = '';
 var estadosoli = '';
 var vecIdMatesoli ='';
 const vector =[];
-
+let newvector =[];
+var newitem ='';
 var vecMateid='';
 var vecMatexis='';
 
@@ -47,6 +48,7 @@ class SolicitudesRM extends Component{
 
         }
     }
+    
 
     peticiongetsoli = async()=>{
         await axios.get(versolicitud).then(response=>{
@@ -95,8 +97,29 @@ class SolicitudesRM extends Component{
                                 vecIdMatesoli = materialesSolicitados._id;
                                 vecMateid = this.state.form2._id;
                                 vecMatexis = this.state.form2.existencia;
-                                vector.push({vecIdMatesoli, vecMateid,vecMatexis});
+                               
+                               
+                                    
+                            vector.push({vecIdMatesoli, vecMateid,vecMatexis});
 
+                            vector.find((item)=>{
+                                console.log(`log: ${item.vecIdMatesoli}`);
+                                if(item.vecIdMatesoli.includes({vecIdMatesoli, vecMateid,vecMatexis})){
+                                    newvector.push(item);
+                                }else{
+                                    
+                                    
+                                }
+                    
+                                
+                            })
+                    
+
+                                    
+
+                               
+                                
+                                
                                 
 
                                 //SI YA INSERTÓ UN MATERIAL SOLICITADO QUE NO LO INSERTE DE NUEVO
@@ -162,15 +185,50 @@ class SolicitudesRM extends Component{
     
 
     peticionPutExistencia=()=>{
+        
+    /*    for(let i =0; i < vector.length; i++){
+            for(let j = i + 1; j< vector.length; j++){
+                if(vector[i] == vector[j] && !newvector.includes(vector[i])){
+                    newvector.push(vector[i]);
+                }else{
+                    console.log(`elsee ${vector.length}`);
+                }
+            }
+        }*/
+        
+          //  newvector = new Set(vector)
+    /*vector.map(item => {
+         // if (item.vecIdMatesoli === newitem){
 
-      let newvector = vector.reduce((a,e)=>{
+         // }else{       
+          //  newvector.push(item);
+         //   newitem = item.vecIdMatesoli;
+         // }
+          
+         // console.log(item.vecIdMatesoli);
+          return item;
+      })*/
+
+
+
+      
+     
+      
+    
+      
+        console.log(newvector);
+
+
+
+
+     /* let newvector = vector.reduce((a,e)=>{
             if(!a.find(d => d == e.vecIdMatesoli)){
                 a.push(e)
             }
             return a;
         },{})
 
-        console.log(newvector);
+        console.log(newvector);*/
 
        // axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
 
