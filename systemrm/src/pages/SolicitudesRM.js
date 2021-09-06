@@ -24,9 +24,9 @@ var estadosoli = '';
 var vecIdMatesoli ='';
 const vector =[];
 let newvector =[];
-var newitem ='';
 var vecMateid='';
-var vecMatexis='';
+var vecCanSol='';
+var i =0;
 
 
 
@@ -85,64 +85,39 @@ class SolicitudesRM extends Component{
         console.log(`solicitudID: ${solicitudID} estado:${estadosoli}`);
       
         if(solicitudID != ''){
-            await axios.get(vermaterial)
-            .then(response=>{
+            //await axios.get(vermaterial)
+           // .then(response=>{
                 if(materialesSolicitados.idSolicitud === solicitudID){
                     this.state.form2._id = materialesSolicitados.idMaterial;
-                    response.data.map(materiales=>{
+                   // response.data.map(materiales=>{
                       
-                            if(materiales._id === materialesSolicitados.idMaterial){
-                                console.log(`existencia real: ${materiales.existencia}`);
-                                this.state.form2.existencia = materiales.existencia - materialesSolicitados.cantidadsolicitada; 
+                           // if(materiales._id === materialesSolicitados.idMaterial){
+                               // console.log(`existencia real: ${materiales.existencia}`);
+                               // this.state.form2.existencia = materiales.existencia - materialesSolicitados.cantidadsolicitada; 
                                 vecIdMatesoli = materialesSolicitados._id;
+                                vecCanSol = materialesSolicitados.cantidadsolicitada;
+                               // 
                                 vecMateid = this.state.form2._id;
-                                vecMatexis = this.state.form2.existencia;
+                               // vecMatexis = this.state.form2.existencia;
                                
                                
                                     
-                            vector.push({vecIdMatesoli, vecMateid,vecMatexis});
+                                vector.push({vecIdMatesoli, vecMateid,vecCanSol});
 
-                            vector.find((item)=>{
-                                console.log(`log: ${item.vecIdMatesoli}`);
-                                if(item.vecIdMatesoli.includes({vecIdMatesoli, vecMateid,vecMatexis})){
-                                    newvector.push(item);
-                                }else{
-                                    
-                                    
-                                }
-                    
-                                
-                            })
-                    
-
-                                    
-
-                               
-                                
-                                
-                                
-
-                                //SI YA INSERTÓ UN MATERIAL SOLICITADO QUE NO LO INSERTE DE NUEVO
-
-
-                    
-
-
-
-                              //  this.aggavector();
-                                
-                               // console.log(`vector: ${vector}`);
-                                //GUARDAR TODOS LOS REGISTROS AQUI Y LUEGO MANDARLO A LA PETICION PUT .MAP Y  VAYA HACIENDO LA PETICON CUANDO PRECIONE EL BOTON ENTREGAR
-                               // this.peticionPutExistencia();
-                               // axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
-                                   // this.peticiongetsoli();
-                               // }) 
-                            }
                             
-                           // console.log(`[${vecMateid}, ${vecMatexis}]`);
-                          //  axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
-                                // this.peticiongetsoli();
-                         //   }) 
+                    
+
+                                    
+
+                               
+                                
+                                
+                                
+
+                                
+                           // }
+                            
+                          
                             
 
                         
@@ -150,23 +125,19 @@ class SolicitudesRM extends Component{
                        
                         
 
-                    })
+                  //  })
                     
 
                     
 
 
-                    //console.log(`idMate: ${this.state.form2._id} cantidad: ${materialesSolicitados.cantidadsolicitada} soli:${materialesSolicitados.idSolicitud} exis:${this.state.form2.
-                    //existencia}`); 
-                   
                     
-                 // console.log(`ids: ${materialesSolicitados.idMaterial} cantidad: ${materialesSolicitados.cantidadsolicitada} soli:${materialesSolicitados.idSolicitud}`);
                 }
                 
                 
                 
 
-            })
+           // })
                 
         } 
         
@@ -195,6 +166,57 @@ class SolicitudesRM extends Component{
                 }
             }
         }*/
+
+             
+                for( i = i; i < vector.length/2; i ++){
+                    newvector.push(vector[i]);
+                }
+
+                console.log(newvector);
+
+                newvector.map((materialesvec)=>{
+                   axios.get(vermaterial)
+                    .then(response=>{
+                        response.data.map(materiales=>{
+
+                            if(materiales._id === materialesvec.vecMateid){
+                               
+                                this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
+                                //materiales.existencia = this.state.form2.existencia;
+                                axios.put(dpsidmaterial+materialesvec.vecMateid, this.state.form2).then(response=>{
+                                    console.log(`axiosput`);
+                                   // this.modalEntregarMaterial();
+                                   //this.peticiongetsoli();
+            
+                                })
+                              
+                          
+
+                            }
+                            
+                           
+                            console.log(`existencia: ${materiales.existencia} nueva Exis: ${this.state.form2.existencia}`);
+                           
+                            
+                        })
+                        
+
+                    })
+                    
+
+
+
+                    console.log(`vector: ${materialesvec.vecMateid} ${materialesvec.vecCanSol}`);
+                   
+                    
+                 })
+
+
+               
+           
+
+            
+   
         
           //  newvector = new Set(vector)
     /*vector.map(item => {
@@ -216,7 +238,7 @@ class SolicitudesRM extends Component{
       
     
       
-        console.log(newvector);
+        
 
 
 
@@ -241,9 +263,6 @@ class SolicitudesRM extends Component{
       //},[])
 
 
-        console.log(vector
-   
-        );
 
         //vector.map((materialesvec)=>{
 
