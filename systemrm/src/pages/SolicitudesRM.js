@@ -14,13 +14,14 @@ const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 const putsoli = "http://localhost:4000/solicitud/";
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 const dpsidmaterial = "http://localhost:4000/materiales/";
+const putmatesoli = "http://localhost:4000/materialsolicitado/";
 
 
 
 
 var materialesSolicitados = [];
 var solicitudID = '';
-var estadosoli = '';
+var typesoli = '';
 var vecIdMatesoli ='';
 const vector =[];
 let newvector =[];
@@ -40,12 +41,19 @@ class SolicitudesRM extends Component{
         datamatesoli:[],
         modalEntregarMaterial: false,
         form:{ 
-            _id:''
+            _id:'',
+            tipoSolicitud:''
+           
         },
         form2:{
             _id:'',
-            existencia:''
+            existencia:'',
+            tipoSolicitud:''
 
+        },
+        form3:{
+            _id:'',
+            cantidadsolicitada:''
         }
     }
     
@@ -81,256 +89,116 @@ class SolicitudesRM extends Component{
     }
 
     selecMaterialaCambiar=async(materialesSolicitados)=>{
-       
-        console.log(`solicitudID: ${solicitudID} estado:${estadosoli}`);
-      
+        //console.log(`solicitudID: ${solicitudID} estado:${estadosoli}`);
         if(solicitudID != ''){
-            //await axios.get(vermaterial)
-           // .then(response=>{
                 if(materialesSolicitados.idSolicitud === solicitudID){
                     this.state.form2._id = materialesSolicitados.idMaterial;
-                   // response.data.map(materiales=>{
-                      
-                           // if(materiales._id === materialesSolicitados.idMaterial){
-                               // console.log(`existencia real: ${materiales.existencia}`);
-                               // this.state.form2.existencia = materiales.existencia - materialesSolicitados.cantidadsolicitada; 
-                                vecIdMatesoli = materialesSolicitados._id;
-                                vecCanSol = materialesSolicitados.cantidadsolicitada;
-                               // 
-                                vecMateid = this.state.form2._id;
-                               // vecMatexis = this.state.form2.existencia;
-                               
-                               
-                                    
-                                vector.push({vecIdMatesoli, vecMateid,vecCanSol});
+                    this.state.form2.tipoSolicitud = typesoli;
+                    vecIdMatesoli = materialesSolicitados._id;
+                    vecCanSol = materialesSolicitados.cantidadsolicitada;
+                    vecMateid = this.state.form2._id;  
 
-                            
-                    
-
-                                    
-
-                               
-                                
-                                
-                                
-
-                                
-                           // }
-                            
-                          
-                            
-
-                        
-
-                       
-                        
-
-                  //  })
-                    
-
-                    
-
-
+                    vector.push({vecIdMatesoli, vecMateid,vecCanSol});
                     
                 }
-                
-                
-                
-
-           // })
                 
         } 
         
     }
     
-   /* aggavector = ()=>{
-        const [ArrIdsExismate,setExis] = this.setState([]);
-      
-            const  newvector ={
-                idmaterialvec: vecMateid,
-                exismatevec: vecMatexis,
-            }
-            vector = setExis([...ArrIdsExismate, newvector]);
-  
-    }*/
-    
-
-    peticionPutExistencia=()=>{
-        
-    /*    for(let i =0; i < vector.length; i++){
-            for(let j = i + 1; j< vector.length; j++){
-                if(vector[i] == vector[j] && !newvector.includes(vector[i])){
-                    newvector.push(vector[i]);
-                }else{
-                    console.log(`elsee ${vector.length}`);
-                }
-            }
-        }*/
-
-             
-                for( i = i; i < vector.length/2; i ++){
-                    newvector.push(vector[i]);
-                }
-
-                console.log(newvector);
-
-                newvector.map((materialesvec)=>{
-                   axios.get(vermaterial)
-                    .then(response=>{
-                        response.data.map(materiales=>{
-
-                            if(materiales._id === materialesvec.vecMateid){
-                               
-                                this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
-                                //materiales.existencia = this.state.form2.existencia;
-                                axios.put(dpsidmaterial+materialesvec.vecMateid, this.state.form2).then(response=>{
-                                    console.log(`axiosput`);
-                                   // this.modalEntregarMaterial();
-                                   //this.peticiongetsoli();
-            
-                                })
-                              
-                          
-
-                            }
-                            
-                           
-                            console.log(`existencia: ${materiales.existencia} nueva Exis: ${this.state.form2.existencia}`);
-                           
-                            
-                        })
-                        
-
-                    })
-                    
-
-
-
-                    console.log(`vector: ${materialesvec.vecMateid} ${materialesvec.vecCanSol}`);
-                   
-                    
-                 })
-
-
-               
-           
-
-            
    
-        
-          //  newvector = new Set(vector)
-    /*vector.map(item => {
-         // if (item.vecIdMatesoli === newitem){
+    peticionPutExistencia=()=>{
 
-         // }else{       
-          //  newvector.push(item);
-         //   newitem = item.vecIdMatesoli;
-         // }
-          
-         // console.log(item.vecIdMatesoli);
-          return item;
-      })*/
+        for( i = i; i < vector.length/2; i ++){
+            newvector.push(vector[i]);
+        }
+
+        newvector.map((materialesvec)=>{
+            axios.get(vermaterial)
+            .then(response=>{
+                response.data.map(materiales=>{
+
+                    if(materiales._id === materialesvec.vecMateid){
+
+                        if(materiales.existencia === 0){
+                            this.setState({
+                                form3:{
+                                    _id:materialesvec.vecIdMatesoli,
+                                }
+                            });
+                            axios.delete(putmatesoli+this.state.form3._id).then(response=>{
+
+                            });
 
 
+                        }else if(materiales.existencia <= materialesvec.vecCanSol){
+                            this.setState({
+                                form3:{
+                                    _id:materialesvec.vecIdMatesoli,
+                                    cantidadsolicitada: materiales.existencia
+                                }
+                            });
+                            this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
+                            this.state.form2._id = materialesvec.vecMateid;
 
-      
-     
-      
+                            axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
+                                console.log(`putix`);
+                                console.log(`idSolici: ${this.state.form3._id}  existencia:${materiales.existencia} cantidadsolinew:${this.state.form3.cantidadsolicitada}`);
+                            })
+ 
+                        }else{
+                            this.state.form2._id = materialesvec.vecMateid;
+                            this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
+
+                        }
+
+                        
+                       // this.state.form2.tipoSolicitud = materiales.tipoSolicitud;
+                    }             
+                })
+                //console.log(`Idmaterial:${this.state.form2._id}  exisnueva:${this.state.form2.existencia}  tiposoli:${this.state.form2.tipoSolicitud}`);
+
+
+                if(this.state.form2.tipoSolicitud === 'Requisición'){
+
+                    
+                    axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{
+                        console.log(`axiosput`);
+                        this.modalEntregarMaterial();
+                        //this.peticiongetsoli();
+              
+                    })
+                }else if(this.state.form2.tipoSolicitud === 'Préstamo'){
+                  //  this.modalEntregarMaterial();
+
+                }
+                //AQUIIIIIIIIIIIII
+              //  axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{
+              //      console.log(`axiosput`);
+              //      this.modalEntregarMaterial();
+                    //this.peticiongetsoli();
     
-      
-        
-
-
-
-
-     /* let newvector = vector.reduce((a,e)=>{
-            if(!a.find(d => d == e.vecIdMatesoli)){
-                a.push(e)
-            }
-            return a;
-        },{})
-
-        console.log(newvector);*/
-
-       // axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
-
-        // })
-       // vector.reduce((allmate, mate)=>{
-       //    return Array.from(new Set([allmate, ...mate]))
-      //  },[]);
-      // vector.reduce((allmate, mate)=>{
-       // return Array.from(new Set([allmate, [mate]]))
-      //},[])
-
-
-
-        //vector.map((materialesvec)=>{
-
-           // console.log(`vector: ${materialesvec.idMaterial, materialesvec.exismatevec}`);
-          //  axios.put(dpsidmaterial+materialesvec.vecMateid, materialesvec.vecMatexis).then(response=>{
-
-           // })
-       // })
-
-      /*  axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
-            this.peticiongetsoli();
+               // })
+            })        
         })
-        console.log(`existencia:${this.state.form2.existencia}`);
-        */
-        
     }
    // ------------------------------------------------------------------------------------
 
-    /*  peticionGetMateriales = async() =>{
-        await  axios.get(vermaterial).then(response =>{
-             this.setState({datamate:response.data});
-         })
-     }
-   cambiarexistencia=()=>{ 
-        
-
-    }
-
-    selecMaterialaCambiar=(materiales,materialsoli)=>{
-        this.setState({
-            form2:{
-                _id: materiales._id,
-                existencia: materiales.existencia - materialsoli.cantidadsolicitada
-            }
-        })
-        if(this.state.form._id === ''){
-            this.peticionPutExistencia();
-        }else{
-           
-        }
-        console.log(`form id:${this.state.form2.existencia}`);
-        console.log(`existenciamaterial:${materiales.existencia}`);
-        console.log(`solicita: ${materialsoli.cantidadsolicitada}`);
-       
-    }
-
-
-    peticionPutExistencia=()=>{
-        axios.put(dpsidmaterial+this.state.form2._id,this.state.form2).then(response=>{
-            this.peticiongetsoli();
-        })
-        console.log(`form id:${this.state.form2.existencia}`);
-        
-        
-    }*/
-   
+    
 
     seleccionarsoliput =(solicitudes)=>{
         
         this.setState({
             form:{
                 _id:solicitudes._id,
+                tipoSolicitud: solicitudes.tipoSolicitud,
                 estado:'Entregada'
             }
         })
         solicitudID = this.state.form._id;
+        typesoli = this.state.form.tipoSolicitud;
       //  estadosoli = solicitudes.estado;
-        console.log(solicitudID)
+        console.log(`${solicitudID} tipo: ${typesoli}`)
         if(solicitudID === ''){
 
         }else{

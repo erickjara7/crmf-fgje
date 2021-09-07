@@ -49,7 +49,7 @@ class MaterialesV1OD extends Component{
 
      peticionPostms  = async() =>{
 
-        if(cookies.get('isolicitud') ){
+        if(!cookies.get('isolicitud') ){
             await axios.post(aggmatesoli, this.state.form).then(response=>{
                 this.modalInsertar();
                 alert('Material agregado exitosamente');
