@@ -108,29 +108,31 @@ class SolicitudesRM extends Component{
     
    
     peticionPutExistencia=()=>{
-
+        //se llena un nuevo vector con la mitad del vector de los materiales solicitados
         for( i = i; i < vector.length/2; i ++){
             newvector.push(vector[i]);
         }
-
+        //se recorre vector, se trae y se recorre los materiales
         newvector.map((materialesvec)=>{
             axios.get(vermaterial)
             .then(response=>{
                 response.data.map(materiales=>{
-
+                    //se busca el material por id y si es igual al del arreglo se cambian el valor exixtencia 
                     if(materiales._id === materialesvec.vecMateid){
-
+                        // si no hay material se elimina de la solicitud la requsicion de ese material 
                         if(materiales.existencia === 0){
                             this.setState({
                                 form3:{
                                     _id:materialesvec.vecIdMatesoli,
                                 }
                             });
+                            console.log(`else cero con ${materialesvec.vecIdMatesoli}`);
+                            this.state.form2.existencia = materiales.existencia;
                             axios.delete(putmatesoli+this.state.form3._id).then(response=>{
 
                             });
 
-
+                        // si lo que hay es menor a lo que pidió se modifica la cantidad solicitada por la existencia
                         }else if(materiales.existencia <= materialesvec.vecCanSol){
                             this.setState({
                                 form3:{
@@ -140,15 +142,17 @@ class SolicitudesRM extends Component{
                             });
                             this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
                             this.state.form2._id = materialesvec.vecMateid;
+                            console.log(`else menor qe con ${materialesvec.vecIdMatesoli}`);
 
                             axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
                                 console.log(`putix`);
                                 console.log(`idSolici: ${this.state.form3._id}  existencia:${materiales.existencia} cantidadsolinew:${this.state.form3.cantidadsolicitada}`);
                             })
- 
+                        // si la existencia es mayor a la cantidad solicitada se cambia la existencia restando lo solicitado
                         }else{
                             this.state.form2._id = materialesvec.vecMateid;
                             this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
+                            console.log(`otro else ${materialesvec.vecIdMatesoli}`);
 
                         }
 
@@ -160,11 +164,11 @@ class SolicitudesRM extends Component{
 
 
                 if(this.state.form2.tipoSolicitud === 'Requisición'){
-
-                    
+ 
                     axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{
-                        console.log(`axiosput`);
-                        this.modalEntregarMaterial();
+                        console.log(`axiosput de ${this.state.form2._id}`);
+                        console.log(`id: ${this.state.form2._id} exis:${this.state.form2.existencia}`);
+                       // this.modalEntregarMaterial();
                         //this.peticiongetsoli();
               
                     })
@@ -187,7 +191,7 @@ class SolicitudesRM extends Component{
     
 
     seleccionarsoliput =(solicitudes)=>{
-        
+        //cambia los valores segun la solicitud seleccionada para hacer el put
         this.setState({
             form:{
                 _id:solicitudes._id,
@@ -195,19 +199,22 @@ class SolicitudesRM extends Component{
                 estado:'Entregada'
             }
         })
+        //guarda valores en variables publicas para usar en otros metodos.
         solicitudID = this.state.form._id;
         typesoli = this.state.form.tipoSolicitud;
-      //  estadosoli = solicitudes.estado;
+
         console.log(`${solicitudID} tipo: ${typesoli}`)
+        //seleccionar la solicitud, doble click uno selecciona, el segundo jala el idsolicitud
         if(solicitudID === ''){
 
         }else{
+            //si tiene id abrir el modal solo si es estado pendiente(desactivar boton)
             if(solicitudes.estado === 'Pendiente'){
                 this.setState({modalEntregarMaterial :true})
             }else{
 
             }
-            //alert('elsee');
+            
         }
         
 
@@ -216,6 +223,7 @@ class SolicitudesRM extends Component{
 
 
     cerrarSesion =() =>{
+    //eliminar cookies para no ir a paginas sin autenticarse
         cookies.remove('_id',{path:"/"});
         cookies.remove('nombres',{path:"/"});
         cookies.remove('apellidoP',{path:"/"});
@@ -229,7 +237,7 @@ class SolicitudesRM extends Component{
     componentDidMount(){
         this.peticiongetmatesoli();
         this.peticiongetsoli();
-        
+        //cookies para no ir a paginas sin autenticarse
         if (!cookies.get('username')){
             window.location.href="./";
         }else if(cookies.get('userType') === 'Usuario'){

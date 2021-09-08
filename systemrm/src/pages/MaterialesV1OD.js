@@ -34,6 +34,7 @@ class MaterialesV1OD extends Component{
             idSolicitud:cookies.get('isolicitud'),
 
             idMaterial:'',
+            cantidadsolicitada:0,
             
         }
     }
@@ -42,6 +43,15 @@ class MaterialesV1OD extends Component{
         await  axios.get(vermaterial).then(response =>{
              this.setState({data:response.data});  
          })
+     }
+
+     validacionPostms = ()=>{
+         if(this.state.form.cantidadsolicitada === 0 || this.state.form.cantidadsolicitada ==='undefined'){
+            console.log(`if`);
+         }else{
+             //this.peticionPostms();
+             console.log(`else ${this.state.form.cantidadsolicitada}`);
+         }
      }
 
 
@@ -108,6 +118,11 @@ class MaterialesV1OD extends Component{
             
             }
         })
+        if(material.existencia === 0){
+            alert("Este material no se encuentra disponible por el momento");
+        }else{
+            this.modalInsertar();
+        }
 
     }
 
@@ -269,7 +284,8 @@ class MaterialesV1OD extends Component{
                                         <td>{material.unidadMedida}</td>
                                         <td>{material.categoria}</td>
                                         <td>
-                                            <Button color="danger" onClick={()=> {this.seleccionarmaterial(material); this.modalInsertar()} }>Agregar</Button>
+                                                                                    {/**this.seleccionarmaterial(material); this.modalInsertar()  */}
+                                            <Button color="danger" onClick={()=> {this.seleccionarmaterial(material)} }>Agregar</Button>
                                         </td>
                                     </tr>
                                 )
@@ -319,7 +335,8 @@ class MaterialesV1OD extends Component{
                         </ModalBody>
 
                         <ModalFooter>
-                                <button className="btn btn-success" onClick={()=>this.peticionPostms()}>Es correcto</button>
+                                                            {/**()=>this.peticionPostms() */}
+                                <button className="btn btn-success" onClick={()=> this.validacionPostms()}>Es correcto</button>
                                 <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>Cancelar</button>
 
                         </ModalFooter>
