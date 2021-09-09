@@ -1,11 +1,10 @@
 import React, {Component, useState} from 'react';
 import Cookies from 'universal-cookie';
 import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import {Card, Accordion} from 'react-bootstrap';
 import axios from 'axios';
-
-
 
 const cookies = new Cookies();
 
@@ -15,7 +14,7 @@ const putsoli = "http://localhost:4000/solicitud/";
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 const dpsidmaterial = "http://localhost:4000/materiales/";
 const putmatesoli = "http://localhost:4000/materialsolicitado/";
-
+const doc = new jsPDF();
 
 
 
@@ -246,6 +245,36 @@ class SolicitudesRM extends Component{
         }
     }
 
+    generatePDF=(solicitudes)=>{
+       //const element = Document.getElementById("invoice");
+        const docc = new jsPDF("p","pt","a4");
+        //doc.html((<label>aaa</label>),10,10);
+        //doc.fromHTML((element).html(),15,15,{
+         //   "width": 170,
+           
+       // });
+      // doc.autoTable({html:'table table-bordered'});
+
+       // doc.save('1.pdf');
+
+       docc.html(document.querySelector("#invoice"),{
+           callback: function(pdf){
+
+            pdf.autoTable({html:'#tablamate'});
+            pdf.save(`${solicitudes.area}.pdf`);
+           }
+       });
+       console.log(solicitudes.area);
+
+      
+
+
+
+
+    }
+
+
+
     
 
 
@@ -276,7 +305,10 @@ class SolicitudesRM extends Component{
 
                 {this.state.data.map((solicitudes,index)=>{
                     if(solicitudes.estado === 'Pendiente'){
+                       
+
                         return(
+
                             <Accordion key={index}>
                                 <Card>
                                     <Accordion.Toggle as={Card.Header} eventKey={solicitudes}>
@@ -285,67 +317,71 @@ class SolicitudesRM extends Component{
 
                                     <Accordion.Collapse eventKey={solicitudes}>
                                         <Card.Body>
-                                            <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
-                                            <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
-                                            <label><b>Departamento: </b>{solicitudes.departamentosoli}</label><br/>
-                                            <label><b>Área:</b> {solicitudes.area}</label><br/>
-                                            <label><b>Tipo de solicitud: </b>{solicitudes.tipoSolicitud}</label><br/>
-                                            <label><b>Estado de la solicitud:</b> {solicitudes.estado}</label><br/>
+                                        {/*/doc.text()*/}
+                                            <div id="invoice">
+                                                <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
+                                                <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
+                                                <label><b>Departamento: </b>{solicitudes.departamentosoli}</label><br/>
+                                                <label><b>Área:</b> {solicitudes.area}</label><br/>
+                                                <label><b>Tipo de solicitud: </b>{solicitudes.tipoSolicitud}</label><br/>
+                                                <label><b>Estado de la solicitud:</b> {solicitudes.estado}</label><br/>
 
-                                            <label><b>idd:</b> {solicitudes._id}</label><br/>
-                                                       
-                                            <br/><br/>
-                                            <h5>Materiales:</h5>
+                                                <label><b>idd:</b> {solicitudes._id}</label><br/>
+                                                        
+                                                <br/><br/>
+                                                <h5>Materiales:</h5>
+                                            </div>
 
-                                            <table className="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Nombre</th>
-                                                        <th>Cantidad</th>
-                                                        <th>Unidad de medida</th>
-                                                    </tr>
-                                                </thead>
+                                                <table className="table table-bordered" id="tablamate">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nombre</th>
+                                                            <th>Cantidad</th>
+                                                            <th>Unidad de medida</th>
+                                                        </tr>
+                                                    </thead>
 
-                                                <tbody>
-                                                    {this.state.datamatesoli.map(materialsoli=>{
-                                                        if(materialsoli.idSolicitud === solicitudes._id){
-                                                            
-                                                            materialesSolicitados = materialsoli;
-                                                            this.selecMaterialaCambiar(materialesSolicitados);
-                                                            return(
-                                                                <tr>
-                                                                    <td>{materialsoli.nombreMaterial}</td>
-                                                                    <td>{materialsoli.cantidadsolicitada}</td>
-                                                                    <td>{materialsoli.unidadMedidaMS}</td>
-                                                                 </tr>
+                                                    <tbody>
+                                                        {this.state.datamatesoli.map(materialsoli=>{
+                                                            if(materialsoli.idSolicitud === solicitudes._id){
                                                                 
-                                                            )
-                                                            
-                                                
-                                                            
-                                                        }
-                                                        //this.selecMaterialaCambiar(materialesSolicitados);
-                                                       
-                                                        
-                                                        
-                                                        
-                                                        
-                                                         /*   if(materialsoli.idMaterial === materiales._id){
-                                                                this.selecMaterialaCambiar(materiales,materialsoli);
+                                                                materialesSolicitados = materialsoli;
+                                                                this.selecMaterialaCambiar(materialesSolicitados);
+                                                                return(
+                                                                    <tr>
+                                                                        <td>{materialsoli.nombreMaterial}</td>
+                                                                        <td>{materialsoli.cantidadsolicitada}</td>
+                                                                        <td>{materialsoli.unidadMedidaMS}</td>
+                                                                    </tr>
+                                                                    
+                                                                )
+                                                                
+                                                    
+                                                                
                                                             }
-                                                        })*/
-                                                       
+                                                            //this.selecMaterialaCambiar(materialesSolicitados);
+                                                        
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            /*   if(materialsoli.idMaterial === materiales._id){
+                                                                    this.selecMaterialaCambiar(materiales,materialsoli);
+                                                                }
+                                                            })*/
+                                                        
 
-                
-                                                    })}
-                                                    
-                                                    
+                    
+                                                        })}
+                                                        
+                                                        
 
-                                                </tbody>
-                                            </table>
+                                                    </tbody>
+                                                </table>
+                                          
 
                                             <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}}>Entregar</Button>
-                                            <Button color="success">Imprimir</Button>
+                                            <Button color="success" onClick={()=>this.generatePDF(solicitudes)}>Imprimir</Button>
 
                                         </Card.Body>
                                     </Accordion.Collapse>

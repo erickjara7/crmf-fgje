@@ -35,6 +35,8 @@ class MaterialesV1OD extends Component{
 
             idMaterial:'',
             cantidadsolicitada:0,
+            nombreMaterial:'',
+            unidadMedidaMS:''
             
         }
     }
@@ -45,8 +47,10 @@ class MaterialesV1OD extends Component{
          })
      }
 
+     // ne fucctionne pas siempre se va al else
      validacionPostms = ()=>{
-         if(this.state.form.cantidadsolicitada === 0 || this.state.form.cantidadsolicitada ==='undefined'){
+        console.log(`elsiiii ${this.state.form.cantidadsolicitada}`);
+         if(this.state.form.cantidadsolicitada === 0 ){
             console.log(`if`);
          }else{
              //this.peticionPostms();
