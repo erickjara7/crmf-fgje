@@ -5,7 +5,10 @@ import 'jspdf-autotable';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import {Card, Accordion} from 'react-bootstrap';
 import axios from 'axios';
+import Imgg from '../img/logofiscalia.png';
 
+
+//const imgg = new Imgg();
 const cookies = new Cookies();
 
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
@@ -247,7 +250,10 @@ class SolicitudesRM extends Component{
 
     generatePDF=(solicitudes)=>{
        //const element = Document.getElementById("invoice");
-        const docc = new jsPDF("p","pt","a4");
+       
+       // const docc = new jsPDF("p","pt","a4");
+
+       const docc = new jsPDF("p","px","a4","false");
         //doc.html((<label>aaa</label>),10,10);
         //doc.fromHTML((element).html(),15,15,{
          //   "width": 170,
@@ -256,12 +262,20 @@ class SolicitudesRM extends Component{
       // doc.autoTable({html:'table table-bordered'});
 
        // doc.save('1.pdf');
-
+      // var img;
        docc.html(document.querySelector("#invoice"),{
+         
+           
            callback: function(pdf){
-
-            pdf.autoTable({html:'#tablamate'});
+               
+                pdf.addImage(Imgg,'PNG',8,8,450,60);
+            
+              pdf.autoTable({html:'#tablamate'});
+           // img = Imgg;
+            
+            //pdf.autoTable({html:'#tablamate'});
             pdf.save(`${solicitudes.area}.pdf`);
+            //window.open(Imgg);
            }
        });
        console.log(solicitudes.area);
@@ -369,7 +383,7 @@ class SolicitudesRM extends Component{
                                                                     this.selecMaterialaCambiar(materiales,materialsoli);
                                                                 }
                                                             })*/
-                                                        
+                                                           // this.generatePDF(solicitudes);
 
                     
                                                         })}
@@ -381,7 +395,9 @@ class SolicitudesRM extends Component{
                                           
 
                                             <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}}>Entregar</Button>
-                                            <Button color="success" onClick={()=>this.generatePDF(solicitudes)}>Imprimir</Button>
+
+                                            {/**onClick={()=>this.generatePDF(solicitudes)} */}
+                                            <Button color="success" onClick={()=>this.generatePDF(solicitudes)}>Descargar</Button>
 
                                         </Card.Body>
                                     </Accordion.Collapse>
@@ -402,7 +418,7 @@ class SolicitudesRM extends Component{
                     </ModalBody>
                     <ModalFooter>
                     {/*this.peticionPutExistencia();                onClick={()=> {  this.peticionPutExistencia();     this.peticionPutestadoSoli()}}*/}
-                        <button className="btn btn-success" onClick={()=> {this.peticionPutExistencia() }}>Si</button>
+                        <button className="btn btn-success" onClick={()=> {this.peticionPutExistencia();     this.peticionPutestadoSoli() }}>Si</button>
                         <button className="btn btn-danger" onClick={()=> this.modalEntregarMaterial()}>No</button>
 
                     </ModalFooter>
