@@ -8,6 +8,8 @@ import axios from 'axios';
 import Imgg from '../img/logofiscalia.png';
 
 
+const today = new Date(),
+date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate() +': ' + today.getHours() +':' + today.getMinutes() ;
 //const imgg = new Imgg();
 const cookies = new Cookies();
 
@@ -30,6 +32,7 @@ let newvector =[];
 var vecMateid='';
 var vecCanSol='';
 var i =0;
+var varidparPDF = '';
 
 
 
@@ -249,11 +252,55 @@ class SolicitudesRM extends Component{
     }
 
     generatePDF=(solicitudes)=>{
+
+        
+        
+        var docc = new jsPDF();
+
+        ///SEGUN YO ESTE BLOQUE NO FUNCIONA 
+        docc.html(document.body,{
+            onrendered:function(canvas){
+               
+                var img = canvas.toDataURL("image/png");
+                docc.addImage(img, 'JPEG',20,20);
+            }
+        
+        });
+       
+        docc.addImage(Imgg,'PNG',8,8,180,25);
+       
+       
+        docc.setFontSize(15);
+        docc.text('Solicitud de Materiales',73,45)
+        docc.setFontSize(10);
+        docc.text(`Fecha de solicitud: ${solicitudes.fecha}`,15,60);
+        docc.text(`Solicitante: ${solicitudes.solicitante}`,15,65);
+        docc.text(`Departamento: ${solicitudes.departamentosoli}`,15,70);
+        docc.text(`Área: ${solicitudes.area}`,15,75);
+        docc.text(`Tipo de solicitud: ${solicitudes.tipoSolicitud}`,15,80);
+        docc.text(`Fecha de Entrega: ${date}`,15,85);
+
+
+        docc.text('Recibí',43,275);
+        docc.text('Entregó',143,275);
+
+        docc.setFontSize(8);
+        docc.text(`${solicitudes.solicitante}`,38,269.5);
+        docc.text('____________________________',30,270);
+        
+
+        docc.text('____________________________',130,270);
+        //docc.autoTable({html:'#tablamate'});
+            
+
+        
+        docc.save(`${solicitudes.departamentosoli}.${solicitudes.area}.pdf`);
+       // ------------------------------------------
        //const element = Document.getElementById("invoice");
        
        // const docc = new jsPDF("p","pt","a4");
 
-       const docc = new jsPDF("p","px","a4","false");
+      // const docc = new jsPDF("p","px","a4","false");
         //doc.html((<label>aaa</label>),10,10);
         //doc.fromHTML((element).html(),15,15,{
          //   "width": 170,
@@ -263,22 +310,32 @@ class SolicitudesRM extends Component{
 
        // doc.save('1.pdf');
       // var img;
-       docc.html(document.querySelector("#invoice"),{
+      // docc.html(document.querySelector("#invoice"),{
          
-           
-           callback: function(pdf){
-               
-                pdf.addImage(Imgg,'PNG',8,8,450,60);
+       
+         //  callback: function(pdf){
+           //  var  lines = docc.splitTextToSize(pdf,3);
+           //  docc.text(0.2,0.2, lines);
+           //  docc.setFontSize(10);
+              
+           // pdf.setFontSize(10); CAMBIAR TAMAÑO
             
-              pdf.autoTable({html:'#tablamate'});
-           // img = Imgg;
+               
+               
+             //   pdf.addImage(Imgg,'PNG',8,8,450,60);
+            
+            //  pdf.autoTable({html:'#tablamate'});
+         
             
             //pdf.autoTable({html:'#tablamate'});
-            pdf.save(`${solicitudes.area}.pdf`);
+           //pdf.save(`${solicitudes.area}.pdf`);
             //window.open(Imgg);
-           }
-       });
-       console.log(solicitudes.area);
+          // }
+     //  });
+      
+       
+       console.log(` pdf ${varidparPDF}`);
+       console.log(vector);
 
       
 
@@ -332,7 +389,7 @@ class SolicitudesRM extends Component{
                                     <Accordion.Collapse eventKey={solicitudes}>
                                         <Card.Body>
                                         {/*/doc.text()*/}
-                                            <div id="invoice">
+                                            <div id="invoice" >
                                                 <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
                                                 <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
                                                 <label><b>Departamento: </b>{solicitudes.departamentosoli}</label><br/>
@@ -378,7 +435,7 @@ class SolicitudesRM extends Component{
                                                             
                                                             
                                                             
-                                                            
+                                                            varidparPDF= solicitudes._id;
                                                             /*   if(materialsoli.idMaterial === materiales._id){
                                                                     this.selecMaterialaCambiar(materiales,materialsoli);
                                                                 }
@@ -418,7 +475,7 @@ class SolicitudesRM extends Component{
                     </ModalBody>
                     <ModalFooter>
                     {/*this.peticionPutExistencia();                onClick={()=> {  this.peticionPutExistencia();     this.peticionPutestadoSoli()}}*/}
-                        <button className="btn btn-success" onClick={()=> {this.peticionPutExistencia();     this.peticionPutestadoSoli() }}>Si</button>
+                        <button className="btn btn-success" onClick={()=> {this.peticionPutExistencia();     this.peticionPutestadoSoli();  }}>Si</button>
                         <button className="btn btn-danger" onClick={()=> this.modalEntregarMaterial()}>No</button>
 
                     </ModalFooter>
