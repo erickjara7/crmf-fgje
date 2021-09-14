@@ -32,7 +32,7 @@ let newvector =[];
 var vecMateid='';
 var vecCanSol='';
 var i =0;
-var varidparPDF = '';
+
 
 
 
@@ -106,7 +106,7 @@ class SolicitudesRM extends Component{
                     vector.push({vecIdMatesoli, vecMateid,vecCanSol});
                     
                 }
-                
+                console.log('entre al ciclo');
         } 
         
     }
@@ -252,49 +252,147 @@ class SolicitudesRM extends Component{
     }
 
     generatePDF=(solicitudes)=>{
+        const arreglo = [];
+        //materialesSolicitados.idSolicitud = solicitudes._id;
+       // solicitudID = solicitudes._id;
+
+        //console.log(`idSoli: ${materialesSolicitados.idSolicitud}`);
+       // console.log(`soliId: ${solicitudes._id}`);
+
+       // this.selecMaterialaCambiar(materialesSolicitados);
 
         
+       // console.log(vector);
+       
+       
+
+
+
+
+       
         
         var docc = new jsPDF();
+       // docc.autoTable({
+        //    head:[['Material', 'Cantidad', 'Unidad de medida']]
+       // })
+
+        this.state.datamatesoli.map(materialsoli=>{
+
+            if(materialsoli.idSolicitud === solicitudes._id){
+             var nm = materialsoli.nombreMaterial;
+             var cs = materialsoli.cantidadsolicitada;
+             var umms = materialsoli.unidadMedidaMS;
+             arreglo.push({nm,cs,umms});
+             
+             
+
+
+             
+ 
+ 
+            }
+           
+            
+ 
+        });
+       /* for( i = i; i < vector.length; i ++){
+            docc.autoTable({
+                head:[['Material', 'Cantidad', 'Unidad de medida']],
+            
+                body:[
+                    [`${vector[i]}`]
+                   
+                ],
+               
+            })
+            console.log(`hola: ${vector[i]}`);
+        }*/
+        
+        arreglo.map(elemento=>{
+            docc.autoTable({
+                head:[['Material', 'Cantidad', 'Unidad de medida']],
+            
+                body:[
+                    [`${elemento.nm}`,`${elemento.cs}`,`${elemento.umms}`]
+                   // {nombre: `${elemento.nm}`,cantidad: `${elemento.cs}`,unidad:`${elemento.umms}`},
+                ],
+                colums:[
+                    {header:'Nombre', dataKey:'nombre'},
+                    {header:'Cantidad', dataKey:'cantidad'},
+                    {header:'Unidad de medida', dataKey:'unidad'},
+                ],
+            })
+            //docc.autoTable({html:'#tablamate'});
+
+        })
+        
+        console.log(arreglo);
+        
 
         ///SEGUN YO ESTE BLOQUE NO FUNCIONA 
-        docc.html(document.body,{
+      /* docc.html(document.body,{
             onrendered:function(canvas){
                
                 var img = canvas.toDataURL("image/png");
                 docc.addImage(img, 'JPEG',20,20);
             }
         
-        });
+        });*/
        
-        docc.addImage(Imgg,'PNG',8,8,180,25);
+        //Logos 
+      //  docc.addImage(Imgg,'PNG',8,8,180,25);
        
-       
+                                            //docc.setFontType('bold');
+                                            // docc.setTextColor('yellow');
+
+        //Titulo
         docc.setFontSize(15);
-        docc.text('Solicitud de Materiales',73,45)
+        docc.text('Solicitud de Materiales',73,45);
+
+        //Información de la solicitud
         docc.setFontSize(10);
-        docc.text(`Fecha de solicitud: ${solicitudes.fecha}`,15,60);
-        docc.text(`Solicitante: ${solicitudes.solicitante}`,15,65);
-        docc.text(`Departamento: ${solicitudes.departamentosoli}`,15,70);
-        docc.text(`Área: ${solicitudes.area}`,15,75);
-        docc.text(`Tipo de solicitud: ${solicitudes.tipoSolicitud}`,15,80);
-        docc.text(`Fecha de Entrega: ${date}`,15,85);
+        docc.text(`${solicitudes.fecha}`,51,60);
+        docc.text(`${solicitudes.solicitante}`,38,65);
+        docc.text(`${solicitudes.departamentosoli}`,45,70);
+        docc.text(`${solicitudes.area}`,27,75);
+        docc.text(`${solicitudes.tipoSolicitud}`,49,80);
+        docc.text(`${date}`,50,85);
 
+        //Firmas
+        docc.text('Solicitante',43,275);
+        docc.text('Entrega',149,275);
 
-        docc.text('Recibí',43,275);
-        docc.text('Entregó',143,275);
-
+        //Estilos para las partes de las firmas
         docc.setFontSize(8);
-        docc.text(`${solicitudes.solicitante}`,38,269.5);
-        docc.text('____________________________',30,270);
-        
+        docc.text('Firma:',25,259);
+        docc.text('Nombre:',25,269.5);
 
-        docc.text('____________________________',130,270);
-        //docc.autoTable({html:'#tablamate'});
+        docc.text(`${solicitudes.solicitante}`,38,269.5);
+        docc.text('_____________________________________',24,270);
+        
+        docc.text('Firma:',130,259)
+        docc.text('Nombre:',130,269.5);
+        docc.text('_____________________________________',129,270);
+                                                             //docc.autoTable({html:'#tablamate'});
             
 
+        //Negritas
+        docc.setFontSize(12);
+        docc.setFont('','bold');
+        docc.text(`Fecha de solicitud:`,15,60);
+        docc.text(`Solicitante:`,15,65);
+        docc.text(`Departamento:`,15,70);
+        docc.text(`Área:`,15,75);
+        docc.text(`Tipo de solicitud:`,15,80);
+        docc.text(`Fecha de Entrega:`,15,85);
+
+        //crear tabla 
+       // docc.autoTable({html:'#tablamate'});
+
+        //Descargar documento 
+       
+       docc.save(`${solicitudes.departamentosoli}.${solicitudes.area}.pdf`);
         
-        docc.save(`${solicitudes.departamentosoli}.${solicitudes.area}.pdf`);
        // ------------------------------------------
        //const element = Document.getElementById("invoice");
        
@@ -310,10 +408,10 @@ class SolicitudesRM extends Component{
 
        // doc.save('1.pdf');
       // var img;
-      // docc.html(document.querySelector("#invoice"),{
+      // docc.html(document.querySelector("invoice"),{
          
        
-         //  callback: function(pdf){
+          // callback: function(pdf){
            //  var  lines = docc.splitTextToSize(pdf,3);
            //  docc.text(0.2,0.2, lines);
            //  docc.setFontSize(10);
@@ -324,18 +422,18 @@ class SolicitudesRM extends Component{
                
              //   pdf.addImage(Imgg,'PNG',8,8,450,60);
             
-            //  pdf.autoTable({html:'#tablamate'});
+           // docc.autoTable({html:'#tablamate'});
          
             
             //pdf.autoTable({html:'#tablamate'});
            //pdf.save(`${solicitudes.area}.pdf`);
             //window.open(Imgg);
           // }
-     //  });
+     // });
       
        
-       console.log(` pdf ${varidparPDF}`);
-       console.log(vector);
+       //console.log(` pdf ${varidparPDF}`);
+      // console.log(vector);
 
       
 
@@ -435,7 +533,7 @@ class SolicitudesRM extends Component{
                                                             
                                                             
                                                             
-                                                            varidparPDF= solicitudes._id;
+                                                           // varidparPDF= solicitudes._id;
                                                             /*   if(materialsoli.idMaterial === materiales._id){
                                                                     this.selecMaterialaCambiar(materiales,materialsoli);
                                                                 }
@@ -454,7 +552,7 @@ class SolicitudesRM extends Component{
                                             <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}}>Entregar</Button>
 
                                             {/**onClick={()=>this.generatePDF(solicitudes)} */}
-                                            <Button color="success" onClick={()=>this.generatePDF(solicitudes)}>Descargar</Button>
+                                            <Button color="success" onClick={()=>this.generatePDF(solicitudes,materialesSolicitados)}>Descargar</Button>
 
                                         </Card.Body>
                                     </Accordion.Collapse>
