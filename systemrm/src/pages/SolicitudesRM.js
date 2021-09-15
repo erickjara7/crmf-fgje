@@ -252,6 +252,9 @@ class SolicitudesRM extends Component{
     }
 
     generatePDF=(solicitudes)=>{
+
+        var element='';
+        //se crea arreglo
         const arreglo = [];
         //materialesSolicitados.idSolicitud = solicitudes._id;
        // solicitudID = solicitudes._id;
@@ -270,77 +273,47 @@ class SolicitudesRM extends Component{
 
 
        
-        
+        // se crea el doc
         var docc = new jsPDF();
-       // docc.autoTable({
-        //    head:[['Material', 'Cantidad', 'Unidad de medida']]
-       // })
-
+        
+      
+        //recorrer materiales
         this.state.datamatesoli.map(materialsoli=>{
-
+            //Guardar el nombre,cantidad y unidad de medida en arreglo. Cuando id de solicitudes 
+            //de los mateiales es igual al id de la solicitud seleccionada.
             if(materialsoli.idSolicitud === solicitudes._id){
              var nm = materialsoli.nombreMaterial;
              var cs = materialsoli.cantidadsolicitada;
              var umms = materialsoli.unidadMedidaMS;
-             arreglo.push({nm,cs,umms});
-             
-             
-
-
-             
- 
- 
+             arreglo.push([nm,cs,umms]);
             }
            
             
  
         });
-       /* for( i = i; i < vector.length; i ++){
-            docc.autoTable({
-                head:[['Material', 'Cantidad', 'Unidad de medida']],
-            
-                body:[
-                    [`${vector[i]}`]
-                   
-                ],
-               
-            })
-            console.log(`hola: ${vector[i]}`);
-        }*/
+        var columns = ['Material', 'Cantidad', 'Unidad de medida'];
         
-        arreglo.map(elemento=>{
-            docc.autoTable({
-                head:[['Material', 'Cantidad', 'Unidad de medida']],
-            
-                body:[
-                    [`${elemento.nm}`,`${elemento.cs}`,`${elemento.umms}`]
-                   // {nombre: `${elemento.nm}`,cantidad: `${elemento.cs}`,unidad:`${elemento.umms}`},
-                ],
-                colums:[
-                    {header:'Nombre', dataKey:'nombre'},
-                    {header:'Cantidad', dataKey:'cantidad'},
-                    {header:'Unidad de medida', dataKey:'unidad'},
-                ],
-            })
-            //docc.autoTable({html:'#tablamate'});
-
-        })
-        
-        console.log(arreglo);
-        
-
-        ///SEGUN YO ESTE BLOQUE NO FUNCIONA 
-      /* docc.html(document.body,{
-            onrendered:function(canvas){
-               
-                var img = canvas.toDataURL("image/png");
-                docc.addImage(img, 'JPEG',20,20);
+        docc.autoTable(columns,arreglo,
+        {   margin:{top:95},
+            theme:'plain',
+            headStyles:{
+                fillColor: [182, 180, 180],
+                textColor: [0, 0, 0],
+                fontSize: 10,
+                padding: 0,
+            },
+            bodyStyles: {
+                fontSize: 8.5,
+                padding: 0,
+                
             }
+        },
         
-        });*/
+        );
+       
        
         //Logos 
-      //  docc.addImage(Imgg,'PNG',8,8,180,25);
+        docc.addImage(Imgg,'PNG',8,8,180,25);
        
                                             //docc.setFontType('bold');
                                             // docc.setTextColor('yellow');
@@ -379,7 +352,7 @@ class SolicitudesRM extends Component{
         //Negritas
         docc.setFontSize(12);
         docc.setFont('','bold');
-        docc.text(`Fecha de solicitud:`,15,60);
+        docc.text(`Fecha de solicitud:`,15,60);     
         docc.text(`Solicitante:`,15,65);
         docc.text(`Departamento:`,15,70);
         docc.text(`Área:`,15,75);
@@ -390,7 +363,6 @@ class SolicitudesRM extends Component{
        // docc.autoTable({html:'#tablamate'});
 
         //Descargar documento 
-       
        docc.save(`${solicitudes.departamentosoli}.${solicitudes.area}.pdf`);
         
        // ------------------------------------------
