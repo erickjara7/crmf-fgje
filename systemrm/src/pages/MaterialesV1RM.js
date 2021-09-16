@@ -192,7 +192,7 @@ componentDidMount(){
                 <h2>Materiales</h2>
                 <br></br>
                 <div>
-                    <div>
+                    <div className="">
                         <input
                             type="text"
                             placeholder="Buscar..."
@@ -215,7 +215,7 @@ componentDidMount(){
 
                     <thead>
                         <tr class="tablaencabezado">
-                            <th>Identificador</th>
+                            
                             <th>Nombre</th>
                             <th>Existencia</th>
                             <th>Unidad de medida</th>
@@ -261,7 +261,7 @@ componentDidMount(){
                             return(
                     
                                 <tr>
-                                    <td>{material._id}</td>
+                                    
                                     <td>{material.nombre}</td>
                                     <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
                                     <td>{material.unidadMedida}</td>

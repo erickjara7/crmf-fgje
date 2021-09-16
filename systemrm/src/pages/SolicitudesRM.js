@@ -274,7 +274,7 @@ class SolicitudesRM extends Component{
 
        
         // se crea el doc
-        var docc = new jsPDF();
+        var docc = new jsPDF(); 
         
       
         //recorrer materiales
@@ -556,16 +556,7 @@ class SolicitudesRM extends Component{
 
 
 {/*------------------------------------------------------------------------------------------------------------------------------------------------*/}
-                            <br/><br/><br/><br/><br/>
-                            <label>Solicitante: {cookies.get('nombres')} {cookies.get('apellidoP')}</label>
-                            <br>
-                            </br>
-
-                    
-               <a href="./Pdf" target="_blank"><Button type="button"  class="btn-sm" >Pdf</Button></a>
-
-
-                <button type="button"  class="btn-sm">Editar</button>
+  
             
             </div>
         );

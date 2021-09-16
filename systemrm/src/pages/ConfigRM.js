@@ -307,7 +307,7 @@ class ConfigRM extends Component{
 
                 <Modal isOpen={this.state.modalEliminar}>
                     <ModalBody>
-                        ¿Estás seguro que deseas eliminar al usuario ?
+                        ¿Estás seguro que deseas eliminar al usuario {this.state.form.nombres} {this.state.form.apellidoP}?
                     </ModalBody>
 
                     <ModalFooter>

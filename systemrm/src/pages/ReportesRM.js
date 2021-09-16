@@ -1,10 +1,68 @@
 import React, {Component} from 'react';
 import Cookies from 'universal-cookie';
+import {Button} from 'reactstrap';
+import axios from 'axios';
 
 
 const cookies = new Cookies();
 
+const versolicitudes ="http://localhost:4000/solicitud/getsoli";
+const vermateriales ="http://localhost:4000/materiales/getmaterial";
+
 class ReportesRM extends Component{
+
+    state={
+        datasolicitudes:[],
+        datamateriales:[],
+        departamentoS:'',   
+        mesS:'',
+        añoS:'' 
+    }
+
+
+    peticionGetsolicitudes = async()=>{
+        await  axios.get(versolicitudes).then(response =>{
+            this.setState({datasolicitudes:response.data});  
+           
+        }) 
+    }
+
+
+    peticionGetmateriales = async()=>{
+        await  axios.get(vermateriales).then(response =>{
+            this.setState({datamateriales:response.data});  
+        })
+    }
+
+
+    mostrarReporte=()=>{
+        
+    }
+
+
+
+   //captura lo que se escribe en el input para la variable departamento del estado
+    onChange = async e =>{
+        e.persist();
+        await this.setState({departamentoS: e.target.value});
+        console.log(`departamento=${this.state.departamentoS}`);
+    }
+   //captura lo que se escribe en el input para la variable mes del estado
+    onChange1 = async e =>{
+        e.persist();
+        await this.setState({mesS: e.target.value});
+        console.log(`mes=${this.state.mesS}`);
+    }
+    //captura lo que se escribe en el input para la variable año del estado
+    onChange2 = async e =>{
+        e.persist();
+        await this.setState({añoS: e.target.value});
+        console.log(`año=${this.state.añoS}`);
+    }
+
+
+
+
     cerrarSesion =() =>{
         cookies.remove('_id',{path:"/"});
         cookies.remove('nombres',{path:"/"});
@@ -18,6 +76,8 @@ class ReportesRM extends Component{
 
 
     componentDidMount(){
+        this.peticionGetsolicitudes();
+        this.peticionGetmateriales();
         if (!cookies.get('username')){
             window.location.href="./";
         }else if(cookies.get('userType') === 'Usuario'){
@@ -30,6 +90,8 @@ class ReportesRM extends Component{
 
 
     render(){
+
+       
         return(
             <div class="container">
                 <div class="navbar">
@@ -47,14 +109,64 @@ class ReportesRM extends Component{
                 </div>
             
                 <div class="raya"/>
-
-
                 <br></br>
-
                 <h2>Reportes</h2>
                 <br></br>
-               
 
+
+                <form>
+                    <div className="row">
+                        <div className="col-3">
+                           
+                            <input type="text" className="form-control" placeholder="Departamento" onChange ={this.onChange}  value={this.state.departamentoS}></input>
+                        </div>
+                        
+                        <div className="col-2">
+                            
+                            <input type="text" className="form-control" placeholder="Mes" onChange ={this.onChange1}  value={this.state.mesS}></input>
+                        </div>
+                        <div className="col-2">
+                            
+                            <input type="text" className="form-control" placeholder="Año" onChange ={this.onChange2}  value={this.state.añoS}></input>
+                        </div>
+                        <div className="col-2">
+                        <Button color="success" onClick={()=>this.mostrarReporte()}>Ver Reporte</Button>
+                        </div>
+                    </div>
+                </form>
+                <br/><br/>
+                <div>
+                    {this.state.datasolicitudes.filter((solicitudes)=>{  
+                        if (this.state.departamentoS =="" && this.state.mesS =="" && this.state.añoS ==""){
+                            return(
+                                <label>holiii</label>,
+                                console.log("holiiii ")
+                            )
+                            
+                            //console.log("holiiii ");
+
+                        }/*else if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) &&
+                            solicitudes.fecha.toLowerCase().includes(this.state.mesS.toLowerCase()) &&
+                            solicitudes.fecha.toLowerCase().includes(this.state.añoS.toLowerCase()) ){
+                            return(
+                                <label>{solicitudes.departamentosoli}</label>,
+                                <label>{solicitudes._id}</label>
+                            )
+
+                        }*/
+                        
+                    }).map((solicitudes=>{
+
+                    }))}
+
+
+                </div>
+                <br/><br/>
+
+
+
+               
+{/**------------------------------------------------------------------------------------------------------------------------------- */}
                 <button type="button"  class="btn-sm">Agregar</button>
                 <button type="button"  class="btn-sm">Editar</button>
             

@@ -4,12 +4,12 @@ const Schema = mongoose.Schema;
 
 
 const SolicitudSchema = Schema({
-    fecha:{type:Date},
-    solicitante:{type:String},
-    departamentosoli:{type:String},
-    area:{type:String},
-    tipoSolicitud:{type:String, enum: ['Requisición','Préstamo']},
-    estado:{type:String, enum:['Iniciada','Pendiente','Entregada']}
+    fecha:{type:Date,required:true},
+    solicitante:{type:String,required:true},
+    departamentosoli:{type:String,required:true},
+    area:{type:String,required:true},
+    tipoSolicitud:{type:String,required:true, enum: ['Requisición','Préstamo']},
+    estado:{type:String,required:true, enum:['Iniciada','Pendiente','Entregada']}
 });
 
 module.exports = mongoose.model('Solicitud', SolicitudSchema)
