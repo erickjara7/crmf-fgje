@@ -7,7 +7,7 @@ import axios from 'axios';
 const cookies = new Cookies();
 
 const versolicitudes ="http://localhost:4000/solicitud/getsoli";
-const vermateriales ="http://localhost:4000/materiales/getmaterial";
+const vermateriales ="http://localhost:4000/materialsolicitado/getms";
 
 class ReportesRM extends Component{
 
@@ -36,6 +36,8 @@ class ReportesRM extends Component{
 
 
     mostrarReporte=()=>{
+        
+ 
         
     }
 
@@ -135,29 +137,108 @@ class ReportesRM extends Component{
                     </div>
                 </form>
                 <br/><br/>
+
+              <table class="table table-striped table-bordered">
+                
+                    {this.state.datasolicitudes.map((solicitudes=>{
+                        if(this.state.departamentoS ==="" && this.state.mesS ==="" && this.state.añoS ===""){
+                            
+                            
+                        }else if(this.state.departamentoS ==="" || this.state.mesS ==="" || this.state.añoS ===""){
+                            console.log(`arriba`);
+                            console.log(this.state.departamentoS, this.state.mesS, this.state.añoS);
+
+                       }else if(this.state.departamentoS !="" && this.state.mesS !="" && this.state.añoS !="" ){
+                        console.log(`abajo`);
+                        console.log(this.state.departamentoS, this.state.mesS, this.state.añoS);
+                        
+                        
+                            if(solicitudes.estado === 'Entregada'){
+                                if(
+                             solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) && 
+                        
+                                solicitudes.fecha.includes(this.state.mesS) &&
+                                solicitudes.fecha.includes(this.state.añoS)
+                                    
+                                ){
+                                // if(solicitudes.fecha.includes(this.state.mesS)){
+                                    //  if(solicitudes.fecha.includes(this.state.añoS) ){
+                                            return(
+                                                <>
+                                                    <thead>
+                                                        <tr>
+                                                            <b>Fecha:</b> {solicitudes.fecha} <br/>
+                                                            <b>Solicitante:</b> {solicitudes.solicitante}         
+                                                            <b>Departamento:</b> {solicitudes.departamentosoli} <b>Area:</b> {solicitudes.area} 
+                                                            <b>Tipo de solicitud:</b> {solicitudes.tipoSolicitud}<br/>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Material</th>
+                                                            <th>Cantidad</th>
+                                                            <th>Unidad de medida</th>
+                                                        </tr>
+                                                    </thead>
+            
+                                                    <tbody>
+                                                        {this.state.datamateriales.map(materiales=>{
+                                                            if(materiales.idSolicitud === solicitudes._id){
+                                                                return(
+                                                                    <tr>
+                                                                        <td>{materiales.nombreMaterial}</td>
+                                                                        <td>{materiales.cantidadsolicitada}</td>
+                                                                        <td>{materiales.unidadMedidaMS}</td>
+                                                                    </tr>
+                                                                )
+            
+                                                            }
+                                                        })}
+            
+                                                    </tbody>
+                                                    <br/>
+                                                </>               
+                                            )
+
+                                    // }
+                                // }
+                                    
+                                }
+
+
+                            }
+                        }
+
+                        
+
+
+                    }))}
+                    
+
+                    
+                </table>
+
                 <div>
-                    {this.state.datasolicitudes.filter((solicitudes)=>{  
+                    {/*this.state.datasolicitudes.filter((solicitudes)=>{  
                         if (this.state.departamentoS =="" && this.state.mesS =="" && this.state.añoS ==""){
-                            return(
-                                <label>holiii</label>,
-                                console.log("holiiii ")
-                            )
+                            
+                                
+                            
                             
                             //console.log("holiiii ");
 
-                        }/*else if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) &&
+                        }else if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) &&
                             solicitudes.fecha.toLowerCase().includes(this.state.mesS.toLowerCase()) &&
                             solicitudes.fecha.toLowerCase().includes(this.state.añoS.toLowerCase()) ){
                             return(
-                                <label>{solicitudes.departamentosoli}</label>,
-                                <label>{solicitudes._id}</label>
+                                <table>
+
+                                </table>
                             )
 
-                        }*/
+                        }
                         
                     }).map((solicitudes=>{
 
-                    }))}
+                    }))*/}
 
 
                 </div>

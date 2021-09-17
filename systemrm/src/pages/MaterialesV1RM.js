@@ -214,6 +214,7 @@ componentDidMount(){
                 <table class="table table-striped table-bordered" >
 
                     <thead>
+                        
                         <tr class="tablaencabezado">
                             
                             <th>Nombre</th>
