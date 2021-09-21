@@ -12,11 +12,13 @@ const vermateriales ="http://localhost:4000/materialsolicitado/getms";
 class ReportesRM extends Component{
 
     state={
+        meses:['01','02','03','04','05','06','07','08','09','10','11','12'],
         datasolicitudes:[],
         datamateriales:[],
         departamentoS:'',   
         mesS:'',
-        añoS:'' 
+        añoS:'',
+        x:''
     }
 
 
@@ -125,11 +127,26 @@ class ReportesRM extends Component{
                         
                         <div className="col-2">
                             
-                            <input type="text" className="form-control" placeholder="Mes" onChange ={this.onChange1}  value={this.state.mesS}></input>
+                            <input type="text" className="form-control" placeholder="Año" onChange ={this.onChange2}  value={this.state.añoS}></input>
                         </div>
                         <div className="col-2">
                             
-                            <input type="text" className="form-control" placeholder="Año" onChange ={this.onChange2}  value={this.state.añoS}></input>
+                            <select type="text" className="form-control" placeholder="Mes" onChange ={this.onChange1}  value={this.state.mesS}>
+                                <option>Mes</option>
+                                <option>01</option>
+                                <option>02</option>
+                                <option>03</option>
+                                <option>04</option>
+                                <option>05</option>
+                                <option>06</option>
+                                <option>07</option>
+                                <option>08</option>
+                                <option>09</option>
+                                <option>10</option>
+                                <option>11</option>
+                                <option>12</option>
+                                
+                            </select>
                         </div>
                         <div className="col-2">
                         <Button color="success" onClick={()=>this.mostrarReporte()}>Ver Reporte</Button>
@@ -137,33 +154,87 @@ class ReportesRM extends Component{
                     </div>
                 </form>
                 <br/><br/>
+               
 
               <table class="table table-striped table-bordered">
                 
                     {this.state.datasolicitudes.map((solicitudes=>{
-                        if(this.state.departamentoS ==="" && this.state.mesS ==="" && this.state.añoS ===""){
-                            
-                            
-                        }else if(this.state.departamentoS ==="" || this.state.mesS ==="" || this.state.añoS ===""){
-                            console.log(`arriba`);
-                            console.log(this.state.departamentoS, this.state.mesS, this.state.añoS);
+                        
+                            if(this.state.departamentoS ==="" || this.state.mesS === "" || this.state.añoS ===""){
 
-                       }else if(this.state.departamentoS !="" && this.state.mesS !="" && this.state.añoS !="" ){
-                        console.log(`abajo`);
-                        console.log(this.state.departamentoS, this.state.mesS, this.state.añoS);
+                            }else if(this.state.departamentoS != "" || this.state.mesS != "" || this.state.añoS != ""){
+                               
+                                if(this.state.departamentoS != "" && this.state.mesS != "" && this.state.añoS != ""){
+                                    console.log(`&& = ${this.state.departamentoS}, ${this.state.mesS}, ${this.state.añoS}`);
+                                   
+
+                                    if(solicitudes.estado === 'Entregada'){
+                                        
+                                        this.state.x = solicitudes.fecha;
+                                        console.log(solicitudes.fecha, solicitudes.departamentosoli, this.state.x);
+
+                                        if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) //&&
+                                        //this.state.x.includes(this.state.mesS,5)
+                                        
+                                        //solicitudes.fecha.includes(this.state.mesS)
+                                   ){
+                                       console.log(solicitudes._id);
+                                      
+                                       //solicitudes.fecha.includes(this.state.mesS) &&
+                                       //solicitudes.fecha.includes(this.state.añoS) &&
+                                       //solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) //&& 
+                                    return(
+                                        <>
+                                            <thead>
+                                                <tr>
+                                                    <b>Fecha:</b> {solicitudes.fecha} <br/>
+                                                    <b>Solicitante:</b> {solicitudes.solicitante}         
+                                                    <b>Departamento:</b> {solicitudes.departamentosoli} <b>Area:</b> {solicitudes.area} 
+                                                    <b>Tipo de solicitud:</b> {solicitudes.tipoSolicitud}<br/>
+                                                </tr>
+                                                <tr>
+                                                    <th>Material</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Unidad de medida</th>
+                                                </tr>
+                                            </thead>
+    
+                                            <tbody>
+                                                {this.state.datamateriales.map(materiales=>{
+                                                    if(materiales.idSolicitud === solicitudes._id){
+                                                        return(
+                                                            <tr>
+                                                                <td>{materiales.nombreMaterial}</td>
+                                                                <td>{materiales.cantidadsolicitada}</td>
+                                                                <td>{materiales.unidadMedidaMS}</td>
+                                                            </tr>
+                                                        )
+    
+                                                    }
+                                                })}
+    
+                                            </tbody>
+                                            <br/>
+                                        </>               
+                                    )
+
+                                   }
+                                        
+
+
+                                    }else{
+
+                                    }
+                                 
+                                }else{
+                                    console.log("nada");
+                                }
+
+                            }
+
                         
-                        
-                            if(solicitudes.estado === 'Entregada'){
-                                if(
-                             solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) && 
-                        
-                                solicitudes.fecha.includes(this.state.mesS) &&
-                                solicitudes.fecha.includes(this.state.añoS)
-                                    
-                                ){
-                                // if(solicitudes.fecha.includes(this.state.mesS)){
-                                    //  if(solicitudes.fecha.includes(this.state.añoS) ){
-                                            return(
+                       
+                                         /*   return(
                                                 <>
                                                     <thead>
                                                         <tr>
@@ -196,20 +267,9 @@ class ReportesRM extends Component{
                                                     </tbody>
                                                     <br/>
                                                 </>               
-                                            )
+                                            )*/
 
-                                    // }
-                                // }
-                                    
-                                }
-
-
-                            }
-                        }
-
-                        
-
-
+                                   
                     }))}
                     
 

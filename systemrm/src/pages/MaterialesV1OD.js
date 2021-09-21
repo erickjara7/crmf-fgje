@@ -49,12 +49,12 @@ class MaterialesV1OD extends Component{
 
      // ne fucctionne pas siempre se va al else
      validacionPostms = ()=>{
-        console.log(`elsiiii ${this.state.form.cantidadsolicitada}`);
+       // console.log(`elsiiii ${this.state.form.cantidadsolicitada}`);
          if(this.state.form.cantidadsolicitada === 0 ){
             console.log(`if`);
          }else{
-             //this.peticionPostms();
-             console.log(`else ${this.state.form.cantidadsolicitada}`);
+             this.peticionPostms();
+            // console.log(`else ${this.state.form.cantidadsolicitada}`);
          }
      }
 

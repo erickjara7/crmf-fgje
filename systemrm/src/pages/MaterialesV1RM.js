@@ -60,6 +60,7 @@ peticionPost=async()=>{
     await axios.post(aggmaterial, this.state.form).then(response=>{
         this.modalInsertar();
         this.peticionGet();
+        alert("Se insertó correctamente")
     }).catch(error=>{
         console.log(error.message);
     })
@@ -107,6 +108,20 @@ seleccionarMaterial = (material) =>{
         }
     })
     
+}
+
+
+validacionaggmaterial = () =>{
+
+    console.log(`nombre: ${this.state.form.nombre}`);
+    
+    
+    if((this.state.form.nombre ==='' || this.state.form.existencia ==='' || this.state.form.unidadMedida ==='' || this.state.form.categoria ==='')){
+        alert("Favor de llenar todos los campos");
+    }else{
+        this.peticionPost();
+    }
+
 }
 
 
@@ -326,7 +341,7 @@ componentDidMount(){
 
                     <ModalFooter>
                         {this.state.tipoModal == 'insertar'?
-                            <button className="btn btn-success" onClick={ () => this.peticionPost()}>Insertar</button>:
+                            <button className="btn btn-success" onClick={ () => this.validacionaggmaterial()}>Insertar</button>:
                             <button className="btn btn-primary" onClick={ () => {this.peticionPut()}}>Actualizar</button>
                         }
                         <button className="btn btn-danger" onClick={ () => this.modalInsertar()}>Cancelar</button>
