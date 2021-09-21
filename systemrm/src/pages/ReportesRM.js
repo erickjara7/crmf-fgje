@@ -115,7 +115,9 @@ class ReportesRM extends Component{
                 <div class="raya"/>
                 <br></br>
                 <h2>Reportes</h2>
+                
                 <br></br>
+                <h6>Consulta solicitudes entregadas por departamento</h6>
 
 
                 <form>
@@ -173,7 +175,10 @@ class ReportesRM extends Component{
                                         this.state.x = solicitudes.fecha;
                                         console.log(solicitudes.fecha, solicitudes.departamentosoli, this.state.x);
 
-                                        if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) //&&
+                                        if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) 
+                                      
+                                        
+                                        //&&
                                         //this.state.x.includes(this.state.mesS,5)
                                         
                                         //solicitudes.fecha.includes(this.state.mesS)
@@ -308,8 +313,7 @@ class ReportesRM extends Component{
 
                
 {/**------------------------------------------------------------------------------------------------------------------------------- */}
-                <button type="button"  class="btn-sm">Agregar</button>
-                <button type="button"  class="btn-sm">Editar</button>
+                
             
             </div>
            

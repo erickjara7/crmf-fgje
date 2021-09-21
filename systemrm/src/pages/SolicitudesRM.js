@@ -152,7 +152,8 @@ class SolicitudesRM extends Component{
                             axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
                                 console.log(`putix`);
                                 console.log(`idSolici: ${this.state.form3._id}  existencia:${materiales.existencia} cantidadsolinew:${this.state.form3.cantidadsolicitada}`);
-                            })
+                            });
+                           // this.generatePDF(solicitudes,materialesSolicitados)
                         // si la existencia es mayor a la cantidad solicitada se cambia la existencia restando lo solicitado
                         }else{
                             this.state.form2._id = materialesvec.vecMateid;
@@ -524,11 +525,11 @@ class SolicitudesRM extends Component{
                                             <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}}>Entregar</Button>
 
                                             {/**onClick={()=>this.generatePDF(solicitudes)} */}
-                                            <Button color="success" onClick={()=>this.generatePDF(solicitudes,materialesSolicitados)}>Descargar</Button>
+                                            <Button color="success" onClick={()=>this.generatePDF(solicitudes)}>Descargar</Button>
 
                                         </Card.Body>
                                     </Accordion.Collapse>
-                                </Card>
+                                </Card> 
                             </Accordion>
                             
 
