@@ -170,7 +170,7 @@ class ConfigRM extends Component{
                     </div>
                 </div>
 
-                <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Agregar</Button>
+                <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Registrar Usuario</Button>
 
                 <table class="table table-striped table-bordered">
 

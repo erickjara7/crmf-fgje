@@ -441,8 +441,15 @@ class SolicitudesRM extends Component{
                 <div class="raya"/>
 
                 <br/>
-                <h2>Solicitudes</h2>
-                <br/> <br/><br/><br/>
+                <h2>Solicitudes Pendientes</h2>
+                
+                
+                
+                <button type="button" className="btn btn-outline-light">Pendientes</button> 
+                <button type="button" className="btn btn-outline-light" onClick={()=> window.location.href="./solicitudesrmen"}>Entregadas</button>
+                <button type="button" className="btn btn-outline-light">Crear Solicitud externa</button>
+               
+                                <br/> <br/> <br/>
                 
 
                 {this.state.data.map((solicitudes,index)=>{

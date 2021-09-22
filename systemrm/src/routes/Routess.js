@@ -8,6 +8,7 @@ import ConfigRM from '../pages/ConfigRM';
 import MaterialesV1OD from '../pages/MaterialesV1OD';
 
 import SolicitudesOD from '../pages/SolicitudesOD';
+import SolicitudesRMEntregadas from '../pages/SolicitudesRMEntregadas';
 
 
 function Routess() {
@@ -21,6 +22,7 @@ function Routess() {
       <Route exact path="/configuracion" component={ConfigRM} />
       <Route exact path="/materialesodep" component={MaterialesV1OD}/>
       <Route exact path="/solicitudesodep" component={SolicitudesOD}/>
+      <Route exact path="/solicitudesrmen" component={SolicitudesRMEntregadas}/>
       
     </Switch>
     </BrowserRouter>
