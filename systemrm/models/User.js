@@ -9,6 +9,7 @@ const UserSchema =  Schema({
     username:{type: String,required:true,unique:true},
     password:{type: String,required:true},
     departamento:{type: String,required:true},
+    municipio:{type: String,required:true},
     userType:{type: String,required:true, enum: ['Administrador', 'Usuario']}
 });
 

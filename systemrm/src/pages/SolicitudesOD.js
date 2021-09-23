@@ -110,7 +110,7 @@ class SolicitudesOD extends Component{
 
      }*/
 
-     validaciónmodal =()=>{
+    validaciónmodal =()=>{
          if ((this.state.form.area === '') || (this.state.form.tipoSolicitud === '')){
              alert('Favor de llenar todos los campos');
          }else{
@@ -118,7 +118,7 @@ class SolicitudesOD extends Component{
          }
      }
 
-     modalInsertar = () =>{
+    modalInsertar = () =>{
         this.setState({modalInsertar: !this.state.modalInsertar})
     }
 
@@ -339,14 +339,13 @@ class SolicitudesOD extends Component{
                                                             
 
                                                            </tbody>
-
                                                        </table>
                                                        
 
                                                        
 
                                                        <Button color="primary" onClick={()=>this.seleccionarsolicitud(solicitudes)} >Agregar Material</Button>
-                                                        <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}} >Enviar</Button>
+                                                    <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}} >Enviar</Button>
                                                     
                                                         
                                                        

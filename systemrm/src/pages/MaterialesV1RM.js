@@ -284,8 +284,8 @@ componentDidMount(){
                                     <td>{material.categoria}</td>
                                     <td>
                                         
-                                        <Button color="btn btn-primary btn-sm" onClick={ () => {this.seleccionarMaterial(material); this.modalInsertar()}}>Editar</Button>
-                                        <Button color="btn btn-success btn-sm" onClick ={() => {this.seleccionarMaterial(material); this.modalAggmaterial()}}>Agregar</Button>
+                                       {/* <Button color="btn btn-primary btn-sm" onClick={ () => {this.seleccionarMaterial(material); this.modalInsertar()}}>Editar</Button>*/}
+                                        <Button color="btn btn-success btn-sm" onClick ={() => {this.seleccionarMaterial(material); this.modalAggmaterial()}}>Agregar existencia</Button>
                                     </td>
                                 </tr>
                             )
@@ -296,6 +296,7 @@ componentDidMount(){
                     </tbody>
 
                 </table>
+                <br/><br/><br/><br/><br/><br/>
 
                
 

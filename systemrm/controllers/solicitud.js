@@ -31,6 +31,7 @@ const postSolicitud =(req,res)=>{
     let solicitud = new Solicitud()
         solicitud.fecha = req.body.fecha,
         solicitud.solicitante = req.body.solicitante,
+        solicitud.municipiosoli = req.body.municipiosoli,
         solicitud.departamentosoli = req.body.departamentosoli,
         solicitud.area = req.body.area,
         solicitud.tipoSolicitud = req.body.tipoSolicitud,

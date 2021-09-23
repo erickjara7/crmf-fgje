@@ -445,9 +445,9 @@ class SolicitudesRM extends Component{
                 
                 
                 
-                <button type="button" className="btn btn-outline-light">Pendientes</button> 
-                <button type="button" className="btn btn-outline-light" onClick={()=> window.location.href="./solicitudesrmen"}>Entregadas</button>
-                <button type="button" className="btn btn-outline-light">Crear Solicitud externa</button>
+                <button type="button" className="btn btn-outline-light" onClick={()=> window.location.href="./solicitudes"}>Solicitudes Pendientes</button> 
+                <button type="button" className="btn btn-outline-light" onClick={()=> window.location.href="./solicitudesrmen"}>Solicitudes Entregadas</button>
+                <button type="button" className="btn btn-outline-light"  onClick={()=> window.location.href="./solicitudesrmext"}>Crear Solicitud externa</button>
                
                                 <br/> <br/> <br/>
                 

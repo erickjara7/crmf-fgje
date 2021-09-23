@@ -39,6 +39,7 @@ const postUser = (req, res) =>{
         user.username = req.body.username,
         user.password = req.body.password,
         user.departamento = req.body.departamento,
+        user.municipio = req.body.municipio,
         user.userType = req.body.userType
 
         user.save((err, usrstored) =>{

@@ -2,10 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-
+ 
 const SolicitudSchema = Schema({
     fecha:{type:Date,required:true},
     solicitante:{type:String,required:true},
+    municipiosoli:{type:String,required:true},
     departamentosoli:{type:String,required:true},
     area:{type:String,required:true},
     tipoSolicitud:{type:String,required:true, enum: ['Requisición','Préstamo']},
