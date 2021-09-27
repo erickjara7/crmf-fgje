@@ -6,6 +6,7 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import {Card, Accordion} from 'react-bootstrap';
 import axios from 'axios';
 import Imgg from '../img/logofiscalia.png';
+import '../css/solisunmenu.css';
 
 
 const today = new Date(),
@@ -254,7 +255,7 @@ class SolicitudesRM extends Component{
 
     generatePDF=(solicitudes)=>{
 
-        var element='';
+       
         //se crea arreglo
         const arreglo = [];
         //materialesSolicitados.idSolicitud = solicitudes._id;
@@ -445,9 +446,9 @@ class SolicitudesRM extends Component{
                 
                 
                 
-                <button type="button" className="btn btn-outline-light" onClick={()=> window.location.href="./solicitudes"}>Solicitudes Pendientes</button> 
-                <button type="button" className="btn btn-outline-light" onClick={()=> window.location.href="./solicitudesrmen"}>Solicitudes Entregadas</button>
-                <button type="button" className="btn btn-outline-light"  onClick={()=> window.location.href="./solicitudesrmext"}>Crear Solicitud externa</button>
+                <button type="button" className="ssmbutton col-4" disabled onClick={()=> window.location.href="./solicitudes"}>Solicitudes Pendientes</button> 
+                <button type="button" className="btn btn-outline-light col-4" onClick={()=> window.location.href="./solicitudesrmen"}>Solicitudes Entregadas</button>
+                <button type="button" className="btn btn-outline-light col-4"  onClick={()=> window.location.href="./solicitudesrmext"}>Crear Solicitud externa</button>
                
                                 <br/> <br/> <br/>
                 

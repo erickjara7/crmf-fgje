@@ -1,46 +1,129 @@
-//import React, {Component} from 'react';
 import React, {Component} from 'react';
 import Cookies from 'universal-cookie';
-import '../css/solisunmenu.css';
-import {Card, Accordion, ThemeProvider} from 'react-bootstrap';
+import { Button,Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import axios from 'axios';
+import '../css/Materiales.css';
 
 
 
-const aggsolicitud = "http://localhost:4000/solicitud/add";
-
-const versolicitud = "http://localhost:4000/solicitud/getsoli";
-
-const putsoli = "http://localhost:4000/solicitud/";
-
-const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
+const vermaterial = "http://localhost:4000/materiales/getmaterial";
+const aggmatesoli = "http://localhost:4000/materialsolicitado/add";
 
 
 const cookies = new Cookies();
-class SolicitudesRMEntregadas extends Component{
-     
+class MaterialesAERM extends Component{
+
     state={
-        data:[]
+        busqueda:'',
+        modalInsertar: false,
+        data:[],
+        form:{
+            _id:'',
+            nombre:'',
+            existencia:'',
+            unidadMedida:'',
+            categoria:'',
+
+            idSolicitud:cookies.get('isolicitud'),
+
+            idMaterial:'',
+            cantidadsolicitada:0,
+            nombreMaterial:'',
+            unidadMedidaMS:''
+            
+        }
+
     }
 
     peticionGet = async() =>{
-        await  axios.get(versolicitud).then(response =>{
-             this.setState({data:response.data});
-             //console.log(this.state.data);
-            
-             
-            // console.log(`busqueda=${this.state.busqueda}`);
-             
+        await  axios.get(vermaterial).then(response =>{
+             this.setState({data:response.data});  
          })
     }
-
-    peticiongetmatesoli = async() =>{
-        await axios.get(vermaterialsoli).then(response =>{
-            this.setState({datamate:response.data});
-           
-        })
+     // ne fucctionne pas siempre se va al else
+    validacionPostms = ()=>{
+        // console.log(`elsiiii ${this.state.form.cantidadsolicitada}`);
+          if(this.state.form.cantidadsolicitada === 0 ){
+             console.log(`if`);
+          }else{
+              this.peticionPostms();
+             // console.log(`else ${this.state.form.cantidadsolicitada}`);
+          }
     }
-    
+
+    //SIEMPRE SE VA AL ELSE
+
+    peticionPostms  = async() =>{
+
+        if(!cookies.get('isolicitud') ){
+            await axios.post(aggmatesoli, this.state.form).then(response=>{
+                this.modalInsertar();
+                alert('Material agregado exitosamente');
+            
+                //this.peticionGet();
+            }).catch(error=>{
+                alert('Error al guardar, intentelo nuevamente');
+                //console.log(error.message);
+            })
+        }else{
+            
+                alert('No ha seleccionado ninguna solicitud');               
+           
+        }
+
+
+     }
+
+
+    handleChange = async e =>{
+        e.persist();
+        await this.setState({
+            
+            form:{
+                ...this.state.form,
+                [e.target.name]: e.target.value
+            }
+            
+        });
+        console.log(this.state.form);
+    }
+
+
+    onChange = async e =>{
+        e.persist();
+        await this.setState({busqueda: e.target.value});
+        console.log(`busqueda=${this.state.busqueda}`);
+    }
+
+    listo =()=>{
+        cookies.remove('isolicitud',{path:"/"});
+      
+    }
+
+    modalInsertar = () =>{
+        this.setState({modalInsertar: !this.state.modalInsertar})
+    }
+
+    seleccionarmaterial = (material) =>{
+        this.setState({
+            tipoModal:'actualizar',
+            form:{
+            idMaterial:material._id,
+            nombreMaterial:material.nombre,
+            unidadMedidaMS:material.unidadMedida,
+            idSolicitud: this.state.form.idSolicitud
+            
+            }
+        })
+        if(material.existencia === 0){
+            alert("Este material no se encuentra disponible por el momento");
+        }else{
+            this.modalInsertar();
+        }
+
+    }
+
+
 
     cerrarSesion =() =>{
         //eliminar cookies para no ir a paginas sin autenticarse
@@ -58,7 +141,7 @@ class SolicitudesRMEntregadas extends Component{
           //  this.peticiongetmatesoli();
            // this.peticiongetsoli();
             //cookies para no ir a paginas sin autenticarse
-           // this.peticionGet();
+            this.peticionGet();
             if (!cookies.get('username')){
                 window.location.href="./";
             }else if(cookies.get('userType') === 'Usuario'){
@@ -71,6 +154,7 @@ class SolicitudesRMEntregadas extends Component{
 
 
     render(){
+        const {form} = this.state;
        return(
            <div class="container">
                 <div class="navbar">
@@ -78,10 +162,7 @@ class SolicitudesRMEntregadas extends Component{
 
                     <ul>
                         
-                        <li><a href="./materiales">Materiales</a></li>
-                        <li><a href="./solicitudes">Solicitudes</a></li>
-                        <li><a href="./reportes">Reportes</a></li>
-                        <li><a href="./configuracion">Configuración</a></li>
+                        <li><a href="./materialesaerm">Materiales</a></li>
                         <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
@@ -91,28 +172,137 @@ class SolicitudesRMEntregadas extends Component{
                 <div class="raya"/>
 
                 <br/>
-               <h2>Solicitudes Entregadas</h2>
-                 
-                <button type="button" className="btn btn-outline-light col-4" onClick={()=> window.location.href="./solicitudes"}>Solicitudes Pendientes</button> 
-                <button type="button" className="ssmbutton col-4" disabled onClick={()=> window.location.href="./solicitudesrmen"}>Solicitudes Entregadas</button>
-                <button type="button" className="btn btn-outline-light col-4"  onClick={()=> window.location.href="./solicitudesrmext"}>Crear Solicitud externa</button>
-               
-                <br/> <br/> <br/>
-
+              
 
                 <div>
-                    {this.state.data.map((solicitudes, index)=>{
-                        if(solicitudes.estado === 'Entregada'){
-                           
-                                
+                   
+                    <h2>Materiales disponibles</h2>
+                    <br></br>
+                    <br></br>
+                    <Button color="primary" href="./solicitudesrmext" onClick={this.listo()}>Listo</Button>
+                    <br></br> 
+                    <br></br>
+
+                    <div>
+                        <div>
+
+                            <input
+                                type="text"
+                                placeholder="Buscar"
+                                name="busqueda"
+                                class="form-control" 
+                            
+                                value = {this.state.busqueda}
+                                onChange = {this.onChange}
+                            
+                            />
+                        </div>
+                    </div>
+                    <br/>
+
+                    <table class="table table-striped table-bordered" id="dev-table">
+                        <thead>
+                            <tr class="tablaencabezado">   
+                                <th>Nombre</th>
+                                <th>Existencia</th>
+                                <th>Unidad de medida</th>
+                                <th>Categoria</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {this.state.data.filter((material)=>{
+                                if(this.state.busqueda === ""){
+                                    return(
+                                        <tr>
+                                            <td>{material.nombre}</td>
+                                            <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                            <td>{material.unidadMedida}</td>
+                                            <td>{material.categoria}</td>
+                                            <td>
+                                                <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
+                                            </td>
+                                        </tr>
+                                    )
+
+                                }else if (material.nombre.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                material.unidadMedida.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                material.categoria.toLowerCase().includes(this.state.busqueda.toLowerCase())){
+
+                                    return(
+                                        <tr>
+                                            <td>{material.nombre}</td>
+                                            <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                            <td>{material.unidadMedida}</td>
+                                            <td>{material.categoria}</td>
+                                            <td>
+                                                <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
+                                            </td>
+                                        </tr>
+                                    )
+
+                                }
+
+                            }).map((material)=>{
+                                return(
+                                    <tr> 
+                                        <td>{material.nombre}</td>
+                                        <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                        <td>{material.unidadMedida}</td>
+                                        <td>{material.categoria}</td>
+                                        <td>
+                                                                                    {/**this.seleccionarmaterial(material); this.modalInsertar()  */}
+                                            <Button color="danger" onClick={()=> {this.seleccionarmaterial(material)} }>Agregar</Button>
+                                        </td>
+                                    </tr>
+                                )
+
+                            })}
+
+                        </tbody>
+
                         
 
-                            
-                        }
+                    </table>
 
-                    })}
+
+
+                    <Modal isOpen={this.state.modalInsertar}>
+                        <ModalHeader style={{display: 'block'}}>
+                            <span style={{float:'left'}}>Usted ha elegido:</span>
+                        </ModalHeader>
+
+                        <ModalBody>
+                            <div>
+                                <label><b>{form?form.nombreMaterial:''} por {form?form.unidadMedidaMS:''}</b></label><br/>
+
+                                <label htmlFor='cantidadsolicitada'>Cantidad requerida:</label><br/>
+                                <input class="form-control" type="number" name="cantidadsolicitada" id="cantidadsolicitada"  onChange ={this.handleChange}  value={form.cantidadsolicitada}></input>
+                            </div>
+
+                        </ModalBody>
+
+                        <ModalFooter>
+                            <button className="btn btn-success" onClick={()=> this.validacionPostms()}>Es correcto</button>
+                            <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>Cancelar</button>
+
+                        </ModalFooter>
+                    </Modal>
+
+
+
 
                 </div>
+
+
+
+
+
+
+
+
+
            </div>
            
        );
@@ -121,5 +311,4 @@ class SolicitudesRMEntregadas extends Component{
 }
 
 
-export default SolicitudesRMEntregadas;
-
+export default MaterialesAERM;

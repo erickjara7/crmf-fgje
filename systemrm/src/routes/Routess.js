@@ -10,6 +10,7 @@ import MaterialesV1OD from '../pages/MaterialesV1OD';
 import SolicitudesOD from '../pages/SolicitudesOD';
 import SolicitudesRMEntregadas from '../pages/SolicitudesRMEntregadas';
 import SoliRMExterna from '../pages/SoliRMExterna';
+import MaterialesAERM from '../pages/MaterialesAERM';
 
 
 function Routess() {
@@ -25,6 +26,7 @@ function Routess() {
       <Route exact path="/solicitudesodep" component={SolicitudesOD}/>
       <Route exact path="/solicitudesrmen" component={SolicitudesRMEntregadas}/>
       <Route exact path="/solicitudesrmext" component={SoliRMExterna}/>
+      <Route exact path="/materialesaerm" component={MaterialesAERM}/>
     </Switch>
     </BrowserRouter>
   );

@@ -61,7 +61,7 @@ class MaterialesV1OD extends Component{
 
      //SIEMPRE SE VA AL ELSE
 
-     peticionPostms  = async() =>{
+    peticionPostms  = async() =>{
 
         if(!cookies.get('isolicitud') ){
             await axios.post(aggmatesoli, this.state.form).then(response=>{
@@ -80,9 +80,9 @@ class MaterialesV1OD extends Component{
         }
 
 
-     }
+    }
 
-     modalInsertar = () =>{
+    modalInsertar = () =>{
         this.setState({modalInsertar: !this.state.modalInsertar})
     }
     
@@ -246,15 +246,14 @@ class MaterialesV1OD extends Component{
                             if (this.state.busqueda === "") {
                                 return(
                                     <tr>
-                                    
-                                    <td>{material.nombre}</td>
-                                    <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
-                                    <td>{material.unidadMedida}</td>
-                                    <td>{material.categoria}</td>
-                                    <td>
-                                        <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
-                                    </td>
-                                </tr>
+                                        <td>{material.nombre}</td>
+                                        <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                        <td>{material.unidadMedida}</td>
+                                        <td>{material.categoria}</td>
+                                        <td>
+                                            <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
+                                        </td>
+                                    </tr>
                                 )
                                 
                             }else if (material.nombre.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
@@ -264,14 +263,14 @@ class MaterialesV1OD extends Component{
                                 return(
                                     <tr>
                                       
-                                    <td>{material.nombre}</td>
-                                    <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
-                                    <td>{material.unidadMedida}</td>
-                                    <td>{material.categoria}</td>
-                                    <td>
-                                        <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
-                                    </td>
-                                </tr>
+                                        <td>{material.nombre}</td>
+                                        <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                        <td>{material.unidadMedida}</td>
+                                        <td>{material.categoria}</td>
+                                        <td>
+                                            <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
+                                        </td>
+                                    </tr>
                                 )
                             }
 

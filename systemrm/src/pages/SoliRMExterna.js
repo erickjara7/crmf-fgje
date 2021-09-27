@@ -5,6 +5,7 @@ import {Card, Accordion, ThemeProvider} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import '../css/Materiales.css';
+import '../css/solisunmenu.css';
 import '../img/logofiscalia.png';
 
 
@@ -132,7 +133,7 @@ class SoliRMExterna extends Component{
        cookies.set('isolicitud',this.state.form._id,{path:"/"})
        console.log(`log: ${this.state.form._id}`)
        if(cookies.get('isolicitud') && solicitudes.estado==='Iniciada'){
-        window.location.href="./materialesodep";
+        window.location.href="./materialesaerm";
        }else{
 
        }      
@@ -214,9 +215,9 @@ class SoliRMExterna extends Component{
                 <h2>Solicitudes Externas</h2>
 
                  
-                <button type="button" className="btn btn-outline-light" onClick={()=> window.location.href="./solicitudes"}>Solicitudes Pendientes</button> 
-                <button type="button" className="btn btn-outline-light" onClick={()=> window.location.href="./solicitudesrmen"}>Solicitudes Entregadas</button>
-                <button type="button" className="btn btn-outline-light"  onClick={()=> window.location.href="./solicitudesrmext"}>Crear Solicitud externa</button>
+                <button type="button" className="btn btn-outline-light col-4" onClick={()=> window.location.href="./solicitudes"}>Solicitudes Pendientes</button> 
+                <button type="button" className="btn btn-outline-light col-4" onClick={()=> window.location.href="./solicitudesrmen"}>Solicitudes Entregadas</button>
+                <button type="button" className="ssmbutton col-4 " disabled color="black" onClick={()=> window.location.href="./solicitudesrmext"}>Solicitudes Externas</button>
                
                 <br/> <br/> <br/>
                <Button color="success" onClick={()=>{ this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Crear Solicitud</Button>
