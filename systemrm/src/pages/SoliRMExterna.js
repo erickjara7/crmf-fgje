@@ -21,7 +21,9 @@ const putsoli = "http://localhost:4000/solicitud/";
 const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 
 const today = new Date(),
-date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate() +': ' + today.getHours() +':' + today.getMinutes() ;
+date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate();
+//const horaaa =  today.getHours() +':' + today.getMinutes(); 
+//const date = fecha +''+''+'' + ':'+horaaa;
 
 
 
@@ -77,8 +79,9 @@ class SoliRMExterna extends Component{
     }
 
 
-    peticionpostsoli = ()=>{
-       axios.post(aggsolicitud,this.state.form).then(response=>{
+    peticionpostsoli =async ()=>{
+        console.log(`post: ${this.state.form.solicitante}`);
+      await axios.post(aggsolicitud,this.state.form).then(response=>{
             this.modalInsertar();
             this.peticionGet();
        })
@@ -212,12 +215,14 @@ class SoliRMExterna extends Component{
                 <div class="raya"/>
 
                 <br/>
-                <h2>Solicitudes Externas</h2>
+                
 
                  
                 <button type="button" className="btn btn-outline-light col-4" onClick={()=> window.location.href="./solicitudes"}>Solicitudes Pendientes</button> 
                 <button type="button" className="btn btn-outline-light col-4" onClick={()=> window.location.href="./solicitudesrmen"}>Solicitudes Entregadas</button>
                 <button type="button" className="ssmbutton col-4 " disabled color="black" onClick={()=> window.location.href="./solicitudesrmext"}>Solicitudes Externas</button>
+                <br/>
+                <h2>Solicitudes Externas</h2>
                
                 <br/> <br/> <br/>
                <Button color="success" onClick={()=>{ this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Crear Solicitud</Button>

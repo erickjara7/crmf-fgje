@@ -1,11 +1,10 @@
 import React, {Component, useState} from 'react';
 import Cookies from 'universal-cookie';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import {Card, Accordion} from 'react-bootstrap';
 import axios from 'axios';
-import Imgg from '../img/logofiscalia.png';
+
 import '../css/solisunmenu.css';
 
 
@@ -20,7 +19,6 @@ const putsoli = "http://localhost:4000/solicitud/";
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 const dpsidmaterial = "http://localhost:4000/materiales/";
 const putmatesoli = "http://localhost:4000/materialsolicitado/";
-const doc = new jsPDF();
 
 
 
@@ -83,6 +81,7 @@ class SolicitudesRM extends Component{
     peticionPutestadoSoli = ()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEntregarMaterial();
+            alert("Si desea descargar la solicitud, dirijase a solicitudes entregadas");
             window.location.href='./solicitudes';
         })
            
@@ -253,169 +252,7 @@ class SolicitudesRM extends Component{
         }
     }
 
-    generatePDF=(solicitudes)=>{
-
-       
-        //se crea arreglo
-        const arreglo = [];
-        //materialesSolicitados.idSolicitud = solicitudes._id;
-       // solicitudID = solicitudes._id;
-
-        //console.log(`idSoli: ${materialesSolicitados.idSolicitud}`);
-       // console.log(`soliId: ${solicitudes._id}`);
-
-       // this.selecMaterialaCambiar(materialesSolicitados);
-
-        
-       // console.log(vector);
-       
-       
-
-
-
-
-       
-        // se crea el doc
-        var docc = new jsPDF(); 
-        
-      
-        //recorrer materiales
-        this.state.datamatesoli.map(materialsoli=>{
-            //Guardar el nombre,cantidad y unidad de medida en arreglo. Cuando id de solicitudes 
-            //de los mateiales es igual al id de la solicitud seleccionada.
-            if(materialsoli.idSolicitud === solicitudes._id){
-             var nm = materialsoli.nombreMaterial;
-             var cs = materialsoli.cantidadsolicitada;
-             var umms = materialsoli.unidadMedidaMS;
-             arreglo.push([nm,cs,umms]);
-            }
-           
-            
- 
-        });
-        var columns = ['Material', 'Cantidad', 'Unidad de medida'];
-        
-        docc.autoTable(columns,arreglo,
-        {   margin:{top:95},
-            theme:'plain',
-            headStyles:{
-                fillColor: [182, 180, 180],
-                textColor: [0, 0, 0],
-                fontSize: 10,
-                padding: 0,
-            },
-            bodyStyles: {
-                fontSize: 8.5,
-                padding: 0,
-                
-            }
-        },
-        
-        );
-       
-       
-        //Logos 
-        docc.addImage(Imgg,'PNG',8,8,180,25);
-       
-                                            //docc.setFontType('bold');
-                                            // docc.setTextColor('yellow');
-
-        //Titulo
-        docc.setFontSize(15);
-        docc.text('Solicitud de Materiales',73,45);
-
-        //Información de la solicitud
-        docc.setFontSize(10);
-        docc.text(`${solicitudes.fecha}`,51,60);
-        docc.text(`${solicitudes.solicitante}`,38,65);
-        docc.text(`${solicitudes.departamentosoli}`,45,70);
-        docc.text(`${solicitudes.area}`,27,75);
-        docc.text(`${solicitudes.tipoSolicitud}`,49,80);
-        docc.text(`${date}`,50,85);
-
-        //Firmas
-        docc.text('Solicitante',43,275);
-        docc.text('Entrega',149,275);
-
-        //Estilos para las partes de las firmas
-        docc.setFontSize(8);
-        docc.text('Firma:',25,259);
-        docc.text('Nombre:',25,269.5);
-
-        docc.text(`${solicitudes.solicitante}`,38,269.5);
-        docc.text('_____________________________________',24,270);
-        
-        docc.text('Firma:',130,259)
-        docc.text('Nombre:',130,269.5);
-        docc.text('_____________________________________',129,270);
-                                                             //docc.autoTable({html:'#tablamate'});
-            
-
-        //Negritas
-        docc.setFontSize(12);
-        docc.setFont('','bold');
-        docc.text(`Fecha de solicitud:`,15,60);     
-        docc.text(`Solicitante:`,15,65);
-        docc.text(`Departamento:`,15,70);
-        docc.text(`Área:`,15,75);
-        docc.text(`Tipo de solicitud:`,15,80);
-        docc.text(`Fecha de Entrega:`,15,85);
-
-        //crear tabla 
-       // docc.autoTable({html:'#tablamate'});
-
-        //Descargar documento 
-       docc.save(`${solicitudes.departamentosoli}.${solicitudes.area}.pdf`);
-        
-       // ------------------------------------------
-       //const element = Document.getElementById("invoice");
-       
-       // const docc = new jsPDF("p","pt","a4");
-
-      // const docc = new jsPDF("p","px","a4","false");
-        //doc.html((<label>aaa</label>),10,10);
-        //doc.fromHTML((element).html(),15,15,{
-         //   "width": 170,
-           
-       // });
-      // doc.autoTable({html:'table table-bordered'});
-
-       // doc.save('1.pdf');
-      // var img;
-      // docc.html(document.querySelector("invoice"),{
-         
-       
-          // callback: function(pdf){
-           //  var  lines = docc.splitTextToSize(pdf,3);
-           //  docc.text(0.2,0.2, lines);
-           //  docc.setFontSize(10);
-              
-           // pdf.setFontSize(10); CAMBIAR TAMAÑO
-            
-               
-               
-             //   pdf.addImage(Imgg,'PNG',8,8,450,60);
-            
-           // docc.autoTable({html:'#tablamate'});
-         
-            
-            //pdf.autoTable({html:'#tablamate'});
-           //pdf.save(`${solicitudes.area}.pdf`);
-            //window.open(Imgg);
-          // }
-     // });
-      
-       
-       //console.log(` pdf ${varidparPDF}`);
-      // console.log(vector);
-
-      
-
-
-
-
-    }
-
+    
 
 
     
@@ -442,13 +279,15 @@ class SolicitudesRM extends Component{
                 <div class="raya"/>
 
                 <br/>
-                <h2>Solicitudes Pendientes</h2>
+               
                 
                 
                 
                 <button type="button" className="ssmbutton col-4" disabled onClick={()=> window.location.href="./solicitudes"}>Solicitudes Pendientes</button> 
                 <button type="button" className="btn btn-outline-light col-4" onClick={()=> window.location.href="./solicitudesrmen"}>Solicitudes Entregadas</button>
-                <button type="button" className="btn btn-outline-light col-4"  onClick={()=> window.location.href="./solicitudesrmext"}>Crear Solicitud externa</button>
+                <button type="button" className="btn btn-outline-light col-4"  onClick={()=> window.location.href="./solicitudesrmext"}>Solicitudes Externas</button>
+                <br/>
+                <h2>Solicitudes Pendientes</h2>
                
                                 <br/> <br/> <br/>
                 
@@ -533,7 +372,7 @@ class SolicitudesRM extends Component{
                                             <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}}>Entregar</Button>
 
                                             {/**onClick={()=>this.generatePDF(solicitudes)} */}
-                                            <Button color="success" onClick={()=>this.generatePDF(solicitudes)}>Descargar</Button>
+                                            
 
                                         </Card.Body>
                                     </Accordion.Collapse>

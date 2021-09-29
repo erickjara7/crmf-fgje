@@ -2,8 +2,20 @@
 import React, {Component} from 'react';
 import Cookies from 'universal-cookie';
 import '../css/solisunmenu.css';
+import { Button, Modal, ModalBody, ModalFooter} from 'reactstrap';
 import {Card, Accordion, ThemeProvider} from 'react-bootstrap';
 import axios from 'axios';
+
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import Imgg from '../img/logofiscalia.png';
+
+
+
+const today = new Date(),
+fecha = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate();
+const horaaa =  today.getHours() +':' + today.getMinutes(); 
+const date = fecha +''+''+'' + '  Hora:'+horaaa;
 
 
 
@@ -15,12 +27,19 @@ const putsoli = "http://localhost:4000/solicitud/";
 
 const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 
-
+const doc = new jsPDF();
 const cookies = new Cookies();
 class SolicitudesRMEntregadas extends Component{
      
     state={
-        data:[]
+        data:[],
+        datamatesoli:[],
+        modalEnviarsoli: false,
+
+        form:{
+            _id:'',
+            estado:''
+        }
     }
 
     peticionGet = async() =>{
@@ -36,9 +55,111 @@ class SolicitudesRMEntregadas extends Component{
 
     peticiongetmatesoli = async() =>{
         await axios.get(vermaterialsoli).then(response =>{
-            this.setState({datamate:response.data});
+            this.setState({datamatesoli:response.data});
            
         })
+    }
+    modalEnviarsoli =()=>{
+        this.setState({modalEnviarsoli: !this.state.modalEnviarsoli});
+        window.location.href="./solicitudesrmen";
+
+    }
+
+    generatePDF=(solicitudes)=>{
+        //se crea arreglo
+        const arreglo = [];
+        // se crea el doc
+        var docc = new jsPDF(); 
+
+        //recorrer materiales
+        this.state.datamatesoli.map(materialsoli=>{
+            //Guardar el nombre,cantidad y unidad de medida en arreglo. Cuando id de solicitudes 
+            //de los mateiales es igual al id de la solicitud seleccionada.
+            if(materialsoli.idSolicitud === solicitudes._id){
+             var nm = materialsoli.nombreMaterial;
+             var cs = materialsoli.cantidadsolicitada;
+             var umms = materialsoli.unidadMedidaMS;
+             arreglo.push([nm,cs,umms]);
+            }
+           
+            
+ 
+        });
+        var columns = ['Material', 'Cantidad', 'Unidad de medida'];
+
+        docc.autoTable(columns,arreglo,
+            {   margin:{top:95},
+                theme:'plain',
+                headStyles:{
+                    fillColor: [182, 180, 180],
+                    textColor: [0, 0, 0],
+                    fontSize: 10,
+                    padding: 0,
+                },
+                bodyStyles: {
+                    fontSize: 8.5,
+                    padding: 0,
+                    
+                }
+            },
+            
+        );
+
+        //Logos 
+        docc.addImage(Imgg,'PNG',8,8,180,25);
+       
+                                            //docc.setFontType('bold');
+                                            // docc.setTextColor('yellow');
+
+        //Titulo
+        docc.setFontSize(15);
+        docc.text('Solicitud de Materiales',73,45);
+
+        //Información de la solicitud
+        docc.setFontSize(10);
+        docc.text(`${solicitudes.fecha}`,51,60);
+        docc.text(`${solicitudes.solicitante}`,38,65);
+        docc.text(`${solicitudes.departamentosoli}`,45,70);
+        docc.text(`${solicitudes.area}`,27,75);
+        docc.text(`${solicitudes.tipoSolicitud}`,49,80);
+        docc.text(`${date}`,50,85);
+
+        //Firmas
+        docc.text('Solicitante',43,275);
+        docc.text('Entrega',149,275);
+
+        //Estilos para las partes de las firmas
+        docc.setFontSize(8);
+        docc.text('Firma:',25,259);
+        docc.text('Nombre:',25,269.5);
+
+        docc.text(`${solicitudes.solicitante}`,38,269.5);
+        docc.text('_____________________________________',24,270);
+        
+        docc.text('Firma:',130,259)
+        docc.text('Nombre:',130,269.5);
+        docc.text('_____________________________________',129,270);
+                                                             //docc.autoTable({html:'#tablamate'});
+            
+
+        //Negritas
+        docc.setFontSize(12);
+        docc.setFont('','bold');
+        docc.text(`Fecha de solicitud:`,15,60);     
+        docc.text(`Solicitante:`,15,65);
+        docc.text(`Departamento:`,15,70);
+        docc.text(`Área:`,15,75);
+        docc.text(`Tipo de solicitud:`,15,80);
+        docc.text(`Fecha de Entrega:`,15,85);
+
+        //crear tabla 
+       // docc.autoTable({html:'#tablamate'});
+
+        //Descargar documento 
+       docc.save(`${solicitudes.departamentosoli}.${solicitudes.area}.pdf`);
+
+
+
     }
     
 
@@ -53,12 +174,42 @@ class SolicitudesRMEntregadas extends Component{
             cookies.remove('userType',{path:"/"});
             window.location.href='./';
         }
+
+        quitar=(solicitudes)=>{
+           // console.log(solicitudes._id);
+            this.setState({
+                form:{
+                    _id: solicitudes._id,
+                    estado: 'Obsolet'
+                }
+
+            })
+
+            if(this.state.form._id === ''){
+
+            }else{
+                
+                this.setState({modalEnviarsoli: true}) 
+                console.log(`log: ${this.state.form._id}`);
+            }
+            //cookies.set('isolicitud',this.state.form._id,{path:"/"})
+            //console.log(`log: ${this.state.form._id}`)
+           // console.log(this.state.form._id);
+           // console.log(this.state.form.estado);
+
+        }
+        peticionPutestadoSoli=()=>{
+            axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
+                this.modalEnviarsoli();
+                this.peticionGet();
+            })
+        }
     
         componentDidMount(){
-          //  this.peticiongetmatesoli();
-           // this.peticiongetsoli();
+            this.peticiongetmatesoli();
+            //this.peticiongetsoli();
             //cookies para no ir a paginas sin autenticarse
-           // this.peticionGet();
+            this.peticionGet();
             if (!cookies.get('username')){
                 window.location.href="./";
             }else if(cookies.get('userType') === 'Usuario'){
@@ -91,11 +242,13 @@ class SolicitudesRMEntregadas extends Component{
                 <div class="raya"/>
 
                 <br/>
-               <h2>Solicitudes Entregadas</h2>
+               
                  
                 <button type="button" className="btn btn-outline-light col-4" onClick={()=> window.location.href="./solicitudes"}>Solicitudes Pendientes</button> 
                 <button type="button" className="ssmbutton col-4" disabled onClick={()=> window.location.href="./solicitudesrmen"}>Solicitudes Entregadas</button>
-                <button type="button" className="btn btn-outline-light col-4"  onClick={()=> window.location.href="./solicitudesrmext"}>Crear Solicitud externa</button>
+                <button type="button" className="btn btn-outline-light col-4"  onClick={()=> window.location.href="./solicitudesrmext"}>Solicitudes Externas</button>
+                <br/>
+                <h2>Solicitudes Entregadas</h2>
                
                 <br/> <br/> <br/>
 
@@ -103,6 +256,69 @@ class SolicitudesRMEntregadas extends Component{
                 <div>
                     {this.state.data.map((solicitudes, index)=>{
                         if(solicitudes.estado === 'Entregada'){
+                            return(
+                                <Accordion key={index}>
+                                    <Card>
+                                        <Accordion.Toggle as={Card.Header}eventKey={solicitudes}>
+                                            {solicitudes.departamentosoli + '/' + solicitudes.area +'--' + solicitudes.fecha}<br/>
+                                            <button className="btn btn-info btn-sm" onClick={()=> this.quitar(solicitudes)}>Quitar</button>
+                                        </Accordion.Toggle>
+
+                                        <Accordion.Collapse eventKey={solicitudes}>
+                                            <Card.Body>
+                                                <div id = "invoice">
+                                                    <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
+                                                    <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
+                                                    <label><b>Departamento: </b>{solicitudes.departamentosoli}</label><br/>
+                                                    <label><b>Área:</b> {solicitudes.area}</label><br/>
+                                                    <label><b>Tipo de solicitud: </b>{solicitudes.tipoSolicitud}</label><br/>
+                                                    <label><b>Estado de la solicitud:</b> {solicitudes.estado}</label><br/>
+
+                                                    <label><b>idd:</b> {solicitudes._id}</label><br/>
+                                                            
+                                                    <br/><br/>
+                                                    <h5>Materiales:</h5>
+                                                </div>
+
+                                                <table className="table table-bordered" id="tablamate">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nombre</th>
+                                                            <th>Cantidad</th>
+                                                            <th>Unidad de medida</th>
+                                                        </tr>
+
+                                                    </thead>
+                                                    <tbody>
+                                                        {this.state.datamatesoli.map(materialsoli=>{
+                                                            if(materialsoli.idSolicitud === solicitudes._id){
+                                                                //materialesSolicitados = materialsoli;
+                                                                //this.selecMaterialaCambiar(materialesSolicitados);
+                                                                return(
+                                                                    <tr>
+                                                                        <td>{materialsoli.nombreMaterial}</td>
+                                                                        <td>{materialsoli.cantidadsolicitada}</td>
+                                                                        <td>{materialsoli.unidadMedidaMS}</td>
+                                                                    </tr>
+                                                                    
+                                                                )
+
+                                                            }
+                                                        })}
+
+                                                    </tbody>
+
+                                                </table>
+
+                                                <Button color="success" onClick={()=>this.generatePDF(solicitudes)}>Descargar</Button>
+
+                                            </Card.Body>
+
+                                        </Accordion.Collapse>
+                                    </Card>
+                                </Accordion>
+
+                            )
                            
                                 
                         
@@ -113,6 +329,20 @@ class SolicitudesRMEntregadas extends Component{
                     })}
 
                 </div>
+
+
+                <Modal isOpen={this.state.modalEnviarsoli}>
+                    
+                    <ModalBody>
+                        ¿Seguro de querer quitar permanentemente esta solicitud?
+
+                    </ModalBody>
+                    <ModalFooter>
+                        <button className="btn btn-success" onClick={()=>this.peticionPutestadoSoli()}>Si</button>
+                        <button className="btn btn-danger" onClick={()=> this.modalEnviarsoli()}>No</button>
+
+                    </ModalFooter>
+                </Modal>
            </div>
            
        );

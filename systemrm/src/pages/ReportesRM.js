@@ -170,7 +170,7 @@ class ReportesRM extends Component{
                                     console.log(`&& = ${this.state.departamentoS}, ${this.state.mesS}, ${this.state.añoS}`);
                                    
 
-                                    if(solicitudes.estado === 'Entregada'){
+                                    if(solicitudes.estado === 'Entregada' || solicitudes.estado === 'Obsolet'){
                                         
                                         this.state.x = solicitudes.fecha;
                                         console.log(solicitudes.fecha, solicitudes.departamentosoli, this.state.x);
