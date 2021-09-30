@@ -119,10 +119,11 @@ class SolicitudesRMEntregadas extends Component{
         docc.setFontSize(10);
         docc.text(`${solicitudes.fecha}`,51,60);
         docc.text(`${solicitudes.solicitante}`,38,65);
-        docc.text(`${solicitudes.departamentosoli}`,45,70);
-        docc.text(`${solicitudes.area}`,27,75);
-        docc.text(`${solicitudes.tipoSolicitud}`,49,80);
-        docc.text(`${date}`,50,85);
+        docc.text(`${solicitudes.municipiosoli}`,37,70)
+        docc.text(`${solicitudes.departamentosoli}`,45,75);
+        docc.text(`${solicitudes.area}`,27,80);
+        docc.text(`${solicitudes.tipoSolicitud}`,49,85);
+        docc.text(`${date}`,50,90);
 
         //Firmas
         docc.text('Solicitante',43,275);
@@ -147,10 +148,11 @@ class SolicitudesRMEntregadas extends Component{
         docc.setFont('','bold');
         docc.text(`Fecha de solicitud:`,15,60);     
         docc.text(`Solicitante:`,15,65);
-        docc.text(`Departamento:`,15,70);
-        docc.text(`Área:`,15,75);
-        docc.text(`Tipo de solicitud:`,15,80);
-        docc.text(`Fecha de Entrega:`,15,85);
+        docc.text(`Municipio:`,15,70)
+        docc.text(`Departamento:`,15,75);
+        docc.text(`Área:`,15,80);
+        docc.text(`Tipo de solicitud:`,15,85);
+        docc.text(`Fecha de Entrega:`,15,90);
 
         //crear tabla 
        // docc.autoTable({html:'#tablamate'});
@@ -169,6 +171,7 @@ class SolicitudesRMEntregadas extends Component{
             cookies.remove('nombres',{path:"/"});
             cookies.remove('apellidoP',{path:"/"});
             cookies.remove('apellidoM',{path:"/"});
+            cookies.remove('municipious',{path:"/"});
             cookies.remove('username',{path:"/"});
             cookies.remove('departamento',{path:"/"});
             cookies.remove('userType',{path:"/"});
@@ -232,7 +235,7 @@ class SolicitudesRMEntregadas extends Component{
                         <li><a href="./materiales">Materiales</a></li>
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
-                        <li><a href="./configuracion">Configuración</a></li>
+                        <li><a href="./configuracion">Usuarios</a></li>
                         <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
@@ -269,6 +272,7 @@ class SolicitudesRMEntregadas extends Component{
                                                 <div id = "invoice">
                                                     <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
                                                     <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
+                                                    <label><b>Municipio:</b> {solicitudes.municipiosoli}</label><br/>
                                                     <label><b>Departamento: </b>{solicitudes.departamentosoli}</label><br/>
                                                     <label><b>Área:</b> {solicitudes.area}</label><br/>
                                                     <label><b>Tipo de solicitud: </b>{solicitudes.tipoSolicitud}</label><br/>

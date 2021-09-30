@@ -72,6 +72,7 @@ class ReportesRM extends Component{
         cookies.remove('nombres',{path:"/"});
         cookies.remove('apellidoP',{path:"/"});
         cookies.remove('apellidoM',{path:"/"});
+        cookies.remove('municipious',{path:"/"});
         cookies.remove('username',{path:"/"});
         cookies.remove('departamento',{path:"/"});
         cookies.remove('userType',{path:"/"});
@@ -106,7 +107,7 @@ class ReportesRM extends Component{
                         <li><a href="./materiales">Materiales</a></li>
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
-                        <li><a href="./configuracion">Configuración</a></li>
+                        <li><a href="./configuracion">Usuarios</a></li>
                         <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>

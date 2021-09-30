@@ -20,7 +20,9 @@ class ConfigRM extends Component{
     state={
         busqueda:'',
         data:[],
-        datausertype:['','Administrador','Usuario'],
+        
+            
+        datausertype:['Seleccione','Administrador','Usuario'],
         modalInsertar: false,
         modalEliminar: false,
         form:{
@@ -29,6 +31,7 @@ class ConfigRM extends Component{
             apellidoP:'',
             apellidoM:'',
             username:'',
+            municipio:'',
             password: '',
             departamento:'',
             userType:'',
@@ -81,6 +84,7 @@ class ConfigRM extends Component{
                 nombres: usuario.nombres,
                 apellidoP:usuario.apellidoP,
                 apellidoM:usuario.apellidoM,
+                municipio: usuario.municipio,
                 username: usuario.username,
                 password: usuario.password,
                 departamento: usuario.departamento,
@@ -115,6 +119,7 @@ class ConfigRM extends Component{
         cookies.remove('nombres',{path:"/"});
         cookies.remove('apellidoP',{path:"/"});
         cookies.remove('apellidoM',{path:"/"});
+        cookies.remove('municipious',{path:"/"})
         cookies.remove('username',{path:"/"});
         cookies.remove('departamento',{path:"/"});
         cookies.remove('userType',{path:"/"});
@@ -145,7 +150,7 @@ class ConfigRM extends Component{
                         <li><a href="./materiales">Materiales</a></li>
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
-                        <li><a href="./configuracion">Configuración</a></li>
+                        <li><a href="./configuracion">Usuarios</a></li>
                         <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
@@ -153,7 +158,7 @@ class ConfigRM extends Component{
             
                 <div class="raya"/>
                 <br></br>
-                <h2>Configuración</h2>
+                <h2>Gestión de Usuarios</h2>
                 <br></br>
                 <div>
                     <div class="barraBusqueda">
@@ -182,8 +187,9 @@ class ConfigRM extends Component{
                             <th>Nombre de Usuario</th>
                             
                             <th>Departamento</th>
+                            <th>Municipio</th>
                             <th>Tipo de Usuario</th>
-                            <th>algoxd</th>
+                            <th>Acciones</th>
                             
                         </tr>
                     </thead>
@@ -197,6 +203,7 @@ class ConfigRM extends Component{
                                         <td>{usuarios.apellidoM}</td>
                                         <td>{usuarios.username}</td>
                                         <td>{usuarios.departamento}</td>
+                                        <td>{usuarios.municipio}</td>
                                         <td>{usuarios.userType}</td>
                                         <td>
                                             <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
@@ -217,6 +224,7 @@ class ConfigRM extends Component{
                                         <td>{usuarios.apellidoM}</td>
                                         <td>{usuarios.username}</td>
                                         <td>{usuarios.departamento}</td>
+                                        <td>{usuarios.municipio}</td>
                                         <td>{usuarios.userType}</td>
                                         <td>
                                             <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
@@ -236,6 +244,7 @@ class ConfigRM extends Component{
                                     <td>{usuarios.apellidoM}</td>
                                     <td>{usuarios.username}</td>
                                     <td>{usuarios.departamento}</td>
+                                    <td>{usuarios.municipio}</td>
                                     <td>{usuarios.userType}</td>
                                     <td>
                                         <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
@@ -270,7 +279,88 @@ class ConfigRM extends Component{
                             <input class="form-control" type="text" name="apellidoM" id="apellidoM" onChange ={this.handleChange} value={form?form.apellidoM:''}></input>
                             <label htmlFor='departamento'>Departamento:</label><br/>
                             <input class="form-control" type="text" name="departamento" id="departamento" onChange ={this.handleChange} value={form?form.departamento:''}></input>
+
+                            <label htmlFor='municipio'>Municipio:</label><br/>
+                            <select class="form-control"  type="text" name="municipio" id="municipio" onChange ={this.handleChange} value={form?form.municipio:''}>
+                                    <option></option>
+                                    <option>Aconchi</option>
+                                    <option>Agua Prieta</option>
+                                    <option>Alamos</option>
+                                    <option>Altar</option>
+                                    <option>Arivechi</option>
+                                    <option>Arizpe</option>
+                                    <option>Atil</option>
+                                    <option>Bacadéhuachi</option>
+                                    <option>Bacanora</option>
+                                    <option>Bacerac</option>
+                                    <option>Bacoachi</option>
+                                    <option>Bácum</option>
+                                    <option>Banámichi</option>
+                                    <option>Baviácora</option>
+                                    <option>Bavispe</option>
+                                    <option>Benjamín Hill</option>
+                                    <option>Caborca</option>
+                                    <option>Cajeme</option>
+                                    <option>Cananea</option>
+                                    <option>Carbó</option>
+                                    <option>La Colorada</option>
+                                    <option>Cucurpe</option>
+                                    <option>Cumpas</option>
+                                    <option>Divisaderos</option>
+                                    <option>Empalme</option>
+                                    <option>Etchojoa</option>
+                                    <option>Fronteras</option>
+                                    <option>Granados</option>
+                                    <option>Guaymas</option>
+                                    <option>Hermosillo</option>
+                                    <option>Huachinera</option>
+                                    <option>Huásabas</option>
+                                    <option>Huatabampo</option>
+                                    <option>Huépac</option>
+                                    <option>Imuris</option>
+                                    <option>Magdalena</option>
+                                    <option>Mazatán</option>
+                                    <option>Moctezuma</option>
+                                    <option>Naco</option>
+                                    <option>Nácori Chico</option>
+                                    <option>Nacozari de García</option>
+                                    <option>Navojoa</option>
+                                    <option>Nogales</option>
+                                    <option>Onavas</option>
+                                    <option>Opodepe</option>
+                                    <option>Oquitoa</option>
+                                    <option>Pitiquito</option>
+                                    <option>Puerto Peñasco</option>
+                                    <option>Quiriego</option>
+                                    <option>Rayón</option>
+                                    <option>Rosario</option>
+                                    <option>Sahuaripa</option>
+                                    <option>San Felipe de Jesús</option>
+                                    <option>San Javier</option>
+                                    <option>San Luis Río Colorado</option>
+                                    <option>San Miguel de Horcasitas</option>
+                                    <option>San Pedro de la Cueva</option>
+                                    <option>Santa Ana</option>
+                                    <option>Santa Cruz</option>
+                                    <option>Sáric</option>
+                                    <option>Soyopa</option>
+                                    <option>Suaqui Grande</option>
+                                    <option>Tepache</option>
+                                    <option>Trincheras</option>
+                                    <option>Tubutama</option>
+                                    <option>Ures</option>
+                                    <option>Villa Hidalgo</option>
+                                    <option>Villa Pesqueira</option>
+                                    <option>Yécora</option>
+                                    <option>General Plutarco Elías Calles</option>
+                                    <option>Benito Juárez</option>
+                                    <option>San Ignacio Río Muerto</option>
+
+
+                            </select>
                             <br/>
+
+
                             <br/>
                                                    
 

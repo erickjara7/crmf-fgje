@@ -137,6 +137,7 @@ class MaterialesV1OD extends Component{
         cookies.remove('nombres',{path:"/"});
         cookies.remove('apellidoP',{path:"/"});
         cookies.remove('apellidoM',{path:"/"});
+        cookies.remove('municipious',{path:"/"});
         cookies.remove('username',{path:"/"});
         cookies.remove('departamento',{path:"/"});
         cookies.remove('userType',{path:"/"});

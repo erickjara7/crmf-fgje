@@ -33,6 +33,8 @@ class SoliRMExterna extends Component{
        
         solicitudid:'',
         datatiposoli:['','Requisición','Préstamo'],
+       
+            
         datamate:[],
         data:[],
         modalInsertar: false,
@@ -83,6 +85,7 @@ class SoliRMExterna extends Component{
         console.log(`post: ${this.state.form.solicitante}`);
       await axios.post(aggsolicitud,this.state.form).then(response=>{
             this.modalInsertar();
+            alert("SOLICITUD CREADA, AHORA ELIJA LA SOLICITUD Y PROCEDA A ELEGIR LOS MATERIALES ");
             this.peticionGet();
        })
        .catch(error=>{
@@ -105,6 +108,7 @@ class SoliRMExterna extends Component{
             alert('Favor de llenar todos los campos');
         }else{
             this.peticionpostsoli();
+           
         }
     }
 
@@ -170,6 +174,7 @@ class SoliRMExterna extends Component{
             cookies.remove('apellidoP',{path:"/"});
             cookies.remove('apellidoM',{path:"/"});
             cookies.remove('username',{path:"/"});
+            cookies.remove('municipious',{path:"/"});
             cookies.remove('departamento',{path:"/"});
             cookies.remove('userType',{path:"/"});
             window.location.href='./';
@@ -205,7 +210,7 @@ class SoliRMExterna extends Component{
                         <li><a href="./materiales">Materiales</a></li>
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
-                        <li><a href="./configuracion">Configuración</a></li>
+                        <li><a href="./configuracion">Usuarios</a></li>
                         <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
@@ -240,6 +245,7 @@ class SoliRMExterna extends Component{
                                        <Card.Body>
                                             <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
                                             <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
+                                            <label><b>Municipio:</b> {solicitudes.municipiosoli}</label><br/>
                                             <label><b>Departamento: </b>{solicitudes.departamentosoli}</label><br/>
                                             <label><b>Área:</b> {solicitudes.area}</label><br/>
                                             <label><b>Tipo de solicitud: </b>{solicitudes.tipoSolicitud}</label><br/>
@@ -307,7 +313,83 @@ class SoliRMExterna extends Component{
                             <br/>
 
                             <label htmlFor='municipiosoli'>Municipio:</label><br/>
-                            <input class="form-control" type="text" name="municipiosoli" id="municipiosoli" onChange ={this.handleChange}  value={form?form.municipiosoli:''}></input>
+                            <select class="form-control"  placeholder="Seleccione" type="text" name="municipiosoli" id="municipiosoli" onChange ={this.handleChange}  value={form?form.municipiosoli:''}>
+                                    <option></option>
+                                    <option>Aconchi</option>
+                                    <option>Agua Prieta</option>
+                                    <option>Alamos</option>
+                                    <option>Altar</option>
+                                    <option>Arivechi</option>
+                                    <option>Arizpe</option>
+                                    <option>Atil</option>
+                                    <option>Bacadéhuachi</option>
+                                    <option>Bacanora</option>
+                                    <option>Bacerac</option>
+                                    <option>Bacoachi</option>
+                                    <option>Bácum</option>
+                                    <option>Banámichi</option>
+                                    <option>Baviácora</option>
+                                    <option>Bavispe</option>
+                                    <option>Benjamín Hill</option>
+                                    <option>Caborca</option>
+                                    <option>Cajeme</option>
+                                    <option>Cananea</option>
+                                    <option>Carbó</option>
+                                    <option>La Colorada</option>
+                                    <option>Cucurpe</option>
+                                    <option>Cumpas</option>
+                                    <option>Divisaderos</option>
+                                    <option>Empalme</option>
+                                    <option>Etchojoa</option>
+                                    <option>Fronteras</option>
+                                    <option>Granados</option>
+                                    <option>Guaymas</option>
+                                    <option>Hermosillo</option>
+                                    <option>Huachinera</option>
+                                    <option>Huásabas</option>
+                                    <option>Huatabampo</option>
+                                    <option>Huépac</option>
+                                    <option>Imuris</option>
+                                    <option>Magdalena</option>
+                                    <option>Mazatán</option>
+                                    <option>Moctezuma</option>
+                                    <option>Naco</option>
+                                    <option>Nácori Chico</option>
+                                    <option>Nacozari de García</option>
+                                    <option>Navojoa</option>
+                                    <option>Nogales</option>
+                                    <option>Onavas</option>
+                                    <option>Opodepe</option>
+                                    <option>Oquitoa</option>
+                                    <option>Pitiquito</option>
+                                    <option>Puerto Peñasco</option>
+                                    <option>Quiriego</option>
+                                    <option>Rayón</option>
+                                    <option>Rosario</option>
+                                    <option>Sahuaripa</option>
+                                    <option>San Felipe de Jesús</option>
+                                    <option>San Javier</option>
+                                    <option>San Luis Río Colorado</option>
+                                    <option>San Miguel de Horcasitas</option>
+                                    <option>San Pedro de la Cueva</option>
+                                    <option>Santa Ana</option>
+                                    <option>Santa Cruz</option>
+                                    <option>Sáric</option>
+                                    <option>Soyopa</option>
+                                    <option>Suaqui Grande</option>
+                                    <option>Tepache</option>
+                                    <option>Trincheras</option>
+                                    <option>Tubutama</option>
+                                    <option>Ures</option>
+                                    <option>Villa Hidalgo</option>
+                                    <option>Villa Pesqueira</option>
+                                    <option>Yécora</option>
+                                    <option>General Plutarco Elías Calles</option>
+                                    <option>Benito Juárez</option>
+                                    <option>San Ignacio Río Muerto</option>
+
+
+                            </select>
                             <br/>
 
 

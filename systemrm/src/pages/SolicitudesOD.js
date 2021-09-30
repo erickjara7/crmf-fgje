@@ -27,7 +27,7 @@ const cookies = new Cookies();
 //const [searchTerm,SetSearchTerm] = useState('');
 
 const today = new Date(),
-date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate() +': ' + today.getHours() +':' + today.getMinutes() ;
+date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate() ;
 
 
 class SolicitudesOD extends Component{
@@ -47,6 +47,7 @@ class SolicitudesOD extends Component{
             fecha:date,
             solicitante: cookies.get('nombres') +' '+ cookies.get('apellidoP') +' '+ cookies.get('apellidoM'),
             departamentosoli: cookies.get('departamento'),
+            municipiosoli:cookies.get('municipious'),
             area:'',
             tipoSolicitud:'',
             estado:'Iniciada'
@@ -289,6 +290,7 @@ class SolicitudesOD extends Component{
                                                         
                                                         <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
                                                         <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
+                                                        <label><b>Municipio:</b> {solicitudes.municipiosoli}</label><br/>
                                                         <label><b>Departamento: </b>{solicitudes.departamentosoli}</label><br/>
                                                         <label><b>Área:</b> {solicitudes.area}</label><br/>
                                                         <label><b>Tipo de solicitud: </b>{solicitudes.tipoSolicitud}</label><br/>
@@ -394,6 +396,11 @@ class SolicitudesOD extends Component{
                                     <label htmlFor='departamentosoli'>Departamento:</label><br/>
                                     <input class="form-control" type="text" name="departamentosoli" id="departamentosoli" readOnly onChange ={this.handleChange} value={form.departamentosoli}></input>
                                     <br/>
+
+                                    <label htmlFor='municipiosoli'>Municipio:</label><br/>
+                                    <input class="form-control" type="text" name="municipiosoli" id="municipiosoli" readOnly onChange ={this.handleChange} value={form.municipiosoli}></input>
+                                    <br/>
+
                                     <label htmlFor='area'>Area:</label><br/>
                                     <input class="form-control" type="text" name="area" id="area" onChange ={this.handleChange} value={form.area}></input>
                                     <br/>

@@ -234,6 +234,7 @@ class SolicitudesRM extends Component{
         cookies.remove('nombres',{path:"/"});
         cookies.remove('apellidoP',{path:"/"});
         cookies.remove('apellidoM',{path:"/"});
+        cookies.remove('municipious',{path:"/"});
         cookies.remove('username',{path:"/"});
         cookies.remove('departamento',{path:"/"});
         cookies.remove('userType',{path:"/"});
@@ -270,7 +271,7 @@ class SolicitudesRM extends Component{
                         <li><a href="./materiales">Materiales</a></li>
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
-                        <li><a href="./configuracion">Configuración</a></li>
+                        <li><a href="./configuracion">Usuarios</a></li>
                         <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
@@ -310,6 +311,7 @@ class SolicitudesRM extends Component{
                                             <div id="invoice" >
                                                 <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
                                                 <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
+                                                <label><b>Municipio:</b> {solicitudes.municipiosoli}</label><br/>
                                                 <label><b>Departamento: </b>{solicitudes.departamentosoli}</label><br/>
                                                 <label><b>Área:</b> {solicitudes.area}</label><br/>
                                                 <label><b>Tipo de solicitud: </b>{solicitudes.tipoSolicitud}</label><br/>

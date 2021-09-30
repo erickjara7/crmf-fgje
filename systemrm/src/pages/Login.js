@@ -63,6 +63,7 @@ class Login extends Component{
                     cookies.set('nombres',respuesta.nombres,{path:"/"});
                     cookies.set('apellidoP',respuesta.apellidoP,{path:"/"});
                     cookies.set('apellidoM',respuesta.apellidoM,{path:"/"});
+                    cookies.set('municipious', respuesta.municipio,{path:"/"});
                     cookies.set('username',respuesta.username,{path:"/"});
                     cookies.set('departamento',respuesta.departamento,{path:"/"});
                     cookies.set('userType',respuesta.userType,{path:"/"});
