@@ -3,6 +3,7 @@ import'../css/Login.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';  
 import md5 from 'md5';
+import {Button} from 'reactstrap';
 import Cookies from 'universal-cookie';
 
 
@@ -151,7 +152,7 @@ class Login extends Component{
                                 required/>
                                
                             
-                            <button className="buttoncss" onClick={()=> this.iniciarSesion() }>Iniciar Sesión</button>
+                            <Button className="buttoncss"  onClick={()=> this.iniciarSesion() }>Iniciar Sesión</Button>
                             <br/> <br/>
                             <a href="" onClick={()=> this.aunnotengocuenta()}>Aún no tengo una cuenta</a>
                             <br/>

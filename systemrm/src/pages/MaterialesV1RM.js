@@ -208,9 +208,16 @@ componentDidMount(){
 
                 <h2>Materiales</h2>
                 <br></br>
-                <div>
-                    <div className="">
+                <div className="row">
+                    <div className="col-2">
+                        <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Agregar nuevo material</Button>
+                    </div>
+                    <div className="col-4">
+                        
+                    </div>
+                    <div  className="col-6"  >
                         <input
+                            
                             type="text"
                             placeholder="Buscar..."
                             class="form-control"
@@ -220,13 +227,15 @@ componentDidMount(){
                             //value ={this.state.form.busqueda}
                         />
                         
+                        
                     </div>
+                    
                 </div>
-                <br></br>
+               
 
-                <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Agregar nuevo material</Button>
+               
 
-               <br></br>
+              
                <br></br>
                 <table class="table table-striped table-bordered" >
 

@@ -8,6 +8,8 @@ const cookies = new Cookies();
 
 const versolicitudes ="http://localhost:4000/solicitud/getsoli";
 const vermateriales ="http://localhost:4000/materialsolicitado/getms";
+const arreglofecha=[];
+var i =0;
 
 class ReportesRM extends Component{
 
@@ -15,6 +17,7 @@ class ReportesRM extends Component{
         meses:['01','02','03','04','05','06','07','08','09','10','11','12'],
         datasolicitudes:[],
         datamateriales:[],
+
         departamentoS:'',   
         mesS:'',
         añoS:'',
@@ -160,6 +163,7 @@ class ReportesRM extends Component{
                
 
               <table class="table table-striped table-bordered">
+                  
                 
                     {this.state.datasolicitudes.map((solicitudes=>{
                         
@@ -168,63 +172,84 @@ class ReportesRM extends Component{
                             }else if(this.state.departamentoS != "" || this.state.mesS != "" || this.state.añoS != ""){
                                
                                 if(this.state.departamentoS != "" && this.state.mesS != "" && this.state.añoS != ""){
-                                    console.log(`&& = ${this.state.departamentoS}, ${this.state.mesS}, ${this.state.añoS}`);
+                                   // console.log(`&& = ${this.state.departamentoS}, ${this.state.mesS}, ${this.state.añoS}`);
                                    
 
                                     if(solicitudes.estado === 'Entregada' || solicitudes.estado === 'Obsolet'){
                                         
-                                        this.state.x = solicitudes.fecha;
-                                        console.log(solicitudes.fecha, solicitudes.departamentosoli, this.state.x);
+                                       // this.state.x = solicitudes.fecha;
+                                       // console.log(solicitudes.fecha, solicitudes.departamentosoli, this.state.x);
 
                                         if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) 
                                       
-                                        
-                                        //&&
-                                        //this.state.x.includes(this.state.mesS,5)
-                                        
-                                        //solicitudes.fecha.includes(this.state.mesS)
-                                   ){
-                                       console.log(solicitudes._id);
-                                      
-                                       //solicitudes.fecha.includes(this.state.mesS) &&
-                                       //solicitudes.fecha.includes(this.state.añoS) &&
-                                       //solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) //&& 
-                                    return(
-                                        <>
-                                            <thead>
-                                                <tr>
-                                                    <b>Fecha:</b> {solicitudes.fecha} <br/>
-                                                    <b>Solicitante:</b> {solicitudes.solicitante}         
-                                                    <b>Departamento:</b> {solicitudes.departamentosoli} <b>Area:</b> {solicitudes.area} 
-                                                    <b>Tipo de solicitud:</b> {solicitudes.tipoSolicitud}<br/>
-                                                </tr>
-                                                <tr>
-                                                    <th>Material</th>
-                                                    <th>Cantidad</th>
-                                                    <th>Unidad de medida</th>
-                                                </tr>
-                                            </thead>
-    
-                                            <tbody>
-                                                {this.state.datamateriales.map(materiales=>{
-                                                    if(materiales.idSolicitud === solicitudes._id){
-                                                        return(
-                                                            <tr>
-                                                                <td>{materiales.nombreMaterial}</td>
-                                                                <td>{materiales.cantidadsolicitada}</td>
-                                                                <td>{materiales.unidadMedidaMS}</td>
-                                                            </tr>
-                                                        )
-    
-                                                    }
-                                                })}
-    
-                                            </tbody>
-                                            <br/>
-                                        </>               
-                                    )
+                                                
+                                                //&&
+                                            // solicitudes.fecha.includes(this.state.mesS)
+                                                
+                                                //solicitudes.fecha.includes(this.state.mesS)
+                                        ){
+                                            console.log(solicitudes.fecha);
+                                            var solid = solicitudes._id;
+                                            var solifech = solicitudes.fecha;
+                                            var solidep = solicitudes.departamentosoli;
 
-                                   }
+                                            var cutfechaaño = solifech.substr(0,4);
+                                            var cutfechames = solifech.substr(5,2)
+                                            arreglofecha.push([solid,solidep,cutfechaaño,cutfechames]);
+                                            //console.log(`arreglo=${[arreglofecha]}, ${arreglofecha.length}`);
+                                                
+
+                                            arreglofecha.map(elementos=>{
+                                                    for( i= 0; i<arreglofecha.length; i++){
+
+                                                        //var fechacut=  arreglofecha.solifech ;
+                                                        //elementos.solifech.substr(0,10);
+                                                        console.log(`lomg fecha= ${elementos}`); 
+
+
+                                                    }
+                                            })
+                                                
+                                                //solicitudes.fecha.includes(this.state.mesS) &&
+                                                //solicitudes.fecha.includes(this.state.añoS) &&
+                                                //solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) //&& 
+                                            return(
+                                                <>
+                                                    <thead>
+                                                        <tr>
+                                                            <b>{solicitudes._id}</b>
+                                                            <b>Fecha:</b> {solicitudes.fecha} <br/>
+                                                            <b>Solicitante:</b> {solicitudes.solicitante}         
+                                                            <b>Departamento:</b> {solicitudes.departamentosoli} <b>Area:</b> {solicitudes.area} 
+                                                            <b>Tipo de solicitud:</b> {solicitudes.tipoSolicitud}<br/>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Material</th>
+                                                            <th>Cantidad</th>
+                                                            <th>Unidad de medida</th>
+                                                        </tr>
+                                                    </thead>
+            
+                                                    <tbody>
+                                                        {this.state.datamateriales.map(materiales=>{
+                                                            if(materiales.idSolicitud === solicitudes._id){
+                                                                return(
+                                                                    <tr>
+                                                                        <td>{materiales.nombreMaterial}</td>
+                                                                        <td>{materiales.cantidadsolicitada}</td>
+                                                                        <td>{materiales.unidadMedidaMS}</td>
+                                                                    </tr>
+                                                                )
+            
+                                                            }
+                                                        })}
+            
+                                                    </tbody>
+                                                    <br/>
+                                                </>               
+                                            )
+
+                                        }
                                         
 
 
