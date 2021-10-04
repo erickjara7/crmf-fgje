@@ -14,7 +14,7 @@ var i =0;
 class ReportesRM extends Component{
 
     state={
-        meses:['01','02','03','04','05','06','07','08','09','10','11','12'],
+       // meses:['01','02','03','04','05','06','07','08','09','10','11','12'],
         datasolicitudes:[],
         datamateriales:[],
 
@@ -40,11 +40,7 @@ class ReportesRM extends Component{
     }
 
 
-    mostrarReporte=()=>{
-        
- 
-        
-    }
+   
 
 
 
@@ -154,17 +150,13 @@ class ReportesRM extends Component{
                                 
                             </select>
                         </div>
-                        <div className="col-2">
-                        <Button color="success" onClick={()=>this.mostrarReporte()}>Ver Reporte</Button>
-                        </div>
+                        
                     </div>
                 </form>
                 <br/><br/>
                
 
               <table class="table table-striped table-bordered">
-                  
-                
                     {this.state.datasolicitudes.map((solicitudes=>{
                         
                             if(this.state.departamentoS ==="" || this.state.mesS === "" || this.state.añoS ===""){
@@ -172,65 +164,35 @@ class ReportesRM extends Component{
                             }else if(this.state.departamentoS != "" || this.state.mesS != "" || this.state.añoS != ""){
                                
                                 if(this.state.departamentoS != "" && this.state.mesS != "" && this.state.añoS != ""){
-                                   // console.log(`&& = ${this.state.departamentoS}, ${this.state.mesS}, ${this.state.añoS}`);
-                                   
-
                                     if(solicitudes.estado === 'Entregada' || solicitudes.estado === 'Obsolet'){
-                                        
-                                       // this.state.x = solicitudes.fecha;
-                                       // console.log(solicitudes.fecha, solicitudes.departamentosoli, this.state.x);
-
-                                        if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) 
-                                      
-                                                
-                                                //&&
-                                            // solicitudes.fecha.includes(this.state.mesS)
-                                                
-                                                //solicitudes.fecha.includes(this.state.mesS)
-                                        ){
-                                            console.log(solicitudes.fecha);
-                                            var solid = solicitudes._id;
+                                        if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase())){
+                                           //console.log(solicitudes.fecha);
+                                            //var solid = solicitudes._id;
                                             var solifech = solicitudes.fecha;
-                                            var solidep = solicitudes.departamentosoli;
-
+                                           
                                             var cutfechaaño = solifech.substr(0,4);
-                                            var cutfechames = solifech.substr(5,2)
-                                            arreglofecha.push([solid,solidep,cutfechaaño,cutfechames]);
-                                            //console.log(`arreglo=${[arreglofecha]}, ${arreglofecha.length}`);
-                                                
+                                            var cutfechames = solifech.substr(5,2);
+                                          
 
-                                            arreglofecha.map(elementos=>{
-                                                    for( i= 0; i<arreglofecha.length; i++){
-
-                                                        //var fechacut=  arreglofecha.solifech ;
-                                                        //elementos.solifech.substr(0,10);
-                                                        console.log(`lomg fecha= ${elementos}`); 
-
-
-                                                    }
-                                            })
-                                                
-                                                //solicitudes.fecha.includes(this.state.mesS) &&
-                                                //solicitudes.fecha.includes(this.state.añoS) &&
-                                                //solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) //&& 
-                                            return(
-                                                <>
-                                                    <thead>
-                                                        <tr>
-                                                            <b>{solicitudes._id}</b>
-                                                            <b>Fecha:</b> {solicitudes.fecha} <br/>
-                                                            <b>Solicitante:</b> {solicitudes.solicitante}         
-                                                            <b>Departamento:</b> {solicitudes.departamentosoli} <b>Area:</b> {solicitudes.area} 
-                                                            <b>Tipo de solicitud:</b> {solicitudes.tipoSolicitud}<br/>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Material</th>
-                                                            <th>Cantidad</th>
-                                                            <th>Unidad de medida</th>
-                                                        </tr>
-                                                    </thead>
+                                            if(cutfechaaño === this.state.añoS && cutfechames === this.state.mesS){
+                                                //console.log(`valor de cutaño:${cutfechaaño}, stateaño: ${this.state.añoS}, idsoli:${solid}`);
+                                                return(
+                                                    <>
+                                                        <thead>
+                                                            <tr>
+                                                                <b>Fecha:</b> {solicitudes.fecha} <br/>
+                                                                <b>Solicitante:</b> {solicitudes.solicitante}         
+                                                                <b>Departamento:</b> {solicitudes.departamentosoli} <b>Area:</b> {solicitudes.area} 
+                                                                <b>Tipo de solicitud:</b> {solicitudes.tipoSolicitud}<br/>
             
-                                                    <tbody>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Material</th>
+                                                                <th>Cantidad</th>
+                                                                <th>Unidad de medida</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
                                                         {this.state.datamateriales.map(materiales=>{
                                                             if(materiales.idSolicitud === solicitudes._id){
                                                                 return(
@@ -246,93 +208,28 @@ class ReportesRM extends Component{
             
                                                     </tbody>
                                                     <br/>
-                                                </>               
-                                            )
-
+                                                    </>
+                                                )
+                                            }else{
+                                              
+                                            }
                                         }
-                                        
-
-
                                     }else{
 
                                     }
-                                 
                                 }else{
-                                    console.log("nada");
+                                    
                                 }
 
                             }
-
-                        
-                       
-                                         /*   return(
-                                                <>
-                                                    <thead>
-                                                        <tr>
-                                                            <b>Fecha:</b> {solicitudes.fecha} <br/>
-                                                            <b>Solicitante:</b> {solicitudes.solicitante}         
-                                                            <b>Departamento:</b> {solicitudes.departamentosoli} <b>Area:</b> {solicitudes.area} 
-                                                            <b>Tipo de solicitud:</b> {solicitudes.tipoSolicitud}<br/>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Material</th>
-                                                            <th>Cantidad</th>
-                                                            <th>Unidad de medida</th>
-                                                        </tr>
-                                                    </thead>
-            
-                                                    <tbody>
-                                                        {this.state.datamateriales.map(materiales=>{
-                                                            if(materiales.idSolicitud === solicitudes._id){
-                                                                return(
-                                                                    <tr>
-                                                                        <td>{materiales.nombreMaterial}</td>
-                                                                        <td>{materiales.cantidadsolicitada}</td>
-                                                                        <td>{materiales.unidadMedidaMS}</td>
-                                                                    </tr>
-                                                                )
-            
-                                                            }
-                                                        })}
-            
-                                                    </tbody>
-                                                    <br/>
-                                                </>               
-                                            )*/
+                            
 
                                    
                     }))}
                     
-
-                    
                 </table>
 
-                <div>
-                    {/*this.state.datasolicitudes.filter((solicitudes)=>{  
-                        if (this.state.departamentoS =="" && this.state.mesS =="" && this.state.añoS ==""){
-                            
-                                
-                            
-                            
-                            //console.log("holiiii ");
-
-                        }else if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase()) &&
-                            solicitudes.fecha.toLowerCase().includes(this.state.mesS.toLowerCase()) &&
-                            solicitudes.fecha.toLowerCase().includes(this.state.añoS.toLowerCase()) ){
-                            return(
-                                <table>
-
-                                </table>
-                            )
-
-                        }
-                        
-                    }).map((solicitudes=>{
-
-                    }))*/}
-
-
-                </div>
+                
                 <br/><br/>
 
 

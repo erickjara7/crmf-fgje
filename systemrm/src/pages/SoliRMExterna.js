@@ -104,7 +104,12 @@ class SoliRMExterna extends Component{
     }
 
     validaciónmodal =()=>{
-        if ((this.state.form.area === '') || (this.state.form.tipoSolicitud === '')){
+        if(this.state.form.solicitante === undefined && this.state.form.municipiosoli ===undefined && this.state.form.departamentosoli === undefined
+            && this.state.form.area === undefined  && this.state.form.tipoSolicitud === undefined){
+                alert("Favor de llenar todos los campos")
+
+        }else if ((this.state.form.solicitante === undefined || this.state.form.municipiosoli ===undefined || this.state.form.departamentosoli === undefined
+            || this.state.form.area === undefined  || this.state.form.tipoSolicitud === undefined)){
             alert('Favor de llenar todos los campos');
         }else{
             this.peticionpostsoli();

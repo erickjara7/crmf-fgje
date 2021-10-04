@@ -45,6 +45,20 @@ class ConfigRM extends Component{
          })
      }
 
+
+    validacionModalReUser = () =>{
+        if(this.state.form.nombres === undefined || this.state.form.apellidoP === undefined || this.state.form.apellidoM === undefined || this.state.form.departamento === undefined 
+           || this.state.form.municipio === undefined || this.state.form.username === undefined || this.state.form.password === undefined || this.state.form.userType === undefined 
+           || this.state.form === undefined ){
+               alert("Favor de llenar todos los campos");
+
+        }else{
+            this.convertirmd5password();
+            this.peticionPost();
+
+        }
+    }
+
     
     peticionPost=async()=>{
         await axios.post(agguser, this.state.form).then(response=>{
@@ -388,7 +402,7 @@ class ConfigRM extends Component{
                     </ModalBody>
 
                     <ModalFooter>
-                        <button className="btn btn-success" onClick={ () => {this.convertirmd5password(); this.peticionPost() }}>Insertar</button>
+                        <button className="btn btn-success" onClick={ () => { this.validacionModalReUser() }}>Insertar</button>
                         <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>Cancelar</button>
                     </ModalFooter>
                 </Modal>

@@ -81,10 +81,17 @@ peticionPut2 =()=>{
 }
 peticionaggmaterial=async()=>{
         this.modalAggmaterial();
-        existencianueva =  this.state.form.existencia + + this.state.form.cantidadaggmate;
-        alert (`La existencia de: ${this.state.form.nombre} se actualizó exitosamente.`);
-        this.state.form.existencia = existencianueva;
-        this.peticionPut2();
+        if(this.state.form.cantidadaggmate <= 0 || this.state.form.cantidadaggmate === undefined){
+            alert("El valor no es válido")
+        }else{
+            
+            existencianueva =  this.state.form.existencia + + this.state.form.cantidadaggmate;
+            alert (`La existencia de: ${this.state.form.nombre} se actualizó exitosamente.`);
+            this.state.form.existencia = existencianueva;
+            this.peticionPut2();
+
+        }
+        
 }
 
 modalInsertar = () =>{
@@ -113,13 +120,22 @@ seleccionarMaterial = (material) =>{
 
 validacionaggmaterial = () =>{
 
-    console.log(`nombre: ${this.state.form.nombre}`);
+    //console.log(`nombre: ${this.state.form.nombre}`);
     
-    
-    if((this.state.form.nombre ==='' || this.state.form.existencia ==='' || this.state.form.unidadMedida ==='' || this.state.form.categoria ==='')){
+    if(this.state.form.nombre === undefined  && this.state.form.existencia === undefined && this.state.form.unidadMedida ===undefined && this.state.form.categoria ===undefined){
+        alert("Favor de llenar todos los campos");
+
+    }else if((this.state.form.nombre === undefined || this.state.form.existencia === undefined || this.state.form.unidadMedida ===undefined || this.state.form.categoria ===undefined)){
         alert("Favor de llenar todos los campos");
     }else{
-        this.peticionPost();
+        if(this.state.form.existencia <= 0){
+            alert("Valor existencia NO VÁLIDO")
+
+        }else{
+            this.peticionPost();
+
+        }
+        
     }
 
 }

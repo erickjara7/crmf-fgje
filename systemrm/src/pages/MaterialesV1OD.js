@@ -21,6 +21,7 @@ class MaterialesV1OD extends Component{
 
 
     state={
+        existenciatemp: '',
         busqueda:'',
         modalInsertar: false,
         data:[],
@@ -63,16 +64,28 @@ class MaterialesV1OD extends Component{
 
     peticionPostms  = async() =>{
 
-        if(!cookies.get('isolicitud') ){
-            await axios.post(aggmatesoli, this.state.form).then(response=>{
-                this.modalInsertar();
-                alert('Material agregado exitosamente');
+        if(this.state.form.idSolicitud != undefined ){
+            if(this.state.form.cantidadsolicitada <=0){
+                alert("El valor solicitado no es válido");
+            }else{
+                if(this.state.form.cantidadsolicitada > this.state.existenciatemp){
+                    alert("La cantidad solicitada supera a la existente");
+                }else{
+                    await axios.post(aggmatesoli, this.state.form).then(response=>{
+                        this.modalInsertar();
+                        alert('Material agregado exitosamente');
+                    
+                        //this.peticionGet();
+                    }).catch(error=>{
+                        alert('Error al guardar, intentelo nuevamente');
+                        //console.log(error.message);
+                    })
+
+                }
+                
+
+            }
             
-                //this.peticionGet();
-            }).catch(error=>{
-                alert('Error al guardar, intentelo nuevamente');
-                //console.log(error.message);
-            })
         }else{
             
                 alert('No ha seleccionado ninguna solicitud');               
@@ -122,6 +135,7 @@ class MaterialesV1OD extends Component{
             
             }
         })
+        this.state.existenciatemp = material.existencia;
         if(material.existencia === 0){
             alert("Este material no se encuentra disponible por el momento");
         }else{
