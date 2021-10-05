@@ -117,11 +117,22 @@ class ReportesRM extends Component{
                 <h2>Reportes</h2>
                 
                 <br></br>
-                <h6>Consulta solicitudes entregadas por departamento</h6>
+                <h6><b>Departamento: </b>Consulta solicitudes entregadas por departamento</h6>
+                <h6><b>Materiales: </b>Consulta materiales entregados por fecha</h6>
 
 
                 <form>
                     <div className="row">
+                        <div className="col-3">
+                            <select type="text" className="form-control" placeholder="Tipo de Reporte">
+                                <option selected disabled>Tipo de Reporte</option>
+                               
+                                <option>Departamento</option>
+                                <option>Materiales</option>
+                            </select>
+                            
+
+                        </div>
                         <div className="col-3">
                            
                             <input type="text" className="form-control" placeholder="Departamento" onChange ={this.onChange}  value={this.state.departamentoS}></input>
@@ -133,8 +144,8 @@ class ReportesRM extends Component{
                         </div>
                         <div className="col-2">
                             
-                            <select type="text" className="form-control" placeholder="Mes" onChange ={this.onChange1}  value={this.state.mesS}>
-                                <option>Mes</option>
+                            <select type="text" className="form-control" placeholder="Mes" onChange ={this.onChange1}  >
+                                <option selected disabled>Mes</option>
                                 <option>01</option>
                                 <option>02</option>
                                 <option>03</option>
@@ -147,6 +158,7 @@ class ReportesRM extends Component{
                                 <option>10</option>
                                 <option>11</option>
                                 <option>12</option>
+                                <option>TODOS</option>
                                 
                             </select>
                         </div>
@@ -166,7 +178,7 @@ class ReportesRM extends Component{
                                 if(this.state.departamentoS != "" && this.state.mesS != "" && this.state.añoS != ""){
                                     if(solicitudes.estado === 'Entregada' || solicitudes.estado === 'Obsolet'){
                                         if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase())){
-                                           //console.log(solicitudes.fecha);
+                                            //console.log(solicitudes.fecha);
                                             //var solid = solicitudes._id;
                                             var solifech = solicitudes.fecha;
                                            
