@@ -335,7 +335,9 @@ class SolicitudesRMEntregadas extends Component{
                 </div>
 
 
-                <Modal isOpen={this.state.modalEnviarsoli}>
+              
+              <Modal isOpen={this.state.modalEnviarsoli}>
+
                     
                     <ModalBody>
                         ¿Seguro de querer quitar permanentemente esta solicitud?
@@ -347,6 +349,10 @@ class SolicitudesRMEntregadas extends Component{
 
                     </ModalFooter>
                 </Modal>
+
+                <footer class="footer">
+                    Jacqueline Leal  | 2021© 
+                </footer>
            </div>
            
        );

@@ -320,6 +320,7 @@ class SoliRMExterna extends Component{
                             <label htmlFor='municipiosoli'>Municipio:</label><br/>
                             <select class="form-control"  placeholder="Seleccione" type="text" name="municipiosoli" id="municipiosoli" onChange ={this.handleChange}  value={form?form.municipiosoli:''}>
                                     <option></option>
+                                    <option>Extraordinario-Hermosillo</option>
                                     <option>Aconchi</option>
                                     <option>Agua Prieta</option>
                                     <option>Alamos</option>
@@ -446,6 +447,9 @@ class SoliRMExterna extends Component{
                 </Modal>
 
 
+                <footer class="footer">
+                    Jacqueline Leal  | 2021© 
+                </footer>
 
                 
            </div> 

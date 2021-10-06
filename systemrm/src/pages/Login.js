@@ -162,8 +162,15 @@ class Login extends Component{
 
                     </div>
                     
+                    
                 </div>
+                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                <footer class="footer">
+                    Jacqueline Leal  | 2021© 
+                </footer>
             </div>
+            
 
         );
     }

@@ -315,6 +315,11 @@ class MaterialesAERM extends Component{
                 </div>
 
 
+                <footer class="footer">
+                    Jacqueline Leal  | 2021© 
+                </footer>
+
+
 
 
 

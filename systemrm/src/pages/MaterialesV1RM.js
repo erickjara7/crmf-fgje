@@ -15,6 +15,7 @@ const dpsidmaterial = "http://localhost:4000/materiales/";
 const cookies = new Cookies();
 
 var existencianueva = 0;
+const nombrematerialesArray = [];
 
 
 class MaterialesV1RM extends Component{
@@ -48,6 +49,7 @@ state={
 peticionGet = async() =>{
    await  axios.get(vermaterial).then(response =>{
         this.setState({data:response.data});
+        
         //setMaterial(response.data);
         //setTablaMateriales(response.data);
         
@@ -118,6 +120,8 @@ seleccionarMaterial = (material) =>{
 }
 
 
+
+
 validacionaggmaterial = () =>{
 
     //console.log(`nombre: ${this.state.form.nombre}`);
@@ -128,16 +132,57 @@ validacionaggmaterial = () =>{
     }else if((this.state.form.nombre === undefined || this.state.form.existencia === undefined || this.state.form.unidadMedida ===undefined || this.state.form.categoria ===undefined)){
         alert("Favor de llenar todos los campos");
     }else{
+
+       /* nombrematerialesArray.map((nombres)=>{
+            if(nombres.toLowerCase().includes(this.state.form.nombre) || nombres.toUpperCase().includes(this.state.form.nombre) ){
+                alert("Pueda que el producto ya exista, si no es así detalle el producto")
+                
+            }else{
+
+            }
+        })*/
+
         if(this.state.form.existencia <= 0){
             alert("Valor existencia NO VÁLIDO")
 
         }else{
-            this.peticionPost();
+            const resultado = nombrematerialesArray.find(nombres => nombres === this.state.form.nombre || 
+            nombres.toLowerCase() === this.state.form.nombre || 
+            nombres.toUpperCase() === this.state.form.nombre ||
 
+
+
+            nombres.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === this.state.form.nombre || 
+            nombres.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() === this.state.form.nombre || 
+            nombres.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase() === this.state.form.nombre  
+
+            
+           /* nombres === this.state.form.nombre.toLowerCase() || 
+            nombres === this.state.form.nombre.toUpperCase() ||
+
+
+
+            nombres === this.state.form.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "")  || 
+            nombres === this.state.form.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() || 
+            nombres === this.state.form.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase()   */ 
+           )
+            
+            if (resultado){
+                console.log(resultado);
+                alert("Pueda que el producto ya exista, si no es así detalle el nombre del producto")
+
+ 
+            }else{
+                console.log("else");
+                this.peticionPost();
+
+            }
+           
+            
         }
         
     }
-
+    
 }
 
 
@@ -168,6 +213,12 @@ cerrarSesion = () =>{
     cookies.remove('departamento',{path:"/"});
     cookies.remove('userType',{path:"/"});
     window.location.href='./';
+}
+
+listamateriales=()=>{
+    this.state.data.map(materiales=>{
+        nombrematerialesArray.push(materiales.nombre);
+    })
 }
 
 
@@ -226,7 +277,7 @@ componentDidMount(){
                 <br></br>
                 <div className="row">
                     <div className="col-2">
-                        <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Agregar nuevo material</Button>
+                        <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.listamateriales(); this.modalInsertar()}}>Agregar nuevo material</Button>
                     </div>
                     <div className="col-4">
                         
@@ -424,11 +475,17 @@ componentDidMount(){
 
                 </Modal>
                 
+                <footer class="footer">
+                    Jacqueline Leal  | 2021© 
+                </footer>
+                
                 
                 
             </div>
             
+            
         );
+        
         
     }
     

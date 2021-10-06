@@ -367,6 +367,9 @@ class MaterialesV1OD extends Component{
                     <br></br>
                     <br></br>
                     <br></br>
+                    <footer class="footer">
+                        Jacqueline Leal  | 2021© 
+                    </footer>
                   
 {/*--------------SOLICITUDES-----------------------------------------------------------------------------------------------------------------------------*/}
 

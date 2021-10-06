@@ -421,6 +421,10 @@ class ConfigRM extends Component{
                     </ModalFooter>
                 </Modal>
 
+                <footer class="footer">
+                    Jacqueline Leal  | 2021© 
+                </footer>
+
                 
                
             
