@@ -13,6 +13,8 @@ const usersurl="http://localhost:4000/users/getuser";
 const agguser = "http://localhost:4000/users/add";
 const deleteuser = "http://localhost:4000/users/";
 
+const nombresUsuariosArray = [];
+
 const cookies = new Cookies();
 
 class ConfigRM extends Component{
@@ -20,6 +22,7 @@ class ConfigRM extends Component{
     state={
         busqueda:'',
         data:[],
+        
         
             
         datausertype:['Seleccione','Administrador','Usuario'],
@@ -53,8 +56,29 @@ class ConfigRM extends Component{
                alert("Favor de llenar todos los campos");
 
         }else{
-            this.convertirmd5password();
-            this.peticionPost();
+            const resultado = nombresUsuariosArray.find(nombres => nombres === this.state.form.nombres+' '+ this.state.form.apellidoP+' '+ this.state.form.apellidoM ||
+                nombres.toLowerCase() === this.state.form.nombres+' '+ this.state.form.apellidoP+' '+ this.state.form.apellidoM || 
+                nombres.toUpperCase() === this.state.form.nombres+' '+ this.state.form.apellidoP+' '+ this.state.form.apellidoM ||  
+                
+                nombres.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === this.state.form.nombres+' '+ this.state.form.apellidoP+' '+ this.state.form.apellidoM || 
+                nombres.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() === this.state.form.nombres+' '+ this.state.form.apellidoP+' '+ this.state.form.apellidoM || 
+                nombres.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase() === this.state.form.nombres+' '+ this.state.form.apellidoP+' '+ this.state.form.apellidoM 
+
+            
+            
+            );
+            if(resultado){
+                console.log(resultado);
+                alert("El usuario ya existe, favor de verificar el nombre")
+
+            }else{
+                console.log("else");
+
+                this.convertirmd5password();
+                this.peticionPost();
+
+            }
+            
 
         }
     }
@@ -86,6 +110,14 @@ class ConfigRM extends Component{
 
     convertirmd5password=()=>{
         this.state.form.password = md5(this.state.form.password)
+    }
+
+    listamateriales=()=>{
+        this.state.data.map((nombresusers) =>{
+            nombresUsuariosArray.push(nombresusers.nombres+' '+nombresusers.apellidoP+' '+nombresusers.apellidoM);
+            console.log(nombresUsuariosArray);
+        })
+
     }
 
 
@@ -189,7 +221,7 @@ class ConfigRM extends Component{
                     </div>
                 </div>
 
-                <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Registrar Usuario</Button>
+                <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.listamateriales(); this.modalInsertar()}}>Registrar Usuario</Button>
 
                 <table class="table table-striped table-bordered">
 

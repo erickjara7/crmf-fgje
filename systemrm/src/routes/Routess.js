@@ -12,6 +12,9 @@ import SolicitudesRMEntregadas from '../pages/SolicitudesRMEntregadas';
 import SoliRMExterna from '../pages/SoliRMExterna';
 import MaterialesAERM from '../pages/MaterialesAERM';
 
+import ReportexDepto from '../pages/ReportexDepto';
+import ReportexMate from '../pages/ReportexMate';
+
 
 function Routess() {
   return (
@@ -27,6 +30,8 @@ function Routess() {
       <Route exact path="/solicitudesrmen" component={SolicitudesRMEntregadas}/>
       <Route exact path="/solicitudesrmext" component={SoliRMExterna}/>
       <Route exact path="/materialesaerm" component={MaterialesAERM}/>
+      <Route exact path="./reportesdepto" component={ReportexDepto}/>
+      <Route exact path="./reportesmate" component={ReportexMate}/>
     </Switch>
     </BrowserRouter>
   );

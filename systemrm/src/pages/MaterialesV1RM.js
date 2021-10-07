@@ -380,10 +380,10 @@ componentDidMount(){
 
                 <Modal isOpen={this.state.modalInsertar}>
                     <ModalHeader style={{display: 'block'}}>
-                    {this.state.tipoModal == 'insertar'?
-                        <span style={{float:'left'}}>Agregar Material</span>:
-                        <span style={{float:'left'}}>Editar Material</span>
-                    }
+                        {this.state.tipoModal == 'insertar'?
+                            <span style={{float:'left'}}>Agregar Material</span>:
+                            <span style={{float:'left'}}>Editar Material</span>
+                        }
                     </ModalHeader>
 
                     <ModalBody>

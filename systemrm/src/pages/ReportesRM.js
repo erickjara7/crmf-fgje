@@ -18,6 +18,8 @@ class ReportesRM extends Component{
         datasolicitudes:[],
         datamateriales:[],
 
+        tipoReporte:'',
+
         departamentoS:'',   
         mesS:'',
         añoS:'',
@@ -41,7 +43,12 @@ class ReportesRM extends Component{
 
 
    
-
+    //captura lo que se escribe en el input para la variable tipo de reporte del estado
+    onChange0 = async e =>{
+        e.persist();
+        await this.setState({tipoReporte: e.target.value});
+        console.log(`tipoReporte=${this.state.tipoReporte}`);
+    }
 
 
    //captura lo que se escribe en el input para la variable departamento del estado
@@ -124,7 +131,7 @@ class ReportesRM extends Component{
                 <form>
                     <div className="row">
                         <div className="col-3">
-                            <select type="text" className="form-control" placeholder="Tipo de Reporte">
+                            <select type="text" className="form-control" placeholder="Tipo de Reporte" onChange ={this.onChange0}  >
                                 <option selected disabled>Tipo de Reporte</option>
                                
                                 <option>Departamento</option>
@@ -133,9 +140,10 @@ class ReportesRM extends Component{
                             
 
                         </div>
+                        
                         <div className="col-3">
                            
-                            <input type="text" className="form-control" placeholder="Departamento" onChange ={this.onChange}  value={this.state.departamentoS}></input>
+                            <input type="text" className="form-control" placeholder="Nombre depto. ó material" onChange ={this.onChange}  value={this.state.departamentoS}></input>
                         </div>
                         
                         <div className="col-2">
@@ -169,63 +177,226 @@ class ReportesRM extends Component{
                
 
               <table class="table table-striped table-bordered">
+              <thead>
+                                                <tr>
+                                                   {/* <b>Fecha:</b> {solicitudes.fecha} <br/>
+                                                    <b>Solicitante:</b> {solicitudes.solicitante}    
+                                                    <b>Tipo de solicitud:</b> {solicitudes.tipoSolicitud}<br/>
+                                                    <b>Area:</b> {solicitudes.area}
+                                                     <b>Departamento:</b> {dep}  */}     
+                                                    
+                                                    
+
+                                                </tr>
+                                                <tr>
+                                                    <th>Material</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Unidad de medida</th>
+                                                    <th>Solitante</th>
+                                                    <th>Departamento</th>
+                                                    <th>Area</th>
+                                                    <th>Fecha</th>
+                                                </tr>
+                                            </thead>
+
                     {this.state.datasolicitudes.map((solicitudes=>{
                         
-                            if(this.state.departamentoS ==="" || this.state.mesS === "" || this.state.añoS ===""){
+                        if(this.state.tipoReporte === "" || this.state.departamentoS ==="" || this.state.mesS === "" || this.state.añoS ===""){
 
-                            }else if(this.state.departamentoS != "" || this.state.mesS != "" || this.state.añoS != ""){
+                            }else if(this.state.tipoReporte !="" || this.state.departamentoS != "" || this.state.mesS != "" || this.state.añoS != ""){
                                
-                                if(this.state.departamentoS != "" && this.state.mesS != "" && this.state.añoS != ""){
+                                if( this.state.tipoReporte !="" && this.state.departamentoS != "" && this.state.mesS != "" && this.state.añoS != ""){
+                                    
                                     if(solicitudes.estado === 'Entregada' || solicitudes.estado === 'Obsolet'){
-                                        if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase())){
-                                            //console.log(solicitudes.fecha);
-                                            //var solid = solicitudes._id;
-                                            var solifech = solicitudes.fecha;
-                                           
-                                            var cutfechaaño = solifech.substr(0,4);
-                                            var cutfechames = solifech.substr(5,2);
-                                          
 
-                                            if(cutfechaaño === this.state.añoS && cutfechames === this.state.mesS){
-                                                //console.log(`valor de cutaño:${cutfechaaño}, stateaño: ${this.state.añoS}, idsoli:${solid}`);
-                                                return(
-                                                    <>
-                                                        <thead>
-                                                            <tr>
-                                                                <b>Fecha:</b> {solicitudes.fecha} <br/>
-                                                                <b>Solicitante:</b> {solicitudes.solicitante}         
-                                                                <b>Departamento:</b> {solicitudes.departamentosoli} <b>Area:</b> {solicitudes.area} 
-                                                                <b>Tipo de solicitud:</b> {solicitudes.tipoSolicitud}<br/>
-            
-                                                            </tr>
-                                                            <tr>
-                                                                <th>Material</th>
-                                                                <th>Cantidad</th>
-                                                                <th>Unidad de medida</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        {this.state.datamateriales.map(materiales=>{
-                                                            if(materiales.idSolicitud === solicitudes._id){
-                                                                return(
+                                        if(this.state.tipoReporte ==='Departamento'){
+
+                                            if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase())){
+                                                //console.log(solicitudes.fecha);
+                                                //var solid = solicitudes._id;
+                                                var solifech = solicitudes.fecha;
+                                            
+                                                var cutfechaaño = solifech.substr(0,4);
+                                                var cutfechames = solifech.substr(5,2);
+                                               
+                                                
+                                        
+
+                                                if(cutfechaaño === this.state.añoS && this.state.mesS === 'TODOS'){
+                                                    
+                                                    return(
+                                                        <>
+                                                       
+                                                            <tbody>
+                                                            {this.state.datamateriales.map(materiales=>{
+                                                                if(materiales.idSolicitud === solicitudes._id){
+                                                                    return(
+                                                                        <tr>
+                                                                            <td>{materiales.nombreMaterial}</td>
+                                                                            <td>{materiales.cantidadsolicitada}</td>
+                                                                            <td>{materiales.unidadMedidaMS}</td>
+                                                                            <td>{solicitudes.solicitante}</td>
+                                                                            <td>{solicitudes.departamentosoli}</td>
+                                                                            <td>{solicitudes.area}</td>
+                                                                            <td>{solicitudes.fecha}</td>
+                                                                        </tr>
+                                                                    )
+                
+                                                                }
+                                                            })}
+                
+                                                        </tbody>
+                                                       
+                                                        </>
+                                                       
+
+                                                    )
+                                                    
+                                            
+
+                                                    
+                                                }else{
+                                                    if(cutfechaaño === this.state.añoS && cutfechames === this.state.mesS){
+                                                        //console.log(`valor de cutaño:${cutfechaaño}, stateaño: ${this.state.añoS}, idsoli:${solid}`);
+                                                        return(
+                                                            <>
+                                                                <thead>
                                                                     <tr>
-                                                                        <td>{materiales.nombreMaterial}</td>
-                                                                        <td>{materiales.cantidadsolicitada}</td>
-                                                                        <td>{materiales.unidadMedidaMS}</td>
+                                                                        <b>Fecha:</b> {solicitudes.fecha} <br/>
+                                                                        <b>Solicitante:</b> {solicitudes.solicitante}         
+                                                                        <b>Departamento:</b> {solicitudes.departamentosoli} <b>Area:</b> {solicitudes.area} 
+                                                                        <b>Tipo de solicitud:</b> {solicitudes.tipoSolicitud}<br/>
+                    
                                                                     </tr>
-                                                                )
-            
-                                                            }
-                                                        })}
-            
-                                                    </tbody>
-                                                    <br/>
-                                                    </>
-                                                )
-                                            }else{
-                                              
+                                                                    <tr>
+                                                                        <th>Material</th>
+                                                                        <th>Cantidad</th>
+                                                                        <th>Unidad de medida</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                {this.state.datamateriales.map(materiales=>{
+                                                                    if(materiales.idSolicitud === solicitudes._id){
+                                                                        return(
+                                                                            <tr>
+                                                                                <td>{materiales.nombreMaterial}</td>
+                                                                                <td>{materiales.cantidadsolicitada}</td>
+                                                                                <td>{materiales.unidadMedidaMS}</td>
+                                                                            </tr>
+                                                                        )
+                    
+                                                                    }
+                                                                })}
+                    
+                                                            </tbody>
+                                                            <br/>
+                                                            </>
+                                                        )
+                                                    }else{
+                                                    
+                                                    }
+
+
+
+
+                                                }
+
                                             }
+                                        }else{
+                                            if(this.state.tipoReporte==='Materiales'){
+                                                this.state.datamateriales.map(materiales=>{
+                                                    if(materiales.nombreMaterial.toLowerCase().includes(this.state.departamentoS.toLowerCase())){
+                                                        if(solicitudes._id === materiales.idSolicitud){
+                                                            
+                                                            var solifech = solicitudes.fecha;
+                                                            var cutfechaaño = solifech.substr(0,4);
+                                                            var cutfechames = solifech.substr(5,2);
+
+
+                                                            if(cutfechaaño === this.state.añoS && this.state.mesS === 'TODOS'){
+                                                                console.log(`Mate:${solicitudes.fecha}`);
+                                                                console.log(`depart: ${solicitudes.departamentosoli}`);
+                                                                console.log(`canti: ${materiales.cantidadsolicitada}`);
+                                                                    return(
+                                                                        <>
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <b>Material:</b>{materiales.nombreMaterial}<br/>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <th>Departamento</th>
+                                                                                    <th>Cantidad</th>
+                                                                                    <th>Fecha</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td>{solicitudes.departamentosoli}</td>
+                                                                                    <td>{materiales.cantidadsolicitada}</td>
+                                                                                    <td>{solicitudes.fecha}</td>
+
+                                                                                </tr>
+
+
+                                                                            </tbody>
+                                                                            
+                                                                        </>
+                                                                    )
+
+
+                                                                
+                                                            }else{
+                                                                if(cutfechaaño === this.state.añoS && cutfechames === this.state.mesS){
+                                                                    //console.log(`Mate:${materiales.nombreMaterial}`);
+                                                                    console.log(`depart: ${solicitudes.departamentosoli}`);
+                                                                    console.log(`canti: ${materiales.cantidadsolicitada}`);
+                                                                    return(
+                                                                        <>
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <b>Material:</b>{materiales.nombreMaterial}<br/>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <th>Departamento</th>
+                                                                                    <th>Cantidad</th>
+                                                                                    <th>Fecha</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td>{solicitudes.departamentosoli}</td>
+                                                                                    <td>{materiales.cantidadsolicitada}</td>
+                                                                                    <td>{solicitudes.fecha}</td>
+
+                                                                                </tr>
+
+
+                                                                            </tbody>
+                                                                            
+                                                                        </>
+                                                                    )
+
+                                                                }
+
+                                                            }
+
+
+                                                           
+                                                            
+                                                        }
+
+                                                    }
+                                                })
+
+                                            }else{
+                                                //nada
+                                            }
+                                           
                                         }
+
+
+
+
                                     }else{
 
                                     }
