@@ -36,14 +36,12 @@ state={
         categoria:'',
         tipoModal:'',
         cantidadaggmate:0,
+        marcamate:'',
+        caducidadmate:'',
+        tipomaterial:''
         
     }
 }
-
-/*state={
-    busqueda:'',
-}*/
-
  
 
 peticionGet = async() =>{
@@ -239,16 +237,6 @@ componentDidMount(){
 
 
     render(){
-
-        console.log(cookies.get('_id'));
-        console.log(cookies.get('nombres'));
-        console.log(cookies.get('apellidoP'));
-        console.log(cookies.get('apellidoM'));
-        
-        console.log(cookies.get('username'));
-        console.log(cookies.get('departamento'));
-        console.log(cookies.get('userType'));
-
 
         const {form} = this.state;
 

@@ -9,6 +9,7 @@ const Users = require("./api/users");
 const Materiales = require("./api/materiales");
 const Solicitud = require ("./api/solicitud");
 const MaterialSolicitado = require ("./api/materialsolicitado");
+const EntradasMate = require('./api/entradasmate');
 //const User = require('./models/User');
 const cors = require('cors');
 
@@ -24,6 +25,7 @@ app.use("/users", Users);
 app.use("/materiales", Materiales);
 app.use("/solicitud", Solicitud);
 app.use("/materialsolicitado", MaterialSolicitado);
+app.use("/entradasmate", EntradasMate);
 //-------------------------------------------------------------
 /*app.get('http://localhost:4000/api/users',(req,res)=>{
     User.find({},(err, users)=>{

@@ -31,13 +31,14 @@ const postMaterial = (req, res) =>{
         material.nombre = req.body.nombre,
         material.existencia = req.body.existencia,
         material.unidadMedida = req.body.unidadMedida,
-        material.categoria = req.body.categoria
+        material.categoria = req.body.categoria,
+        material.marcamate = req.body.marcamate
 
         material.save((err,materialstored) =>{
             if (err) res.status(500).send({message:`Error al salvar en la base de datos:${err}`})
 
             res.status(200).send({material: materialstored})
-        })
+    })
 }
 
 const putMaterial = (req,res) => {
