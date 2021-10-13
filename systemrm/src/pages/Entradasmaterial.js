@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 
 
-class ReportexDepto extends Component{
+class Entradasmaterial extends Component{
     render(){
         return(
             <div class="container">
@@ -13,20 +13,22 @@ class ReportexDepto extends Component{
                         <li><a href="./materiales">Materiales</a></li>
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
-                        <li><a href="./configuracion">Usuarios</a></li>                    
+                        <li><a href="./configuracion">Usuarios</a></li>
                         <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
                 </div>
             
                 <div class="raya"/>
-                <h5>reportex depto</h5>
+                <h5>Entradas Material</h5>
+                 
 
 
-                
             </div>
-        );
+           
+        )
     }
 }
 
-export default ReportexDepto;
+
+export default Entradasmaterial;

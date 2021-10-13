@@ -11,6 +11,7 @@ const getEntradasmate =(req, res)=>{
 const postEntradasmate = (req,res) =>{
     console.log(req.body);
     let entradasmate = new EntradasMate()
+        entradasmate.idmaterialEM = req.body.idmaterialEM,
         entradasmate.nombreEM = req.body.nombreEM,
         entradasmate.cantidadaggEM = req.body.cantidadaggEM,
         entradasmate.unidadMedidaEM = req.body.unidadMedidaEM,

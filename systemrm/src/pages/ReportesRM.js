@@ -34,6 +34,18 @@ class ReportesRM extends Component{
         }) 
     }
 
+    /*linktoreportes=()=>{
+        if(this.state.tipoReporte === ''){
+           
+
+        }else{
+            if(this.state.tipoReporte ==='Departamento'){
+                window.location.href="./reportesdepto";
+
+            }
+        }
+    }*/
+
 
     peticionGetmateriales = async()=>{
         await  axios.get(vermateriales).then(response =>{
@@ -87,8 +99,9 @@ class ReportesRM extends Component{
 
 
     componentDidMount(){
-        this.peticionGetsolicitudes();
-        this.peticionGetmateriales();
+       // this.linktoreportes();
+        //this.peticionGetsolicitudes();
+        //this.peticionGetmateriales();
         if (!cookies.get('username')){
             window.location.href="./";
         }else if(cookies.get('userType') === 'Usuario'){
@@ -114,7 +127,7 @@ class ReportesRM extends Component{
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
                         <li><a href="./configuracion">Usuarios</a></li>
-                        <li><a href="./reportesdepto">repordep</a></li>
+                      
                         <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
@@ -137,6 +150,7 @@ class ReportesRM extends Component{
                                
                                 <option>Departamento</option>
                                 <option>Materiales</option>
+                                <option>Entradas de Material</option>
                             </select>
                             
 
@@ -177,7 +191,7 @@ class ReportesRM extends Component{
                 <br/><br/>
                
 
-              <table class="table table-striped table-bordered">
+         { /*    <table class="table table-striped table-bordered">
                     <thead>                          
                         <tr>
                             <th>Material</th>
@@ -308,7 +322,7 @@ class ReportesRM extends Component{
                             }                                                               
                      })}
                     
-                </table>
+                </table>*/}
 
                 
                 <br/><br/>

@@ -7,10 +7,14 @@ import '../img/logofiscalia.png';
 import Cookies from 'universal-cookie';
 
 
-
+const aggEntradaMate ="http://localhost:4000/entradasmate/add";
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 const aggmaterial = "http://localhost:4000/materiales/add";
 const dpsidmaterial = "http://localhost:4000/materiales/";
+
+
+const today = new Date(),
+date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate() ;
 
 const cookies = new Cookies();
 
@@ -28,6 +32,7 @@ state={
     datacategoria:['','Consumible','Limpieza','Embalaje','Reactivos y material químicos','Material de Id. Humana','Material de oficina','Tintas y toner'],
     modalAggmaterial: false,
     modalInsertar: false,
+    //form de material
     form:{
         _id:'',
         nombre:'',
@@ -40,7 +45,23 @@ state={
         caducidadmate:'',
         tipomaterial:''
         
+    },
+    //form de entradas material
+    form2:{
+        idmaterialEM:'',
+        nombreEM:'',
+        cantidadaggEM:'',
+        unidadMedidaEM:'',
+        categoriaEM:'',
+        marcamateEM:'',
+        caducidadmateEM:'',
+        tipomaterialEM:'',
+        loteEM:'',
+        fechaEM:'',
+        usuarioEM:''
+
     }
+    
 }
  
 
@@ -66,30 +87,43 @@ peticionPost=async()=>{
     })
 }
 
+peticionPostEntradasMate=async()=>{
+    await axios.post(aggEntradaMate, this.state.form2).then(response=>{
+        alert("Se insertóoooooo correctamente")
+        console.log(this.state.form2);
+    }).catch(error=>{
+        console.log(error.message);
+    })
+
+}
+
 peticionPut=()=>{
     axios.put(dpsidmaterial+this.state.form._id, this.state.form).then(response=>{
         this.modalInsertar();
         this.peticionGet();
+        
+    
 
     })
 }
 
 peticionPut2 =()=>{
     axios.put(dpsidmaterial+this.state.form._id, this.state.form).then(response=>{
+       
         this.peticionGet();
     })
 }
 peticionaggmaterial=async()=>{
         this.modalAggmaterial();
-        if(this.state.form.cantidadaggmate <= 0 || this.state.form.cantidadaggmate === undefined){
+        if(this.state.form2.cantidadaggEM <= 0 || this.state.form2.cantidadaggEM === undefined){
+            console.log(this.state.form2.cantidadaggEM);
             alert("El valor no es válido")
-        }else{
-            
-            existencianueva =  this.state.form.existencia + + this.state.form.cantidadaggmate;
+        }else{            
+            existencianueva =  this.state.form.existencia + + this.state.form2.cantidadaggEM;
             alert (`La existencia de: ${this.state.form.nombre} se actualizó exitosamente.`);
             this.state.form.existencia = existencianueva;
+            this.peticionPostEntradasMate();
             this.peticionPut2();
-
         }
         
 }
@@ -111,9 +145,21 @@ seleccionarMaterial = (material) =>{
             existencia: material.existencia,
             unidadMedida: material.unidadMedida,
             categoria: material.categoria,
+            marcamate: material.marcamate,
+
+        },
+        form2:{
+            idmaterialEM: material._id,
+            nombreEM:material.nombre,           
+            unidadMedidaEM:material.unidadMedida,
+            categoriaEM:material.categoria,
+            marcamateEM:material.marcamate,                      
+            fechaEM:date,
+            usuarioEM:cookies.get('nombres')+' '+ cookies.get('apellidoP')+' '+ cookies.get('apellidoM'),
 
         }
     })
+   
     
 }
 
@@ -192,6 +238,17 @@ handleChange = async e =>{
             [e.target.name]: e.target.value
         }   
     });
+}
+
+onchangeform2 = async e =>{
+    e.persist();
+    await this.setState({
+        form2:{
+            ...this.state.form2,
+            [e.target.name]: e.target.value
+        }   
+    });
+
 }
 
 onChange = async e =>{
@@ -299,6 +356,7 @@ componentDidMount(){
                         <tr class="tablaencabezado">
                             
                             <th>Nombre</th>
+                            <th>Marca</th>
                             <th>Existencia</th>
                             <th>Unidad de medida</th>
                             <th>Categoria</th>
@@ -330,6 +388,7 @@ componentDidMount(){
                                     <tr>
                                         
                                     <td>{material.nombre}</td>
+                                    <td>{material.marcamate}</td>
                                     <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
                                     <td>{material.unidadMedida}</td>
                                     <td>{material.categoria}</td>
@@ -345,6 +404,7 @@ componentDidMount(){
                                 <tr>
                                     
                                     <td>{material.nombre}</td>
+                                    <td>{material.marcamate}</td>
                                     <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
                                     <td>{material.unidadMedida}</td>
                                     <td>{material.categoria}</td>
@@ -403,6 +463,10 @@ componentDidMount(){
                             </select>
                             <br/>
 
+                            <label htmlFor="marcamate">Marca:</label>
+                            <input className="form-control" type="text"  name="marcamate" id="marcamate" onChange={this.handleChange} value={form?form.marcamate:''}></input>
+                            <br/>
+
                         </div>
                     </ModalBody>
 
@@ -424,30 +488,52 @@ componentDidMount(){
 
                     <ModalBody>
                         <div>
-                            <label htmlFor="nombre">Nombre:</label>
-                            <input className="form-control" type="text"  name="nombre" id="nombre" readOnly onChange={this.handleChange} value={form && form.nombre}/>
+                            <label htmlFor="nombreEM">Nombre:</label>
+                            <input className="form-control" type="text"  name="nombreEM" id="nombreEM" readOnly onChange={this.handleChange} value={form && form.nombre}/>
                             <br/>
 
-                            <label htmlFor="categoria">Categoría</label>
-                            <input className="form-control" type="text" name="categoria" id="categoria" readOnly onChange={this.handleChange} value={form && form.categoria}/>
+                            <label htmlFor="categoriaEM">Categoría</label>
+                            <input className="form-control" type="text" name="categoriaEM" id="categoriaEM" readOnly onChange={this.handleChange} value={form && form.categoria}/>
                             <br/>
 
-                            <label htmlFor="unidadMedida">Unidad de medida:</label>
-                            <input className="form-control" type="text" name="unidadMedida" id="unidadMedida" readOnly onChange={this.handleChange} value={form && form.unidadMedida}/>
+                            <label htmlFor="unidadMedidaEM">Unidad de medida:</label>
+                            <input className="form-control" type="text" name="unidadMedidaEM" id="unidadMedidaEM" readOnly onChange={this.handleChange} value={form && form.unidadMedida}/>
                             <br/>
 
                             <label htmlFor="existencia">Existencia:</label>
                             <input className="form-control" type="number" placeholder="Solo números, sin comas ni puntos" name="existencia" id="existencia" readOnly onChange={this.handleChange} value={form && form.existencia}/> 
                             <br/>
 
-                            <label>Cantidad a agregar:</label>
+                            <label htmlFor="cantidadaggEM">Cantidad a agregar:</label>
                             <input  className="form-control is-valid"
                                 type="number"
+                                id="cantidadaggEM"
                                 
-                                name="cantidadaggmate"
-                                onChange={this.handleChange}
-                               // value ={this.state.form.cantidadaggmate}
-                               />
+                                name="cantidadaggEM"
+                                onChange={this.onchangeform2}
+                                //value ={this.state.form2.cantidadaggEM}
+                            />
+                            <br/>
+
+                            <label htmlFor="tipomaterialEM">Tipo de Material:</label>
+                            <input className="form-control" type="text" name="tipomaterialEM" id="tipomaterialEM" onChange={this.onchangeform2}></input>
+                            <br/>
+
+                            <label htmlFor="loteEM">Lote: </label>
+                            <input className="form-control" type="text" name="loteEM" id="loteEM" onChange={this.onchangeform2}></input>
+                            <br/>
+
+                            <div class="md-form md-outline input-with-post-icon datepicker">
+                                <label htmlFor="caducidadmateEM">Caducidad: </label>
+                                <input placeholder="Select date" type="date" id="caducidadmateEM" name="caducidadmateEM" className="form-control" onChange={this.onchangeform2}/>
+                                
+                            </div>
+                          
+
+                            
+                        
+
+                            
 
 
 
