@@ -20,6 +20,11 @@ class ReportexDepto extends Component{
                 </div>
             
                 <div class="raya"/>
+                <br></br>
+                <button type="button" className="ssmbutton col-4" disabled onClick={()=> window.location.href="./reportesdepto"}>Reporte por departamento</button> 
+                <button type="button" className="btn btn-outline-light col-4" onClick={()=> window.location.href="./reportesmate"}>Reporte por material</button>
+                <button type="button" className="btn btn-outline-light col-4"  onClick={()=> window.location.href="./entradasmate"}>Reporte entradas de material</button>
+                <h2>Reportes</h2>
                 <h5>reportex depto</h5>
 
 

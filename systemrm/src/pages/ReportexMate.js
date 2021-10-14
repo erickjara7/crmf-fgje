@@ -1,7 +1,76 @@
 import React, {Component} from "react";
+import Cookies from 'universal-cookie';
+import {Button} from 'reactstrap';
+import axios from 'axios';
+
+const cookies = new Cookies();
+
+const versolicitudes ="http://localhost:4000/solicitud/getsoli";
+const vermateriales ="http://localhost:4000/materialsolicitado/getms";
 
 
 class ReportexMate extends Component{
+    state={
+        // meses:['01','02','03','04','05','06','07','08','09','10','11','12'],
+         datasolicitudes:[],
+         datamateriales:[],
+ 
+         
+ 
+         materialesS:'',   
+         mesS:'',
+         añoS:'',
+       
+    }
+
+    //captura lo que se escribe en el input para la variable departamento del estado
+    onChange = async e =>{
+        e.persist();
+        await this.setState({materialesS: e.target.value});
+        console.log(`materiales=${this.state.materialesS}`);
+    }
+   //captura lo que se escribe en el input para la variable mes del estado
+    onChange1 = async e =>{
+        e.persist();
+        await this.setState({mesS: e.target.value});
+        console.log(`mes=${this.state.mesS}`);
+    }
+    //captura lo que se escribe en el input para la variable año del estado
+    onChange2 = async e =>{
+        e.persist();
+        await this.setState({añoS: e.target.value});
+        console.log(`año=${this.state.añoS}`);
+    }
+
+
+
+
+
+    cerrarSesion =() =>{
+        cookies.remove('_id',{path:"/"});
+        cookies.remove('nombres',{path:"/"});
+        cookies.remove('apellidoP',{path:"/"});
+        cookies.remove('apellidoM',{path:"/"});
+        cookies.remove('municipious',{path:"/"});
+        cookies.remove('username',{path:"/"});
+        cookies.remove('departamento',{path:"/"});
+        cookies.remove('userType',{path:"/"});
+        window.location.href='./';
+    }
+
+
+
+    componentDidMount(){
+        // this.linktoreportes();
+         //this.peticionGetsolicitudes();
+         //this.peticionGetmateriales();
+         if (!cookies.get('username')){
+             window.location.href="./";
+         }else if(cookies.get('userType') === 'Usuario'){
+             alert('Página no permitida, favor de autenticarse nuevamente.');
+             this.cerrarSesion(); 
+         }
+     }
     render(){
         return(
             <div class="container">
@@ -20,8 +89,63 @@ class ReportexMate extends Component{
                 </div>
             
                 <div class="raya"/>
-               
-                 <h2>reportex Mate</h2>
+              
+
+                <br></br>
+                <button type="button" className="btn btn-outline-light col-4"  onClick={()=> window.location.href="./reportes"}>Reporte por departamento</button> 
+                <button type="button" className="ssmbutton col-4" disabled onClick={()=> window.location.href="./reportesmate"}>Reporte por material</button>
+                <button type="button" className="btn btn-outline-light col-4"  onClick={()=> window.location.href="./entradasmate"}>Reporte entradas de material</button>
+                <h2>Reportes</h2>               
+                
+                
+                
+                <h6><b>Materiales: </b>Consulta materiales entregados por fecha</h6>
+
+
+                <form>
+                    <div className="row">
+                        
+                        <div className="col-3">
+                           
+                            <input type="text" className="form-control" placeholder="Nombre Material" onChange ={this.onChange}  value={this.state.materialesS}></input>
+                        </div>
+                        
+                        <div className="col-2">
+                            
+                            <input type="text" className="form-control" placeholder="Año" onChange ={this.onChange2}  value={this.state.añoS}></input>
+                        </div>
+                        <div className="col-2">
+                            
+                            <select type="text" className="form-control" placeholder="Mes" onChange ={this.onChange1}  >
+                                <option selected disabled>Mes</option>
+                                <option>01</option>
+                                <option>02</option>
+                                <option>03</option>
+                                <option>04</option>
+                                <option>05</option>
+                                <option>06</option>
+                                <option>07</option>
+                                <option>08</option>
+                                <option>09</option>
+                                <option>10</option>
+                                <option>11</option>
+                                <option>12</option>
+                                <option>TODOS</option>
+                                
+                            </select>
+                        </div>
+                        
+                    </div>
+                </form>
+                <br/><br/>
+
+
+
+
+                <footer class="footer">
+                    Jacqueline Leal  | 2021© 
+                </footer>
+
 
             </div>
             

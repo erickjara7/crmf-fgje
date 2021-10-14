@@ -135,12 +135,14 @@ class ReportesRM extends Component{
             
                 <div class="raya"/>
                 <br></br>
+                <button type="button" className="ssmbutton col-4" disabled onClick={()=> window.location.href="./reportes"}>Reporte por departamento</button> 
+                <button type="button" className="btn btn-outline-light col-4" onClick={()=> window.location.href="./reportesmate"}>Reporte por material</button>
+                <button type="button" className="btn btn-outline-light col-4"  onClick={()=> window.location.href="./entradasmate"}>Reporte entradas de material</button>
                 <h2>Reportes</h2>
                 
-                <br></br>
+                
                 <h6><b>Departamento: </b>Consulta solicitudes entregadas por departamento</h6>
-                <h6><b>Materiales: </b>Consulta materiales entregados por fecha</h6>
-
+                
 
                 <form>
                     <div className="row">
@@ -158,7 +160,7 @@ class ReportesRM extends Component{
                         
                         <div className="col-3">
                            
-                            <input type="text" className="form-control" placeholder="Nombre depto. ó material" onChange ={this.onChange}  value={this.state.departamentoS}></input>
+                            <input type="text" className="form-control" placeholder="Nombre departamento" onChange ={this.onChange}  value={this.state.departamentoS}></input>
                         </div>
                         
                         <div className="col-2">
