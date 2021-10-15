@@ -34,18 +34,7 @@ class ReportesRM extends Component{
         }) 
     }
 
-    /*linktoreportes=()=>{
-        if(this.state.tipoReporte === ''){
-           
-
-        }else{
-            if(this.state.tipoReporte ==='Departamento'){
-                window.location.href="./reportesdepto";
-
-            }
-        }
-    }*/
-
+    
 
     peticionGetmateriales = async()=>{
         await  axios.get(vermateriales).then(response =>{
@@ -100,8 +89,8 @@ class ReportesRM extends Component{
 
     componentDidMount(){
        // this.linktoreportes();
-        //this.peticionGetsolicitudes();
-        //this.peticionGetmateriales();
+        this.peticionGetsolicitudes();
+        this.peticionGetmateriales();
         if (!cookies.get('username')){
             window.location.href="./";
         }else if(cookies.get('userType') === 'Usuario'){
@@ -146,7 +135,7 @@ class ReportesRM extends Component{
 
                 <form>
                     <div className="row">
-                        <div className="col-3">
+                      {/*  <div className="col-3">
                             <select type="text" className="form-control" placeholder="Tipo de Reporte" onChange ={this.onChange0}  >
                                 <option selected disabled>Tipo de Reporte</option>
                                
@@ -156,7 +145,7 @@ class ReportesRM extends Component{
                             </select>
                             
 
-                        </div>
+                        </div>*/}
                         
                         <div className="col-3">
                            
@@ -193,7 +182,7 @@ class ReportesRM extends Component{
                 <br/><br/>
                
 
-         { /*    <table class="table table-striped table-bordered">
+                <table class="table table-striped table-bordered">
                     <thead>                          
                         <tr>
                             <th>Material</th>
@@ -208,128 +197,72 @@ class ReportesRM extends Component{
 
                     {this.state.datasolicitudes.map(solicitudes=>{
                         
-                        if(this.state.tipoReporte === "" || this.state.departamentoS ==="" || this.state.mesS === "" || this.state.añoS ===""){
+                        if(this.state.departamentoS ==="" || this.state.mesS === "" || this.state.añoS ===""){
 
-                            }else if(this.state.tipoReporte !="" || this.state.departamentoS != "" || this.state.mesS != "" || this.state.añoS != ""){
-                               
-                                if( this.state.tipoReporte !="" && this.state.departamentoS != "" && this.state.mesS != "" && this.state.añoS != ""){
-                                    
-                                    if(solicitudes.estado === 'Entregada' || solicitudes.estado === 'Obsolet'){
+                        }else if(this.state.departamentoS != "" || this.state.mesS != "" || this.state.añoS != ""){   
+                            if(this.state.departamentoS != "" && this.state.mesS != "" && this.state.añoS != ""){
+                                if(solicitudes.estado === 'Entregada' || solicitudes.estado === 'Obsolet'){
+                                    if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase())){
+                                        var solifech = solicitudes.fecha;
+                                        var cutfechaaño = solifech.substr(0,4);
+                                        var cutfechames = solifech.substr(5,2);
 
-                                        if(this.state.tipoReporte ==='Departamento'){
-
-                                            if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase())){
-                                                var solifech = solicitudes.fecha;
-                                                var cutfechaaño = solifech.substr(0,4);
-                                                var cutfechames = solifech.substr(5,2);
-
-                                                if(cutfechaaño === this.state.añoS && this.state.mesS === 'TODOS'){
+                                        if(cutfechaaño === this.state.añoS && this.state.mesS === 'TODOS'){
                                                     
-                                                    return(
-                                                        <>                                                       
-                                                            <tbody>
-                                                                {this.state.datamateriales.map(materiales=>{
-                                                                    if(materiales.idSolicitud === solicitudes._id){
-                                                                        return(
-                                                                            <tr>
-                                                                                <td>{materiales.nombreMaterial}</td>
-                                                                                <td>{materiales.cantidadsolicitada}</td>
-                                                                                <td>{materiales.unidadMedidaMS}</td>
-                                                                                <td>{solicitudes.solicitante}</td>
-                                                                                <td>{solicitudes.departamentosoli}</td>
-                                                                                <td>{solicitudes.area}</td>
-                                                                                <td>{solicitudes.fecha}</td>
-                                                                            </tr>
-                                                                        )                    
-                                                                    }
-                                                                })}                    
-                                                            </tbody>                                                
-                                                        </>                                                    
-                                                    )                                                                                                                                            
-                                                }else{
-                                                    if(cutfechaaño === this.state.añoS && cutfechames === this.state.mesS){
-                                
-                                                        return(
-                                                            <>                                                        
-                                                                <tbody>
-                                                                    {this.state.datamateriales.map(materiales=>{
-                                                                        if(materiales.idSolicitud === solicitudes._id){
-                                                                            return(
-                                                                                <tr>
-                                                                                    <td>{materiales.nombreMaterial}</td>
-                                                                                    <td>{materiales.cantidadsolicitada}</td>
-                                                                                    <td>{materiales.unidadMedidaMS}</td>
-                                                                                    <td>{solicitudes.solicitante}</td>
-                                                                                    <td>{solicitudes.departamentosoli}</td>
-                                                                                    <td>{solicitudes.area}</td>
-                                                                                    <td>{solicitudes.fecha}</td>
-                                                                                </tr>
-                                                                            )                        
-                                                                        }
-                                                                    })}                        
-                                                                </tbody>                                                        
-                                                            </>
-                                                        )
-                                                    }
-                                                }
-                                            }
+                                            return(
+                                                <>                                                       
+                                                    <tbody>
+                                                        {this.state.datamateriales.map(materiales=>{
+                                                            if(materiales.idSolicitud === solicitudes._id){
+                                                                return(
+                                                                    <tr>
+                                                                        <td>{materiales.nombreMaterial}</td>
+                                                                        <td>{materiales.cantidadsolicitada}</td>
+                                                                        <td>{materiales.unidadMedidaMS}</td>
+                                                                        <td>{solicitudes.solicitante}</td>
+                                                                        <td>{solicitudes.departamentosoli}</td>
+                                                                        <td>{solicitudes.area}</td>
+                                                                        <td>{solicitudes.fecha}</td>
+                                                                    </tr>
+                                                                )                    
+                                                            }
+                                                        })}                    
+                                                    </tbody>                                                
+                                                </>                                                    
+                                            )                                                                                                                                            
                                         }else{
-                                            if(this.state.tipoReporte ==='Materiales'){
-                                                this.state.datamateriales.map(materiales=>{
-                                                    if(materiales.nombreMaterial.toLowerCase().includes(this.state.departamentoS.toLowerCase())){
-                                                        if(solicitudes._id === materiales.idSolicitud){
-                                                            
-                                                            var solifech = solicitudes.fecha;
-                                                            var cutfechaaño = solifech.substr(0,4);
-                                                            var cutfechames = solifech.substr(5,2);
-
-                                                            if(cutfechaaño === this.state.añoS && this.state.mesS === 'TODOS'){
-                                                                //console.log(``);
-                                                                //console.log(``);
-                                                                console.log(`canti: ${materiales.cantidadsolicitada}, depart: ${solicitudes.departamentosoli},Mate:${solicitudes.fecha}`);
+                                            if(cutfechaaño === this.state.añoS && cutfechames === this.state.mesS){
+                                
+                                                return(
+                                                    <>                                                        
+                                                        <tbody>
+                                                            {this.state.datamateriales.map(materiales=>{
+                                                                if(materiales.idSolicitud === solicitudes._id){
                                                                     return(
-                                                                        <>                                                       
-                                                                            <tbody>
-                                                                                
-                                                                                <tr>
-                                                                                    <td>{materiales.nombreMaterial}</td>
-                                                                                    <td>{materiales.cantidadsolicitada}</td>
-                                                                                    <td>{materiales.unidadMedidaMS}</td>
-                                                                                    <td>{solicitudes.solicitante}</td>
-                                                                                    <td>{solicitudes.departamentosoli}</td>
-                                                                                    <td>{solicitudes.area}</td>
-                                                                                    <td>{solicitudes.fecha}</td>
-                                                                                </tr>
-                                                                                                                      
-                                                                            </tbody>                                                                    
-                                                                        </>                                                
-                                                                    )                                                                
-                                                            }else{
-                                                                if(cutfechaaño === this.state.añoS && cutfechames === this.state.mesS){
-                                                                    //console.log(`Mate:${materiales.nombreMaterial}`);
-                                                                    console.log(`depart: ${solicitudes.departamentosoli}`);
-                                                                    console.log(`canti: ${materiales.cantidadsolicitada}`);
-                                                                    return(
-                                                                        <h2>hola</h2>                                                                       
-                                                                    )
+                                                                        <tr>
+                                                                            <td>{materiales.nombreMaterial}</td>
+                                                                            <td>{materiales.cantidadsolicitada}</td>
+                                                                            <td>{materiales.unidadMedidaMS}</td>
+                                                                            <td>{solicitudes.solicitante}</td>
+                                                                            <td>{solicitudes.departamentosoli}</td>
+                                                                            <td>{solicitudes.area}</td>
+                                                                            <td>{solicitudes.fecha}</td>
+                                                                        </tr>
+                                                                    )                        
                                                                 }
-                                                            }                                                        
-                                                        }
-                                                    }
-                                                })
-                                            }                                           
+                                                            })}                        
+                                                        </tbody>                                                        
+                                                    </>
+                                                )
+                                            }
                                         }
-                                    }
+                                    }     
                                 }
-                            }                                                               
-                     })}
-                    
-                </table>*/}
-
-                
+                            }                                
+                        }                                                                     
+                    })}   
+                </table>
                 <br/><br/>
-
-
                 <footer class="footer">
                     Jacqueline Leal  | 2021© 
                 </footer>
