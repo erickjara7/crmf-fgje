@@ -109,6 +109,12 @@ class ConfigRM extends Component{
     }
 
     convertirmd5password=()=>{
+       /* this.setState({
+            form:{
+                password: md5(this.state.form.password)
+            }
+
+        })*/
         this.state.form.password = md5(this.state.form.password)
     }
 

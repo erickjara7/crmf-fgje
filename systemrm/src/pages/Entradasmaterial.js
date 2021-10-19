@@ -5,17 +5,15 @@ import axios from 'axios';
 
 const cookies = new Cookies();
 
-const versolicitudes ="http://localhost:4000/solicitud/getsoli";
-const vermateriales ="http://localhost:4000/materialsolicitado/getms";
+
+const vermaterialesentradas ="http://localhost:4000/entradasmate/get";
 
 
 class Entradasmaterial extends Component{
     state={
         // meses:['01','02','03','04','05','06','07','08','09','10','11','12'],
-         datasolicitudes:[],
-         datamateriales:[],
- 
          
+         dataentradasmateriales:[],
  
          materialesS:'',   
          mesS:'',
@@ -24,11 +22,11 @@ class Entradasmaterial extends Component{
     }
 
       //captura lo que se escribe en el input para la variable departamento del estado
-   /* onChange = async e =>{
+    onChange = async e =>{
         e.persist();
-        await this.setState({departamentoS: e.target.value});
-        console.log(`departamento=${this.state.departamentoS}`);
-    }*/
+        await this.setState({materialesS: e.target.value});
+        console.log(`material=${this.state.materialesS}`);
+    }
 
    //captura lo que se escribe en el input para la variable mes del estado
     onChange1 = async e =>{
@@ -41,6 +39,13 @@ class Entradasmaterial extends Component{
         e.persist();
         await this.setState({añoS: e.target.value});
         console.log(`año=${this.state.añoS}`);
+    }
+
+
+    peticionGetmateriales = async()=>{
+        await  axios.get(vermaterialesentradas).then(response =>{
+            this.setState({dataentradasmateriales:response.data});  
+        })
     }
 
 
@@ -64,7 +69,7 @@ class Entradasmaterial extends Component{
     componentDidMount(){
         // this.linktoreportes();
          //this.peticionGetsolicitudes();
-         //this.peticionGetmateriales();
+         this.peticionGetmateriales();
          if (!cookies.get('username')){
              window.location.href="./";
          }else if(cookies.get('userType') === 'Usuario'){
@@ -105,10 +110,10 @@ class Entradasmaterial extends Component{
                     <div className="row">
                         
                         
-                        <div className="col-3">
+                      {/*  <div className="col-3">
                            
                             <input type="text" className="form-control" placeholder="Nombre Material" onChange ={this.onChange}  value={this.state.materialesS}></input>
-                        </div>
+                        </div>*/}
                         
                         <div className="col-2">
                             
@@ -136,8 +141,88 @@ class Entradasmaterial extends Component{
                         </div>
                         
                     </div>
-              </form>
+                </form>
                 <br/><br/>
+
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Unidad Medida</th>
+                            <th>Cantidad</th>
+                            <th>Marca</th>
+                            <th>Tipo</th>
+                            <th>Lote</th>
+                            <th>Usuario</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {this.state.dataentradasmateriales.map(material=>{
+                            //this.state.materialesS ==="" || 
+                            if(this.state.mesS === "" || this.state.añoS ===""){
+
+                                //this.state.materialesS != "" || 
+                            }else{ 
+                                
+                                    if(this.state.mesS != "" || this.state.añoS != ""){
+                                        //this.state.materialesS != "" &&
+                                        if( this.state.mesS != "" && this.state.añoS != ""){
+                                         //   if(material.nombreEM.toLowerCase().includes(this.state.materialesS.toLowerCase())){
+                                                var fechEntrada = material.fechaEM;
+                                                var cutfechaaño = fechEntrada.substr(0,4);
+                                                var cutfechames = fechEntrada.substr(5,2);
+                                                
+                                                if(cutfechaaño === this.state.añoS && this.state.mesS === 'TODOS'){
+                                                    return(
+                                                        <tr>
+                                                            <td>{material.nombreEM}</td>
+                                                            <td>{material.unidadMedidaEM}</td>
+                                                            <td>{material.cantidadaggEM}</td>
+                                                            <td>{material.marcamateEM}</td>
+                                                            <td>{material.tipomaterialEM}</td>
+                                                            <td>{material.loteEM}</td>
+                                                            <td>{material.usuarioEM}</td>
+                                                            <td>{material.fechaEM}</td>
+                                                                                                                
+                                                        </tr>
+                                                    )
+    
+                                                }else{
+                                                    if(cutfechaaño === this.state.añoS && cutfechames === this.state.mesS){
+                                                        return(
+                                                            <tr>
+                                                                <td>{material.nombreEM}</td>
+                                                                <td>{material.unidadMedidaEM}</td>
+                                                                <td>{material.cantidadaggEM}</td>
+                                                                <td>{material.marcamateEM}</td>
+                                                                <td>{material.tipomaterialEM}</td>
+                                                                <td>{material.loteEM}</td>
+                                                                <td>{material.usuarioEM}</td> 
+                                                                <td>{material.fechaEM}</td>
+                                                                                                                
+                                                            </tr>                                                    
+                                                        )
+    
+                                                    }
+                                                }
+                                          //  }
+    
+                                        }
+                                    }                                                                                           
+                            }
+                        })}
+
+
+                    </tbody>
+                    
+
+
+
+                </table>
+
+
 
                 <footer class="footer">
                     Jacqueline Leal  | 2021© 
