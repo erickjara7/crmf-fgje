@@ -262,7 +262,23 @@ class SolicitudesOD extends Component{
                             <br/>
                             <h2>Solicitud de Material</h2>
                             <br/>
-                            <Button color="success" onClick={()=>{ this.modalInsertar()}}>Crear Solicitud</Button>
+                            <Button color="success" onClick={()=>{ 
+                                this.setState({
+                                    form:{
+                                        fecha:date,
+                                        solicitante: cookies.get('nombres') +' '+ cookies.get('apellidoP') +' '+ cookies.get('apellidoM'),
+                                        departamentosoli: cookies.get('departamento'),
+                                        municipiosoli:cookies.get('municipious'),
+                                        area:'',
+                                        tipoSolicitud:'',
+                                        estado:'Iniciada'
+                         
+                                    }
+                                 });
+                                
+                                
+                                
+                                this.modalInsertar()}}>Crear Solicitud</Button>
                             <br/>
                             
                             

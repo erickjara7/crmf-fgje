@@ -41,55 +41,39 @@ class MaterialesAERM extends Component{
              this.setState({data:response.data});  
          })
     }
-     // ne fucctionne pas siempre se va al else
+
+    
     validacionPostms = ()=>{
-        // console.log(`elsiiii ${this.state.form.cantidadsolicitada}`);
-          if(this.state.form.cantidadsolicitada === 0 ){
-             console.log(`if`);
-          }else{
-              this.peticionPostms();
-             // console.log(`else ${this.state.form.cantidadsolicitada}`);
-          }
+        if(this.state.form.idSolicitud != undefined ){
+            if(this.state.form.cantidadsolicitada === undefined){
+                alert("Favor de llenar los campos");
+            }else{
+                 if(this.state.form.cantidadsolicitada <=0){
+                     alert("El valor solicitado no es válido");
+                 }else{
+                     if(this.state.form.cantidadsolicitada > this.state.existenciatemp){
+                         alert("La cantidad solicitada supera a la existente");
+                     }else{
+                         this.peticionPostms();
+                     }    
+                 }
+            }
+         }else{
+             alert('No ha seleccionado ninguna solicitud');               
+         }
     }
 
-    //SIEMPRE SE VA AL ELSE
+   
 
     peticionPostms  = async() =>{
-
-        if(this.state.form.idSolicitud != undefined  ){
-            if(this.state.form.cantidadsolicitada <=0){
-                alert("El valor solicitado no es válido");
-
-            }else{
-                console.log(`exis: ${this.state.existenciatemp}`);
-                //existemcia
-                if (this.state.form.cantidadsolicitada > this.state.existenciatemp){
-                        alert("La cantidad solicitada supera a la existente");
-
-                }else{
-                    await axios.post(aggmatesoli, this.state.form).then(response=>{
-                        this.modalInsertar();
-                        alert('Material agregado exitosamente');
-                    
-                        //this.peticionGet();
-                    }).catch(error=>{
-                        alert('Error al guardar, intentelo nuevamente');
-                        //console.log(error.message);
-                    })
-
-                }
-                
-
-            }
-            
-        }else{
-            
-                alert('No ha seleccionado ninguna solicitud');               
-           
-        }
-
-
-     }
+        await axios.post(aggmatesoli, this.state.form).then(response=>{
+            this.modalInsertar();
+            alert('Material agregado exitosamente');
+        }).catch(error=>{
+            alert('Error al guardar, intentelo nuevamente');
+            //console.log(error.message);
+        })
+    }
 
 
     handleChange = async e =>{
@@ -154,20 +138,18 @@ class MaterialesAERM extends Component{
             cookies.remove('departamento',{path:"/"});
             cookies.remove('userType',{path:"/"});
             window.location.href='./';
-        }
+    }
     
-        componentDidMount(){
-          //  this.peticiongetmatesoli();
-           // this.peticiongetsoli();
-            //cookies para no ir a paginas sin autenticarse
-            this.peticionGet();
-            if (!cookies.get('username')){
-                window.location.href="./";
-            }else if(cookies.get('userType') === 'Usuario'){
-                alert('Página no permitida, favor de autenticarse nuevamente.');
-                this.cerrarSesion(); 
-            }
+    componentDidMount(){
+        //cookies para no ir a paginas sin autenticarse
+        this.peticionGet();
+        if (!cookies.get('username')){
+            window.location.href="./";
+        }else if(cookies.get('userType') === 'Usuario'){
+            alert('Página no permitida, favor de autenticarse nuevamente.');
+            this.cerrarSesion(); 
         }
+    }
 
 
 

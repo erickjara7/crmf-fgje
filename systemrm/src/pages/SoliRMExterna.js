@@ -41,8 +41,8 @@ class SoliRMExterna extends Component{
         modalEnviarsoli: false,
         form:{
             _id:'',
-            fecha:date,
-            solicitante: '',
+            fecha: date,
+            solicitante:'',
             departamentosoli:'',
             municipiosoli:'',
             area:'',
@@ -61,14 +61,14 @@ class SoliRMExterna extends Component{
             // console.log(`busqueda=${this.state.busqueda}`);
              
          })
-     }
+    }
 
-     peticiongetmatesoli = async() =>{
+    peticiongetmatesoli = async() =>{
          await axios.get(vermaterialsoli).then(response =>{
              this.setState({datamate:response.data});
             
          })
-     }
+    }
 
      peticionPutestadoSoli = ()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
@@ -83,17 +83,22 @@ class SoliRMExterna extends Component{
 
     peticionpostsoli =async ()=>{
         console.log(`post: ${this.state.form.solicitante}`);
-      await axios.post(aggsolicitud,this.state.form).then(response=>{
+        await axios.post(aggsolicitud,this.state.form).then(response=>{
             this.modalInsertar();
-            alert("SOLICITUD CREADA, AHORA ELIJA LA SOLICITUD Y PROCEDA A ELEGIR LOS MATERIALES ");
+            alert("SOLICITUD CREADA, AHORA ELIJA LA SOLICITUD Y PROCEDA A ELEGIR LOS MATERIALES ");   
             this.peticionGet();
        })
        .catch(error=>{
            alert('error en la peticion')
        })
+       
+      
     }
-     modalInsertar = () =>{
-        this.setState({modalInsertar: !this.state.modalInsertar})
+    modalInsertar = () =>{
+        this.setState({
+            modalInsertar: !this.state.modalInsertar,
+            
+        })
     }
 
 
@@ -104,18 +109,19 @@ class SoliRMExterna extends Component{
     }
 
     validaciónmodal =()=>{
-        if(this.state.form.solicitante === undefined && this.state.form.municipiosoli ===undefined && this.state.form.departamentosoli === undefined
-            && this.state.form.area === undefined  && this.state.form.tipoSolicitud === undefined){
-                alert("Favor de llenar todos los campos")
+        if(this.state.form.solicitante === ''  || this.state.form.municipiosoli ==='' || this.state.form.departamentosoli === ''
+            || this.state.form.area === ''  || this.state.form.tipoSolicitud === ''){
+            console.log("nulñl");
+            alert("Favor de llenar todos los campos");
 
-        }else if ((this.state.form.solicitante === undefined || this.state.form.municipiosoli ===undefined || this.state.form.departamentosoli === undefined
-            || this.state.form.area === undefined  || this.state.form.tipoSolicitud === undefined)){
-            alert('Favor de llenar todos los campos');
         }else{
-            this.peticionpostsoli();
-           
+             this.peticionpostsoli();
+            
         }
+       
     }
+
+    //this.setState({form:null});
 
 
     handleChange = async e =>{
@@ -125,8 +131,8 @@ class SoliRMExterna extends Component{
             form:{
                 ...this.state.form,
                 [e.target.name]: e.target.value, 
-                estado:'Iniciada',
-                fecha: date
+               // estado:'Iniciada',
+               // fecha: date
             }
             
         });
@@ -183,27 +189,27 @@ class SoliRMExterna extends Component{
             cookies.remove('departamento',{path:"/"});
             cookies.remove('userType',{path:"/"});
             window.location.href='./';
-        }
+    }
     
-        componentDidMount(){
-            this.peticionGet();
-            this.peticiongetmatesoli();
-           // this.peticiongetsoli();
-            //cookies para no ir a paginas sin autenticarse
-            if (!cookies.get('username')){
-                window.location.href="./";
-            }else if(cookies.get('userType') === 'Usuario'){
-                alert('Página no permitida, favor de autenticarse nuevamente.');
-                this.cerrarSesion(); 
-            }
+    componentDidMount(){
+        this.peticionGet();
+        this.peticiongetmatesoli();
+        // this.peticiongetsoli();
+        //cookies para no ir a paginas sin autenticarse
+        if (!cookies.get('username')){
+            window.location.href="./";
+        }else if(cookies.get('userType') === 'Usuario'){
+            alert('Página no permitida, favor de autenticarse nuevamente.');
+            this.cerrarSesion(); 
         }
+    }
     
 
 
 
     render(){
         const {form} = this.state;
-        const status = 'Iniciada';
+       
        return(
 
            <div class="container">
@@ -235,7 +241,22 @@ class SoliRMExterna extends Component{
                 <h2>Solicitudes Externas</h2>
                
                 <br/> <br/> <br/>
-               <Button color="success" onClick={()=>{ this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}}>Crear Solicitud</Button>
+               <Button color="success" onClick={()=>{ 
+                   this.setState({
+                    form:{
+                            fecha: date,
+                            solicitante:'',
+                            departamentosoli:'',
+                            municipiosoli:'',
+                            area:'',
+                            tipoSolicitud:'',
+                            estado:'Iniciada'
+                
+                        }
+                    });
+                    
+                   
+                   this.modalInsertar()}}>Crear Solicitud</Button>
 
                {this.state.data.map((solicitudes, index)=>{
                    if((solicitudes.estado === 'Iniciada' || solicitudes.estado ==='Pendiente') && (solicitudes.municipiosoli != 'Hermosillo')){
@@ -310,15 +331,15 @@ class SoliRMExterna extends Component{
                    <ModalBody>
                        <div>
                             <label htmlFor='fecha'>Fecha:</label><br/>
-                            <input class="form-control" type="text" name="fecha" id="fecha" readOnly  value={form?form.fecha:date}></input>
+                            <input class="form-control" type="text" name="fecha" id="fecha" readOnly  value={form.fecha}></input>
                             <br/>
 
                             <label htmlFor='solicitante'>Solicitante:</label><br/>
-                            <input class="form-control" type="text" name="solicitante" id="solicitante" onChange ={this.handleChange}  value={form?form.solicitante:''}></input>
+                            <input class="form-control" type="text" name="solicitante" id="solicitante" onChange ={this.handleChange}  value={form.solicitante}></input>
                             <br/>
 
                             <label htmlFor='municipiosoli'>Municipio:</label><br/>
-                            <select class="form-control"  placeholder="Seleccione" type="text" name="municipiosoli" id="municipiosoli" onChange ={this.handleChange}  value={form?form.municipiosoli:''}>
+                            <select class="form-control"  placeholder="Seleccione" type="text" name="municipiosoli" id="municipiosoli" onChange ={this.handleChange}  value={form.municipiosoli}>
                                     <option></option>
                                     <option>Extraordinario-Hermosillo</option>
                                     <option>Aconchi</option>
@@ -401,14 +422,14 @@ class SoliRMExterna extends Component{
 
 
                             <label htmlFor='departamentosoli'>Departamento:</label><br/>
-                            <input class="form-control" type="text" name="departamentosoli" id="departamentosoli"   onChange ={this.handleChange} value={form?form.departamentosoli:''}></input>
+                            <input class="form-control" type="text" name="departamentosoli" id="departamentosoli"   onChange ={this.handleChange} value={form.departamentosoli}></input>
                             <br/>
                             <label htmlFor='area'>Area:</label><br/>
-                            <input class="form-control" type="text" name="area" id="area" onChange ={this.handleChange} value={form?form.area:''}></input>
+                            <input class="form-control" type="text" name="area" id="area" onChange ={this.handleChange} value={form.area}></input>
                             <br/>
 
                             <label htmlFor='tipoSolicitud'>Tipo de Solicitud:</label><br/>
-                            <select class="form-control" type="text" name="tipoSolicitud" id="tipoSolicitud" placeholder="Seleccione" onChange ={this.handleChange}  value={form?form.tipoSolicitud:''}>
+                            <select class="form-control" type="text" name="tipoSolicitud" id="tipoSolicitud" placeholder="Seleccione" onChange ={this.handleChange}  value={form.tipoSolicitud}>
                                 {this.state.datatiposoli.map(elemento =>(
                                     <option>{elemento}</option>
                                 ))}
@@ -416,7 +437,7 @@ class SoliRMExterna extends Component{
                             <br/>
 
                             <label htmlFor='estado'>Estatus:</label><br/>
-                            <input class="form-control" type="text" name="estado" id="estado"   readOnly  value={form?form.estado:status}></input>
+                            <input class="form-control" type="text" name="estado" id="estado"   readOnly  value={form.estado}></input>
                             <br/>
                            
                        </div>

@@ -50,9 +50,9 @@ class ConfigRM extends Component{
 
 
     validacionModalReUser = () =>{
-        if(this.state.form.nombres === undefined || this.state.form.apellidoP === undefined || this.state.form.apellidoM === undefined || this.state.form.departamento === undefined 
-           || this.state.form.municipio === undefined || this.state.form.username === undefined || this.state.form.password === undefined || this.state.form.userType === undefined 
-           || this.state.form === undefined ){
+        if(this.state.form.nombres === '' || this.state.form.apellidoP === '' || this.state.form.apellidoM === '' || this.state.form.departamento === '' 
+           || this.state.form.municipio === '' || this.state.form.username === '' || this.state.form.password === '' || this.state.form.userType === '' 
+           || this.state.form === '' ){
                alert("Favor de llenar todos los campos");
 
         }else{
@@ -91,6 +91,7 @@ class ConfigRM extends Component{
         }).catch(error=>{
             console.log(error.message);
         })
+        
     }
 
     peticionDelete=()=>{
@@ -227,7 +228,20 @@ class ConfigRM extends Component{
                     </div>
                 </div>
 
-                <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.listamateriales(); this.modalInsertar()}}>Registrar Usuario</Button>
+                <Button color="success" onClick={()=>{this.setState({
+                    form:{
+                        nombres:'',
+                        apellidoP:'',
+                        apellidoM:'',
+                        username:'',
+                        municipio:'',
+                        password: '',
+                        departamento:'',
+                        userType:'',
+                    }
+                    }); 
+                    this.listamateriales(); 
+                    this.modalInsertar()}}>Registrar Usuario</Button>
 
                 <table class="table table-striped table-bordered">
 
@@ -320,20 +334,20 @@ class ConfigRM extends Component{
                     <ModalBody>
                         <div className="form-group" >
                             <label htmlFor='nombres'>Nombres:</label><br/>
-                            <input class="form-control" type="text" name="nombres" id="nombres" onChange ={this.handleChange} value={form?form.nombres:''}></input>
+                            <input class="form-control" type="text" name="nombres" id="nombres" onChange ={this.handleChange} value={form.nombres}></input>
                             <br/>
 
                             <label htmlFor='apellidoP'>Apellido Paterno:</label><br/>
-                            <input class="form-control" type="text" name="apellidoP" id="apellidoP" onChange ={this.handleChange} value={form?form.apellidoP:''}></input>
+                            <input class="form-control" type="text" name="apellidoP" id="apellidoP" onChange ={this.handleChange} value={form.apellidoP}></input>
                             <br/>
 
                             <label htmlFor='apellidoM'>Apellido Materno:</label><br/>
-                            <input class="form-control" type="text" name="apellidoM" id="apellidoM" onChange ={this.handleChange} value={form?form.apellidoM:''}></input>
+                            <input class="form-control" type="text" name="apellidoM" id="apellidoM" onChange ={this.handleChange} value={form.apellidoM}></input>
                             <label htmlFor='departamento'>Departamento:</label><br/>
-                            <input class="form-control" type="text" name="departamento" id="departamento" onChange ={this.handleChange} value={form?form.departamento:''}></input>
+                            <input class="form-control" type="text" name="departamento" id="departamento" onChange ={this.handleChange} value={form.departamento}></input>
 
                             <label htmlFor='municipio'>Municipio:</label><br/>
-                            <select class="form-control"  type="text" name="municipio" id="municipio" onChange ={this.handleChange} value={form?form.municipio:''}>
+                            <select class="form-control"  type="text" name="municipio" id="municipio" onChange ={this.handleChange} value={form.municipio}>
                                     <option></option>
                                     <option>Aconchi</option>
                                     <option>Agua Prieta</option>
@@ -417,11 +431,11 @@ class ConfigRM extends Component{
                                                    
 
                             <label htmlFor='username'>Nombre de usuario:</label><br/>
-                            <input class="form-control form-control-sm" type="text" name="username" id="username"onChange ={this.handleChange} value={form?form.username:''} ></input>
+                            <input class="form-control form-control-sm" type="text" name="username" id="username"onChange ={this.handleChange} value={form.username} ></input>
                             <br/>
 
                             <label htmlFor='password'>Contraseña:</label><br/>
-                            <input class="form-control form-control-sm" type="password" name="password" id="password" onChange ={this.handleChange} value= {form?form.password:''}>
+                            <input class="form-control form-control-sm" type="password" name="password" id="password" onChange ={this.handleChange} value= {form.password}>
                                
                             </input>
                             <br/>
@@ -429,7 +443,7 @@ class ConfigRM extends Component{
                            
 
                             <label htmlFor='userType'>Tipo de usuario:</label><br/>
-                            <select className="form-control form-control-sm" type="text" name="userType" id="userType" onChange ={this.handleChange} value={form?form.userType:''}>
+                            <select className="form-control form-control-sm" type="text" name="userType" id="userType" onChange ={this.handleChange} value={form.userType}>
                             {this.state.datausertype.map(elemento =>(
                                     <option>{elemento}</option>
                                 ))}
