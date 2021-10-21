@@ -1,7 +1,7 @@
 import React, {Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-import {Button, Modal,ModalBody, ModalHeader, FormGroup, ModalFooter} from 'reactstrap';
+import {Button, Modal,ModalBody, ModalHeader, ModalFooter} from 'reactstrap';
 import '../css/Materiales.css';
 import '../img/logofiscalia.png';
 import Cookies from 'universal-cookie';
@@ -32,19 +32,15 @@ state={
     datacategoria:['','Consumible','Limpieza','Embalaje','Reactivos y material químicos','Material de Id. Humana','Material de oficina','Tintas y toner'],
     modalAggmaterial: false,
     modalInsertar: false,
+    
     //form de material
     form:{
         _id:'',
         nombre:'',
-        existencia:0,
+        existencia:'',
         unidadMedida:'',
-        categoria:'',
-        tipoModal:'',
-        cantidadaggmate:0,
-        marcamate:'',
-        caducidadmate:'',
-        tipomaterial:''
-        
+        categoria:'',        
+        marcamate:''              
     },
     //form de entradas material
     form2:{
@@ -97,6 +93,8 @@ peticionPostEntradasMate=async()=>{
 
 }
 
+
+///BORRAR ES EL METODO DEL BOTON EDITAR QE BORRÉ
 peticionPut=()=>{
     axios.put(dpsidmaterial+this.state.form._id, this.state.form).then(response=>{
         this.modalInsertar();
@@ -107,25 +105,30 @@ peticionPut=()=>{
     })
 }
 
+//PUT a existencia de los materiales
 peticionPut2 =()=>{
     axios.put(dpsidmaterial+this.state.form._id, this.state.form).then(response=>{
-       
+        alert (`La existencia de: ${this.state.form.nombre} se actualizó exitosamente.`);       
         this.peticionGet();
     })
 }
-peticionaggmaterial=async()=>{
-        this.modalAggmaterial();
-        if(this.state.form2.cantidadaggEM <= 0 || this.state.form2.cantidadaggEM === undefined){
-            console.log(this.state.form2.cantidadaggEM);
-            alert("El valor no es válido")
-        }else{            
+validacionaggExistencia=async()=>{
+    this.modalAggmaterial();
+
+    if(this.state.form2.cantidadaggEM ===undefined || this.state.form2.tipomaterialEM === undefined || this.state.form2.loteEM===undefined){
+        alert("Favor de llenar todos los campos");
+    }else{
+        if(this.state.form2.cantidadaggEM <= 0){
+            alert("El valor Cantidad a agregar, no es válido");
+
+        }else{
             existencianueva =  this.state.form.existencia + + this.state.form2.cantidadaggEM;
-            alert (`La existencia de: ${this.state.form.nombre} se actualizó exitosamente.`);
             this.state.form.existencia = existencianueva;
             this.peticionPostEntradasMate();
             this.peticionPut2();
+
         }
-        
+    }
 }
 
 modalInsertar = () =>{
@@ -170,10 +173,7 @@ validacionaggmaterial = () =>{
 
     //console.log(`nombre: ${this.state.form.nombre}`);
     
-    if(this.state.form.nombre === undefined  && this.state.form.existencia === undefined && this.state.form.unidadMedida ===undefined && this.state.form.categoria ===undefined){
-        alert("Favor de llenar todos los campos");
-
-    }else if((this.state.form.nombre === undefined || this.state.form.existencia === undefined || this.state.form.unidadMedida ===undefined || this.state.form.categoria ===undefined)){
+    if((this.state.form.nombre === '' || this.state.form.existencia === '' || this.state.form.unidadMedida === '' || this.state.form.categoria ==='')){
         alert("Favor de llenar todos los campos");
     }else{
 
@@ -270,6 +270,7 @@ cerrarSesion = () =>{
     window.location.href='./';
 }
 
+
 listamateriales=()=>{
     this.state.data.map(materiales=>{
         nombrematerialesArray.push(materiales.nombre);
@@ -308,7 +309,7 @@ componentDidMount(){
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
                         <li><a href="./configuracion">Usuarios</a></li>
-                        <li><a onClick={()=>this.cerrarSesion()} >Cerrar Sesión</a></li>
+                        <li><a href="/" onClick={()=>this.cerrarSesion()} >Cerrar Sesión</a></li>
                         
                     </ul>
                 </div>
@@ -322,7 +323,19 @@ componentDidMount(){
                 <br></br>
                 <div className="row">
                     <div className="col-2">
-                        <Button color="success" onClick={()=>{this.setState({form:null, tipoModal:'insertar'}); this.listamateriales(); this.modalInsertar()}}>Agregar nuevo material</Button>
+                                                            {/**  */}
+                        <Button color="success" onClick={()=>{ 
+                            this.setState({
+                                form:{
+                                    _id:'',
+                                    nombre:'',
+                                    existencia:'',
+                                    unidadMedida:'',
+                                    categoria:'',
+                                    marcamate:''                                    
+                                }
+                            }); 
+                            this.listamateriales(); this.modalInsertar()}}>Agregar nuevo material</Button>
                     </div>
                     <div className="col-4">
                         
@@ -365,17 +378,28 @@ componentDidMount(){
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.data.filter((material)=>{
-                            if (this.state.busqueda == "") {
+                        {this.state.data.map((material)=>{
+                            if (this.state.busqueda === "") {
                                 return(
                                     <tr>
                                         
                                     <td>{material.nombre}</td>
+                                    <td>{material.marcamate}</td>
                                     <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
                                     <td>{material.unidadMedida}</td>
                                     <td>{material.categoria}</td>
                                     <td>
-                                        <Button color="danger">Agregar</Button>
+                                        <Button color="btn btn-success btn-sm" onClick ={() => {
+                                            this.setState({
+                                                form2:{                                                                                                        
+                                                    cantidadaggEM:'',                                                                                                                                                       
+                                                    caducidadmateEM:'',
+                                                    tipomaterialEM:'',
+                                                    loteEM:''                                                                                                
+                                                }
+                                            }); 
+                                            
+                                            this.seleccionarMaterial(material); this.modalAggmaterial()}}>Agregar Existencia</Button>
                                     </td>
                                 </tr>
                                 )
@@ -393,12 +417,22 @@ componentDidMount(){
                                     <td>{material.unidadMedida}</td>
                                     <td>{material.categoria}</td>
                                     <td>
-                                        <Button color="danger">Agregar</Button>
+                                        <Button color="btn btn-success btn-sm" onClick ={() => {
+                                            this.setState({
+                                                form2:{                                                                                                        
+                                                    cantidadaggEM:'',                                                                                                                                                       
+                                                    caducidadmateEM:'',
+                                                    tipomaterialEM:'',
+                                                    loteEM:''                                                                                                
+                                                }
+                                            }); 
+                                            
+                                            this.seleccionarMaterial(material); this.modalAggmaterial()}}>Agregar Existencia</Button>
                                     </td>
                                 </tr>
                                 )
                             }
-                        }).map(material =>{
+                        })}{/*.map(material =>{
                             return(
                     
                                 <tr>
@@ -411,12 +445,22 @@ componentDidMount(){
                                     <td>
                                         
                                        {/* <Button color="btn btn-primary btn-sm" onClick={ () => {this.seleccionarMaterial(material); this.modalInsertar()}}>Editar</Button>*/}
-                                        <Button color="btn btn-success btn-sm" onClick ={() => {this.seleccionarMaterial(material); this.modalAggmaterial()}}>Agregar existencia</Button>
+                                   {/*     <Button color="btn btn-success btn-sm" onClick ={() => {
+                                            this.setState({
+                                                form2:{                                                                                                        
+                                                    cantidadaggEM:'',                                                                                                                                                       
+                                                    caducidadmateEM:'',
+                                                    tipomaterialEM:'',
+                                                    loteEM:''                                                                                                
+                                                }
+                                            }); 
+                                            
+                                            this.seleccionarMaterial(material); this.modalAggmaterial()}}>Agregar existencia</Button>
                                     </td>
                                 </tr>
                             )
 
-                        })}
+                        })*/}
                         
                         
                     </tbody>
@@ -437,18 +481,18 @@ componentDidMount(){
                     <ModalBody>
                         <div>
                             <label htmlFor="nombre">Nombre:</label>
-                            <input className="form-control" type="text"  name="nombre" id="nombre" onChange={this.handleChange} value={form?form.nombre:''}/>
+                            <input className="form-control" type="text"  name="nombre" id="nombre" onChange={this.handleChange} value={form.nombre}/>
                             <br/>
 
                             <label htmlFor="existencia">Existencia:</label>
-                            {this.state.tipoModal == 'insertar'?
-                                <input className="form-control" type="number" placeholder="Solo números, sin comas ni puntos" name="existencia" id="existencia"  onChange={this.handleChange} value={form?form.existencia:''}/>:
-                                <input className="form-control is-invalid" type="number" placeholder="Solo números, sin comas ni puntos" name="existencia" id="existencia" readOnly onChange={this.handleChange} value={form?form.existencia:''}/>   
-                            }
+                            {/*this.state.tipoModal == 'insertar'?*/}
+                                <input className="form-control" type="number" placeholder="Solo números, sin comas ni puntos" name="existencia" id="existencia"  onChange={this.handleChange} value={form.existencia}/>
+                               {/* <input className="form-control is-invalid" type="number" placeholder="Solo números, sin comas ni puntos" name="existencia" id="existencia" readOnly onChange={this.handleChange} value={form?form.existencia:''}/>   
+                            */}
                              <br/>
 
                             <label htmlFor="unidadMedida">Unidad de medida:</label>
-                            <select className="form-control" type="text" name="unidadMedida" id="unidadMedida" onChange={this.handleChange} value={form?form.unidadMedida:''}>
+                            <select className="form-control" type="text" name="unidadMedida" id="unidadMedida" onChange={this.handleChange} value={form.unidadMedida}>
                                 {this.state.datamedida.map(elementoo =>(
                                     <option>{elementoo}</option>
                                 ))}
@@ -456,7 +500,7 @@ componentDidMount(){
                             <br/>
 
                             <label htmlFor="categoria">Categoría</label>
-                            <select className="form-control" type="text" name="categoria" id="categoria" onChange={this.handleChange} value={form?form.categoria:''}>
+                            <select className="form-control" type="text" name="categoria" id="categoria" onChange={this.handleChange} value={form.categoria}>
                                 {this.state.datacategoria.map(elemento =>(
                                     <option>{elemento}</option>
                                 ))}
@@ -464,17 +508,17 @@ componentDidMount(){
                             <br/>
 
                             <label htmlFor="marcamate">Marca:</label>
-                            <input className="form-control" type="text"  name="marcamate" id="marcamate" onChange={this.handleChange} value={form?form.marcamate:''}></input>
+                            <input className="form-control" type="text"  name="marcamate" id="marcamate" onChange={this.handleChange} value={form.marcamate}></input>
                             <br/>
 
                         </div>
                     </ModalBody>
 
                     <ModalFooter>
-                        {this.state.tipoModal == 'insertar'?
-                            <button className="btn btn-success" onClick={ () => this.validacionaggmaterial()}>Insertar</button>:
-                            <button className="btn btn-primary" onClick={ () => {this.peticionPut()}}>Actualizar</button>
-                        }
+                        {/*this.state.tipoModal == 'insertar'?*/}
+                            <button className="btn btn-success" onClick={ () => this.validacionaggmaterial()}>Insertar</button>
+                           {/* <button className="btn btn-primary" onClick={ () => {this.peticionPut()}}>Actualizar</button>
+                        */}
                         <button className="btn btn-danger" onClick={ () => this.modalInsertar()}>Cancelar</button>
                     </ModalFooter>
 
@@ -503,6 +547,8 @@ componentDidMount(){
                             <label htmlFor="existencia">Existencia:</label>
                             <input className="form-control" type="number" placeholder="Solo números, sin comas ni puntos" name="existencia" id="existencia" readOnly onChange={this.handleChange} value={form && form.existencia}/> 
                             <br/>
+
+                        {/**-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */}
 
                             <label htmlFor="cantidadaggEM">Cantidad a agregar:</label>
                             <input  className="form-control is-valid"
@@ -542,7 +588,7 @@ componentDidMount(){
                     </ModalBody>
 
                     <ModalFooter>
-                        <button className="btn btn-success" onClick={()=> this.peticionaggmaterial()} >Agregar</button>
+                        <button className="btn btn-success" onClick={()=> this.validacionaggExistencia()} >Agregar</button>
                         <button className="btn btn-danger" onClick={()=>this.modalAggmaterial()} >Cancelar</button>
                     </ModalFooter>
 

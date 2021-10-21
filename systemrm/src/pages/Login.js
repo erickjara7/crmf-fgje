@@ -42,14 +42,14 @@ class Login extends Component{
                 alert("Favor de llenar todos los campos")
 
             }else{
-                {response.data.map(usuarios=>{
+                response.data.map(usuarios=>{
                     if (usuarios.username.includes(this.state.form.username)  && usuarios.password.includes(md5(this.state.form.password))){
                     response[0] = usuarios;
                     response.length = 0;
                     response.data = response[0];
                     }
                     
-                }) }    
+                })    
             }
             return response;
             
@@ -130,7 +130,7 @@ class Login extends Component{
                             <label>Usuario:</label>
                             <br/>
                             <input
-                                className="inputPassUs"
+                                class="inputPassUs"
                                 type="text"
                                 className="form-control"
                                 placeholder="Ingresa tu nombre de usuario"
@@ -143,7 +143,7 @@ class Login extends Component{
 
                               
                                 <input
-                                    className="inputPassUs"
+                                    class="inputPassUs"
                                     type="password"
                                     className="form-control"
                                     placeholder="Ingresa tu contraseña"
@@ -154,9 +154,9 @@ class Login extends Component{
                             
                             <Button className="buttoncss"  onClick={()=> this.iniciarSesion() }>Iniciar Sesión</Button>
                             <br/> <br/>
-                            <a href="" onClick={()=> this.aunnotengocuenta()}>Aún no tengo una cuenta</a>
+                            <a href="/" onClick={()=> this.aunnotengocuenta()}>Aún no tengo una cuenta</a>
                             <br/>
-                            <a href="" onClick={()=> this.olvidecontraseña()}>Olvidé mi contraseña</a>
+                            <a href="/" onClick={()=> this.olvidecontraseña()}>Olvidé mi contraseña</a>
 
                         </div>
 

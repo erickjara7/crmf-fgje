@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Cookies from 'universal-cookie';
-import { Alert, Button,Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
+import {Button,Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import axios from 'axios';
 import '../css/Materiales.css';
 
@@ -44,7 +44,7 @@ class MaterialesAERM extends Component{
 
     
     validacionPostms = ()=>{
-        if(this.state.form.idSolicitud != undefined ){
+        if(this.state.form.idSolicitud !== undefined ){
             if(this.state.form.cantidadsolicitada === undefined){
                 alert("Favor de llenar los campos");
             }else{
@@ -114,9 +114,10 @@ class MaterialesAERM extends Component{
             unidadMedidaMS:material.unidadMedida,
             idSolicitud: this.state.form.idSolicitud
             
-            }
+            },
+            existenciatemp: material.existencia
         })
-        this.state.existenciatemp = material.existencia;
+       // this.state.existenciatemp = material.existencia;
         if(material.existencia === 0){
             alert("Este material no se encuentra disponible por el momento");
         }else{
@@ -164,7 +165,7 @@ class MaterialesAERM extends Component{
                     <ul>
                         
                         <li><a href="./materialesaerm">Materiales</a></li>
-                        <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
+                        <li><a href="/" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
 
@@ -213,7 +214,7 @@ class MaterialesAERM extends Component{
                         </thead>
 
                         <tbody>
-                            {this.state.data.filter((material)=>{
+                            {this.state.data.map((material)=>{
                                 if(this.state.busqueda === ""){
                                     return(
                                         <tr>
@@ -222,7 +223,7 @@ class MaterialesAERM extends Component{
                                             <td>{material.unidadMedida}</td>
                                             <td>{material.categoria}</td>
                                             <td>
-                                                <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
+                                                <Button color="danger" onClick={()=>  { this.seleccionarmaterial(material); this.modalInsertar()}}>Agregar</Button>
                                             </td>
                                         </tr>
                                     )
@@ -238,14 +239,15 @@ class MaterialesAERM extends Component{
                                             <td>{material.unidadMedida}</td>
                                             <td>{material.categoria}</td>
                                             <td>
-                                                <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
+                                                <Button color="danger" onClick={()=> { this.seleccionarmaterial(material); this.modalInsertar()}}>Agregar</Button>
                                             </td>
                                         </tr>
                                     )
 
                                 }
 
-                            }).map((material)=>{
+                            })}
+                            {/*.map((material)=>{
                                 return(
                                     <tr> 
                                         <td>{material.nombre}</td>
@@ -254,12 +256,12 @@ class MaterialesAERM extends Component{
                                         <td>{material.categoria}</td>
                                         <td>
                                                                                     {/**this.seleccionarmaterial(material); this.modalInsertar()  */}
-                                            <Button color="danger" onClick={()=> {this.seleccionarmaterial(material)} }>Agregar</Button>
+                                          {/*</tbody>  <Button color="danger" onClick={()=> {this.seleccionarmaterial(material)} }>Agregar</Button>
                                         </td>
                                     </tr>
                                 )
 
-                            })}
+                            })*/}
 
                         </tbody>
 

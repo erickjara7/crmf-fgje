@@ -110,7 +110,8 @@ class ConfigRM extends Component{
     }
 
     convertirmd5password=()=>{
-       /* this.setState({
+       /* var encrypvariable = md5(this.state.form.password)
+        this.setState({
             form:{
                 password: md5(this.state.form.password)
             }
@@ -204,7 +205,7 @@ class ConfigRM extends Component{
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
                         <li><a href="./configuracion">Usuarios</a></li>
-                        <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
+                        <li><a href="./" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
                 </div>
@@ -260,7 +261,48 @@ class ConfigRM extends Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.data.filter((usuarios)=>{
+                        {this.state.data.map(usuarios=>{
+                            if(this.state.busqueda ===""){
+                                return(
+                                    <tr>
+                                        <td>{usuarios.nombres}</td>
+                                        <td>{usuarios.apellidoP}</td>
+                                        <td>{usuarios.apellidoM}</td>
+                                        <td>{usuarios.username}</td>
+                                        <td>{usuarios.departamento}</td>
+                                        <td>{usuarios.municipio}</td>
+                                        <td>{usuarios.userType}</td>
+                                        <td>
+                                            <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
+                                        </td>
+                                    </tr>  
+                                )
+                            }else if(usuarios.nombres.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                usuarios.apellidoP.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                usuarios.apellidoM.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                usuarios.username.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                usuarios.departamento.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                usuarios.userType.toLowerCase().includes(this.state.busqueda.toLowerCase())){
+
+                                    return(
+                                        <tr>
+                                            <td>{usuarios.nombres}</td>
+                                            <td>{usuarios.apellidoP}</td>
+                                            <td>{usuarios.apellidoM}</td>
+                                            <td>{usuarios.username}</td>
+                                            <td>{usuarios.departamento}</td>
+                                            <td>{usuarios.municipio}</td>
+                                            <td>{usuarios.userType}</td>
+                                            <td>
+                                                <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
+                                            </td>
+                                        </tr>  
+                                    )
+
+                            }
+
+                        })}
+                        {/*this.state.data.filter((usuarios)=>{
                             if(this.state.busqueda ===""){
                                 return(
                                     <tr>
@@ -318,7 +360,7 @@ class ConfigRM extends Component{
                                 </tr>
                             )
 
-                        })}
+                        })*/}
 
                     </tbody>
 

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Cookies from 'universal-cookie';
-import {Button} from 'reactstrap';
+
 import axios from 'axios';
 
 const cookies = new Cookies();
@@ -89,7 +89,7 @@ class Entradasmaterial extends Component{
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
                         <li><a href="./configuracion">Usuarios</a></li>
-                        <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
+                        <li><a href="./" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
                 </div>
@@ -166,9 +166,9 @@ class Entradasmaterial extends Component{
                                 //this.state.materialesS != "" || 
                             }else{ 
                                 
-                                    if(this.state.mesS != "" || this.state.añoS != ""){
+                                    if(this.state.mesS !== "" || this.state.añoS !== ""){
                                         //this.state.materialesS != "" &&
-                                        if( this.state.mesS != "" && this.state.añoS != ""){
+                                        if( this.state.mesS !== "" && this.state.añoS !== ""){
                                          //   if(material.nombreEM.toLowerCase().includes(this.state.materialesS.toLowerCase())){
                                                 var fechEntrada = material.fechaEM;
                                                 var cutfechaaño = fechEntrada.substr(0,4);

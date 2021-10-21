@@ -50,7 +50,7 @@ class MaterialesV1OD extends Component{
 
 
     validacionPostms = ()=>{
-        if(this.state.form.idSolicitud != undefined ){
+        if(this.state.form.idSolicitud !== undefined ){
            if(this.state.form.cantidadsolicitada === undefined){
                alert("Favor de llenar los campos");
            }else{
@@ -118,9 +118,10 @@ class MaterialesV1OD extends Component{
             unidadMedidaMS:material.unidadMedida,
             idSolicitud: this.state.form.idSolicitud
             
-            }
+            },
+            existenciatemp: material.existencia
         })
-        this.state.existenciatemp = material.existencia;
+        //this.state.existenciatemp = material.existencia;
         if(material.existencia === 0){
             alert("Este material no se encuentra disponible por el momento");
         }else{
@@ -174,7 +175,7 @@ class MaterialesV1OD extends Component{
 
                         
                         <li><a href="./materialesodep">Materiales</a></li>
-                        <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
+                        <li><a href="/" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
                 </div>
@@ -230,7 +231,7 @@ class MaterialesV1OD extends Component{
                             </tr>
                         </thead>
                         <tbody>
-                        {this.state.data.filter((material)=>{
+                        {this.state.data.map((material)=>{
                             if (this.state.busqueda === "") {
                                 return(
                                     <tr>
@@ -239,7 +240,7 @@ class MaterialesV1OD extends Component{
                                         <td>{material.unidadMedida}</td>
                                         <td>{material.categoria}</td>
                                         <td>
-                                            <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
+                                            <Button color="danger" onClick={()=>  {this.seleccionarmaterial(material); this.modalInsertar()}}>Agregar</Button>
                                         </td>
                                     </tr>
                                 )
@@ -256,13 +257,13 @@ class MaterialesV1OD extends Component{
                                         <td>{material.unidadMedida}</td>
                                         <td>{material.categoria}</td>
                                         <td>
-                                            <Button color="danger" onClick={()=>  this.modalInsertar()}>Agregar</Button>
+                                            <Button color="danger" onClick={()=> {this.seleccionarmaterial(material); this.modalInsertar()}}>Agregar</Button>
                                         </td>
                                     </tr>
                                 )
                             }
 
-                        }).map(material =>{
+                        })} {/*.map(material =>{
                             
                                 return(
                                     
@@ -276,12 +277,12 @@ class MaterialesV1OD extends Component{
                                         <td>{material.categoria}</td>
                                         <td>
                                                                                     {/**this.seleccionarmaterial(material); this.modalInsertar()  */}
-                                            <Button color="danger" onClick={()=> {this.seleccionarmaterial(material)} }>Agregar</Button>
+                                        {  /*  <Button color="danger" onClick={()=> {this.seleccionarmaterial(material)} }>Agregar</Button>
                                         </td>
                                     </tr>
                                 )
 
-                            })}
+                            })*/}
 
                 
                         </tbody>

@@ -1,15 +1,15 @@
-import React, {Component, useState} from 'react';
+import React, {Component} from 'react';
 import Cookies from 'universal-cookie';
 
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
+import { Button, Modal, ModalBody, ModalFooter} from 'reactstrap';
 import {Card, Accordion} from 'react-bootstrap';
 import axios from 'axios';
 
 import '../css/solisunmenu.css';
 
 
-const today = new Date(),
-date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate() +': ' + today.getHours() +':' + today.getMinutes() ;
+//const today = new Date(),
+//date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate() +': ' + today.getHours() +':' + today.getMinutes() ;
 //const imgg = new Imgg();
 const cookies = new Cookies();
 
@@ -95,7 +95,7 @@ class SolicitudesRM extends Component{
 
     selecMaterialaCambiar=async(materialesSolicitados)=>{
         //console.log(`solicitudID: ${solicitudID} estado:${estadosoli}`);
-        if(solicitudID != ''){
+        if(solicitudID !== ''){
                 if(materialesSolicitados.idSolicitud === solicitudID){
                     this.state.form2._id = materialesSolicitados.idMaterial;
                     this.state.form2.tipoSolicitud = typesoli;
@@ -114,7 +114,7 @@ class SolicitudesRM extends Component{
    
     peticionPutExistencia=()=>{
         //se llena un nuevo vector con la mitad del vector de los materiales solicitados
-        for( i = i; i < vector.length/2; i ++){
+        for(  i = i; i < vector.length/2; i ++){
             newvector.push(vector[i]);
         }
         //se recorre vector, se trae y se recorre los materiales
@@ -129,10 +129,13 @@ class SolicitudesRM extends Component{
                             this.setState({
                                 form3:{
                                     _id:materialesvec.vecIdMatesoli,
+                                },
+                                form2:{
+                                    existencia: materiales.existencia,
                                 }
                             });
                             console.log(`else cero con ${materialesvec.vecIdMatesoli}`);
-                            this.state.form2.existencia = materiales.existencia;
+                           //--- this.state.form2.existencia = materiales.existencia;
                             axios.delete(putmatesoli+this.state.form3._id).then(response=>{
 
                             });
@@ -143,10 +146,14 @@ class SolicitudesRM extends Component{
                                 form3:{
                                     _id:materialesvec.vecIdMatesoli,
                                     cantidadsolicitada: materiales.existencia
+                                },
+                                form2:{
+                                    existencia: materiales.existencia - this.state.form3.cantidadsolicitada,
+                                    _id: materialesvec.vecMateid
                                 }
                             });
-                            this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
-                            this.state.form2._id = materialesvec.vecMateid;
+                            //-----this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
+                            //-----this.state.form2._id = materialesvec.vecMateid;
                             console.log(`else menor qe con ${materialesvec.vecIdMatesoli}`);
 
                             axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
@@ -156,8 +163,14 @@ class SolicitudesRM extends Component{
                            // this.generatePDF(solicitudes,materialesSolicitados)
                         // si la existencia es mayor a la cantidad solicitada se cambia la existencia restando lo solicitado
                         }else{
-                            this.state.form2._id = materialesvec.vecMateid;
-                            this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
+                            this.setState({
+                                form2:{
+                                    _id: materialesvec.vecMateid,
+                                    existencia: materiales.existencia - materialesvec.vecCanSol
+                                }
+                            })
+                           //-------- this.state.form2._id = materialesvec.vecMateid;
+                            //-----------this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
                             console.log(`otro else ${materialesvec.vecIdMatesoli}`);
 
                         }
@@ -272,7 +285,7 @@ class SolicitudesRM extends Component{
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
                         <li><a href="./configuracion">Usuarios</a></li>
-                        <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
+                        <li><a href="/" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
                 </div>

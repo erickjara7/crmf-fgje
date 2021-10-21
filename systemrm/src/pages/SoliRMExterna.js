@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Cookies from 'universal-cookie';
-import { Button, Modal,ModalBody, ModalHeader, FormGroup, ModalFooter, CardBody} from 'reactstrap';
-import {Card, Accordion, ThemeProvider} from 'react-bootstrap';
+import { Button, Modal,ModalBody, ModalHeader, ModalFooter} from 'reactstrap';
+import {Card, Accordion} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import '../css/Materiales.css';
@@ -222,7 +222,7 @@ class SoliRMExterna extends Component{
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
                         <li><a href="./configuracion">Usuarios</a></li>
-                        <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
+                        <li><a href="/" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
 
@@ -259,7 +259,7 @@ class SoliRMExterna extends Component{
                    this.modalInsertar()}}>Crear Solicitud</Button>
 
                {this.state.data.map((solicitudes, index)=>{
-                   if((solicitudes.estado === 'Iniciada' || solicitudes.estado ==='Pendiente') && (solicitudes.municipiosoli != 'Hermosillo')){
+                   if((solicitudes.estado === 'Iniciada' || solicitudes.estado ==='Pendiente') && (solicitudes.municipiosoli !== 'Hermosillo')){
                        return(
                            <Accordion key={index}>
                                <Card>

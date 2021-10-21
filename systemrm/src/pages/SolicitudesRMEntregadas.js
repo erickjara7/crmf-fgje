@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import Cookies from 'universal-cookie';
 import '../css/solisunmenu.css';
 import { Button, Modal, ModalBody, ModalFooter} from 'reactstrap';
-import {Card, Accordion, ThemeProvider} from 'react-bootstrap';
+import {Card, Accordion} from 'react-bootstrap';
 import axios from 'axios';
 
 import jsPDF from 'jspdf';
@@ -19,7 +19,7 @@ const date = fecha +''+''+'' + '  Hora:'+horaaa;
 
 
 
-const aggsolicitud = "http://localhost:4000/solicitud/add";
+//const aggsolicitud = "http://localhost:4000/solicitud/add";
 
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
 
@@ -27,7 +27,7 @@ const putsoli = "http://localhost:4000/solicitud/";
 
 const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 
-const doc = new jsPDF();
+//const doc = new jsPDF();
 const cookies = new Cookies();
 class SolicitudesRMEntregadas extends Component{
      
@@ -236,7 +236,7 @@ class SolicitudesRMEntregadas extends Component{
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
                         <li><a href="./configuracion">Usuarios</a></li>
-                        <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
+                        <li><a href="/" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
 

@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-import { Button, Modal,ModalBody, ModalHeader, FormGroup, ModalFooter} from 'reactstrap';
-import {Card, Accordion, ThemeProvider} from 'react-bootstrap';
+import { Button, Modal,ModalBody, ModalHeader, ModalFooter} from 'reactstrap';
+import {Card, Accordion} from 'react-bootstrap';
 import '../css/Materiales.css';
 import '../img/logofiscalia.png';
 import Cookies from 'universal-cookie';
@@ -244,7 +244,7 @@ class SolicitudesOD extends Component{
                         <li><a href="./solicitudesodep">Solicitudes</a></li>
                         
                         
-                        <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
+                        <li><a href="/" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
                 </div>

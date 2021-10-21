@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Cookies from 'universal-cookie';
-import {Button} from 'reactstrap';
+
 import axios from 'axios';
 
 const cookies = new Cookies();
@@ -98,7 +98,7 @@ class ReportexMate extends Component{
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
                         <li><a href="./configuracion">Usuarios</a></li>
-                        <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
+                        <li><a href="/" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
                 </div>
@@ -170,8 +170,8 @@ class ReportexMate extends Component{
                     {this.state.datasolicitudes.map(solicitudes=>{
                         if(this.state.materialesS ==="" || this.state.mesS === "" || this.state.añoS ===""){
 
-                        }else if(this.state.materialesS != "" || this.state.mesS != "" || this.state.añoS != ""){
-                            if(this.state.materialesS != "" && this.state.mesS != "" && this.state.añoS != ""){
+                        }else if(this.state.materialesS !== "" || this.state.mesS !== "" || this.state.añoS !== ""){
+                            if(this.state.materialesS !== "" && this.state.mesS !== "" && this.state.añoS !== ""){
                                 if(solicitudes.estado === 'Entregada' || solicitudes.estado === 'Obsolet'){
                                     var solifech = solicitudes.fecha;
                                     var cutfechaaño = solifech.substr(0,4);

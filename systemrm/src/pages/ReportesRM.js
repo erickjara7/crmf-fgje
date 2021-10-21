@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Cookies from 'universal-cookie';
-import {Button} from 'reactstrap';
+
 import axios from 'axios';
 
 
@@ -8,8 +8,8 @@ const cookies = new Cookies();
 
 const versolicitudes ="http://localhost:4000/solicitud/getsoli";
 const vermateriales ="http://localhost:4000/materialsolicitado/getms";
-const arreglofecha=[];
-var i =0;
+//const arreglofecha=[];
+//var i =0;
 
 class ReportesRM extends Component{
 
@@ -117,7 +117,7 @@ class ReportesRM extends Component{
                         <li><a href="./reportes">Reportes</a></li>
                         <li><a href="./configuracion">Usuarios</a></li>
                       
-                        <li><a onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
+                        <li><a href="/" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
                 </div>
@@ -199,8 +199,8 @@ class ReportesRM extends Component{
                         
                         if(this.state.departamentoS ==="" || this.state.mesS === "" || this.state.añoS ===""){
 
-                        }else if(this.state.departamentoS != "" || this.state.mesS != "" || this.state.añoS != ""){   
-                            if(this.state.departamentoS != "" && this.state.mesS != "" && this.state.añoS != ""){
+                        }else if(this.state.departamentoS !== "" || this.state.mesS !== "" || this.state.añoS !== ""){   
+                            if(this.state.departamentoS !== "" && this.state.mesS !== "" && this.state.añoS !== ""){
                                 if(solicitudes.estado === 'Entregada' || solicitudes.estado === 'Obsolet'){
                                     if(solicitudes.departamentosoli.toLowerCase().includes(this.state.departamentoS.toLowerCase())){
                                         var solifech = solicitudes.fecha;
