@@ -8,13 +8,11 @@ const cookies = new Cookies();
 
 const versolicitudes ="http://localhost:4000/solicitud/getsoli";
 const vermateriales ="http://localhost:4000/materialsolicitado/getms";
-//const arreglofecha=[];
-//var i =0;
 
 class ReportesRM extends Component{
 
     state={
-       // meses:['01','02','03','04','05','06','07','08','09','10','11','12'],
+      
         datasolicitudes:[],
         datamateriales:[],
 
@@ -29,9 +27,10 @@ class ReportesRM extends Component{
 
     peticionGetsolicitudes = async()=>{
         await  axios.get(versolicitudes).then(response =>{
-            this.setState({datasolicitudes:response.data});  
-           
-        }) 
+            this.setState({datasolicitudes:response.data});             
+        }).catch(error=>{
+            console.log(error.message);
+        })
     }
 
     
@@ -39,16 +38,9 @@ class ReportesRM extends Component{
     peticionGetmateriales = async()=>{
         await  axios.get(vermateriales).then(response =>{
             this.setState({datamateriales:response.data});  
+        }).catch(error=>{
+            console.log(error.message);
         })
-    }
-
-
-   
-    //captura lo que se escribe en el input para la variable tipo de reporte del estado
-    onChange0 = async e =>{
-        e.persist();
-        await this.setState({tipoReporte: e.target.value});
-        console.log(`tipoReporte=${this.state.tipoReporte}`);
     }
 
 
@@ -56,19 +48,16 @@ class ReportesRM extends Component{
     onChange = async e =>{
         e.persist();
         await this.setState({departamentoS: e.target.value});
-        console.log(`departamento=${this.state.departamentoS}`);
     }
    //captura lo que se escribe en el input para la variable mes del estado
     onChange1 = async e =>{
         e.persist();
         await this.setState({mesS: e.target.value});
-        console.log(`mes=${this.state.mesS}`);
     }
     //captura lo que se escribe en el input para la variable año del estado
     onChange2 = async e =>{
         e.persist();
         await this.setState({añoS: e.target.value});
-        console.log(`año=${this.state.añoS}`);
     }
 
 
@@ -88,7 +77,7 @@ class ReportesRM extends Component{
 
 
     componentDidMount(){
-       // this.linktoreportes();
+       
         this.peticionGetsolicitudes();
         this.peticionGetmateriales();
         if (!cookies.get('username')){
@@ -135,17 +124,6 @@ class ReportesRM extends Component{
 
                 <form>
                     <div className="row">
-                      {/*  <div className="col-3">
-                            <select type="text" className="form-control" placeholder="Tipo de Reporte" onChange ={this.onChange0}  >
-                                <option selected disabled>Tipo de Reporte</option>
-                               
-                                <option>Departamento</option>
-                                <option>Materiales</option>
-                                <option>Entradas de Material</option>
-                            </select>
-                            
-
-                        </div>*/}
                         
                         <div className="col-3">
                            
@@ -262,18 +240,13 @@ class ReportesRM extends Component{
                         }                                                                     
                     })}   
                 </table>
+                
                 <br/><br/>
+
                 <footer class="footer">
                     Jacqueline Leal  | 2021© 
                 </footer>
-
-
-               
-{/**------------------------------------------------------------------------------------------------------------------------------- */}
-                
-            
             </div>
-           
         );
     }
 }

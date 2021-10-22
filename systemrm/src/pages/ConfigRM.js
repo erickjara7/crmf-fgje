@@ -4,30 +4,38 @@ import axios from 'axios';
 import { Button,  Modal,ModalBody, ModalHeader, ModalFooter} from 'reactstrap';
 import '../css/Materiales.css';
 import '../img/logofiscalia.png';
-
 import Cookies from 'universal-cookie';
 import md5 from 'md5';
 
-
+//Ruta traer datos de la coleccion User
 const usersurl="http://localhost:4000/users/getuser";
+
+//Ruta para hacer post y agg usuarios
 const agguser = "http://localhost:4000/users/add";
+
+//Ruta para eliminar usuarios
 const deleteuser = "http://localhost:4000/users/";
 
+//Arreglo para almacenar nombres de usuarios Nombre+ApellidoP+ApellidoM
 const nombresUsuariosArray = [];
 
+//Traer cookies de inicio de sesión
 const cookies = new Cookies();
 
 class ConfigRM extends Component{
 
+    //Estado para guardar valores
     state={
+        //Guardar lo que se escribe en el input de barra buscadora
         busqueda:'',
-        data:[],
-        
-        
-            
+
+        //Arreglo para guardar los datos obtenidos de la ruta usersurl
+        data:[],    
         datausertype:['Seleccione','Administrador','Usuario'],
         modalInsertar: false,
         modalEliminar: false,
+
+        //Form para guardar cada uno de los datos de la api users
         form:{
             _id:'',
             nombres:'',
@@ -45,8 +53,10 @@ class ConfigRM extends Component{
         await  axios.get(usersurl).then(response =>{
              this.setState({data:response.data});
              
+         }).catch(error=>{
+            console.log(error.message);
          })
-     }
+    }
 
 
     validacionModalReUser = () =>{
@@ -90,6 +100,7 @@ class ConfigRM extends Component{
             this.peticionGet();
         }).catch(error=>{
             console.log(error.message);
+            alert("Error al guardar");
         })
         
     }
@@ -98,6 +109,10 @@ class ConfigRM extends Component{
         axios.delete(deleteuser+this.state.form._id).then(response =>{
             this.setState({modalEliminar:false});
             this.peticionGet()       
+         }).catch(error=>{
+            console.log(error.message);
+            alert("Error al Eliminar");
+
          })
     }
     
@@ -110,20 +125,12 @@ class ConfigRM extends Component{
     }
 
     convertirmd5password=()=>{
-       /* var encrypvariable = md5(this.state.form.password)
-        this.setState({
-            form:{
-                password: md5(this.state.form.password)
-            }
-
-        })*/
         this.state.form.password = md5(this.state.form.password)
     }
 
-    listamateriales=()=>{
+    listausers=()=>{
         this.state.data.map((nombresusers) =>{
             nombresUsuariosArray.push(nombresusers.nombres+' '+nombresusers.apellidoP+' '+nombresusers.apellidoM);
-            console.log(nombresUsuariosArray);
         })
 
     }
@@ -158,13 +165,13 @@ class ConfigRM extends Component{
             }
             
         });
-        console.log(this.state.form);
+       
     }
 
     onChange = async e =>{
         e.persist();
         await this.setState({busqueda: e.target.value});
-        console.log(`busqueda=${this.state.busqueda}`);
+       
     
     }
 
@@ -205,7 +212,7 @@ class ConfigRM extends Component{
                         <li><a href="./solicitudes">Solicitudes</a></li>
                         <li><a href="./reportes">Reportes</a></li>
                         <li><a href="./configuracion">Usuarios</a></li>
-                        <li><a href="./" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
+                        <li><a href="/" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</a></li>
                         
                     </ul>
                 </div>
@@ -223,7 +230,6 @@ class ConfigRM extends Component{
                             name="busqueda"
                             value = {this.state.busqueda}
                             onChange={this.onChange}
-
                             //value
                         />
                     </div>
@@ -241,7 +247,7 @@ class ConfigRM extends Component{
                         userType:'',
                     }
                     }); 
-                    this.listamateriales(); 
+                    this.listausers(); 
                     this.modalInsertar()}}>Registrar Usuario</Button>
 
                 <table class="table table-striped table-bordered">
@@ -302,71 +308,10 @@ class ConfigRM extends Component{
                             }
 
                         })}
-                        {/*this.state.data.filter((usuarios)=>{
-                            if(this.state.busqueda ===""){
-                                return(
-                                    <tr>
-                                        <td>{usuarios.nombres}</td>
-                                        <td>{usuarios.apellidoP}</td>
-                                        <td>{usuarios.apellidoM}</td>
-                                        <td>{usuarios.username}</td>
-                                        <td>{usuarios.departamento}</td>
-                                        <td>{usuarios.municipio}</td>
-                                        <td>{usuarios.userType}</td>
-                                        <td>
-                                            <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
-                                        </td>
-                                    </tr>  
-                                )
-                            }else if (usuarios.nombres.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
-                                      usuarios.apellidoP.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
-                                      usuarios.apellidoM.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
-                                      usuarios.username.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
-                                      usuarios.departamento.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
-                                      usuarios.userType.toLowerCase().includes(this.state.busqueda.toLowerCase()))
-                            {
-                                return(
-                                    <tr>
-                                        <td>{usuarios.nombres}</td>
-                                        <td>{usuarios.apellidoP}</td>
-                                        <td>{usuarios.apellidoM}</td>
-                                        <td>{usuarios.username}</td>
-                                        <td>{usuarios.departamento}</td>
-                                        <td>{usuarios.municipio}</td>
-                                        <td>{usuarios.userType}</td>
-                                        <td>
-                                            <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
-                                        </td>
-                                    </tr>  
-                                )
-
-
-                            }
-                        }).map(usuarios =>{
-                            return(
-                    
-                                <tr>
-                                    
-                                    <td>{usuarios.nombres}</td>
-                                    <td>{usuarios.apellidoP}</td>
-                                    <td>{usuarios.apellidoM}</td>
-                                    <td>{usuarios.username}</td>
-                                    <td>{usuarios.departamento}</td>
-                                    <td>{usuarios.municipio}</td>
-                                    <td>{usuarios.userType}</td>
-                                    <td>
-                                        <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
-                                    </td>
-                                </tr>
-                            )
-
-                        })*/}
-
+                        
                     </tbody>
 
-                </table>
-
-               
+                </table>               
 
                 <Modal isOpen={this.state.modalInsertar}>
                     <ModalHeader style={{display: 'block'}} >
@@ -502,7 +447,6 @@ class ConfigRM extends Component{
                 </Modal>
 
 
-
                 <Modal isOpen={this.state.modalEliminar}>
                     <ModalBody>
                         ¿Estás seguro que deseas eliminar a este usuario?
@@ -518,10 +462,7 @@ class ConfigRM extends Component{
                 <footer class="footer">
                     Jacqueline Leal  | 2021© 
                 </footer>
-
-                
-               
-            
+                                           
             </div>
             
         );

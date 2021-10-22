@@ -29,24 +29,21 @@ class Login extends Component{
                 ...this.state.form,
                 [e.target.name]: e.target.value
             }
-        });
-        //console.log(this.state.form)
+        });   
     }
 
 //METODO INICIAR SESION 
     iniciarSesion=async()=>{
-        //Params: {username: this.state.form.username, password:this.state.form.password}
         await axios.get(loginurl)
         .then(response=>{
             if(this.state.form.username === "" || this.state.form.password === ""){
                 alert("Favor de llenar todos los campos")
-
             }else{
                 response.data.map(usuarios=>{
                     if (usuarios.username.includes(this.state.form.username)  && usuarios.password.includes(md5(this.state.form.password))){
-                    response[0] = usuarios;
-                    response.length = 0;
-                    response.data = response[0];
+                        response[0] = usuarios;
+                        response.length = 0;
+                        response.data = response[0];
                     }
                     
                 })    
@@ -89,40 +86,32 @@ class Login extends Component{
         })
     }
 
-    
     aunnotengocuenta=async()=>{
         alert("Favor de pasar al departamento de Recursos Materiales a registrarse.");
         
     }
+
     olvidecontraseña=async()=>{
         alert("Favor de pasar al departamento de Recursos Materiales a solicitar la información correspondiente.");
    
     }
-    componentDidMount(){
-        //cookies.get('username') && cookies.get('userType') == 'usuario'
+
+    componentDidMount(){  
         if (cookies.get('username')){
             if(cookies.get('userType') === 'Usuario'){
                 window.location.href="./materialesodep";
-                console.log('entre al if');
+               
             }else if(cookies.get('userType') === 'Administrador'){
-                window.location.href="./materiales";
-                console.log('entre al else');  
-            }
-              
-            //window.location.href="./materialesodep"; 
+                window.location.href="./materiales";     
+            } 
         }
-
     }
 
     render(){
         return(
             // Estructura Login
-            
             <div className="container1">
-                
-                
                 <div className="containerPrincipal">
-                
                     <div className="containerSecundario">
                         <div className="form-group">
                             <h2 color="white">Iniciar Sesión</h2>

@@ -10,49 +10,39 @@ const vermaterialesentradas ="http://localhost:4000/entradasmate/get";
 
 
 class Entradasmaterial extends Component{
-    state={
-        // meses:['01','02','03','04','05','06','07','08','09','10','11','12'],
-         
+    state={ 
+
          dataentradasmateriales:[],
- 
          materialesS:'',   
          mesS:'',
-         añoS:'',
-        
+         añoS:'',        
     }
 
-      //captura lo que se escribe en el input para la variable departamento del estado
+    //captura lo que se escribe en el input para la variable departamento del estado
     onChange = async e =>{
         e.persist();
         await this.setState({materialesS: e.target.value});
-        console.log(`material=${this.state.materialesS}`);
     }
 
    //captura lo que se escribe en el input para la variable mes del estado
     onChange1 = async e =>{
         e.persist();
         await this.setState({mesS: e.target.value});
-        console.log(`mes=${this.state.mesS}`);
     }
     //captura lo que se escribe en el input para la variable año del estado
     onChange2 = async e =>{
         e.persist();
         await this.setState({añoS: e.target.value});
-        console.log(`año=${this.state.añoS}`);
     }
 
 
     peticionGetmateriales = async()=>{
         await  axios.get(vermaterialesentradas).then(response =>{
             this.setState({dataentradasmateriales:response.data});  
+        }).catch(error=>{
+            console.log(error.message);
         })
     }
-
-
-
-
-
-
 
     cerrarSesion =() =>{
         cookies.remove('_id',{path:"/"});
@@ -67,8 +57,6 @@ class Entradasmaterial extends Component{
     }
 
     componentDidMount(){
-        // this.linktoreportes();
-         //this.peticionGetsolicitudes();
          this.peticionGetmateriales();
          if (!cookies.get('username')){
              window.location.href="./";
@@ -76,7 +64,9 @@ class Entradasmaterial extends Component{
              alert('Página no permitida, favor de autenticarse nuevamente.');
              this.cerrarSesion(); 
          }
-     }
+    }
+
+
     render(){
         return(
             <div class="container">
@@ -108,13 +98,7 @@ class Entradasmaterial extends Component{
 
                 <form>
                     <div className="row">
-                        
-                        
-                      {/*  <div className="col-3">
-                           
-                            <input type="text" className="form-control" placeholder="Nombre Material" onChange ={this.onChange}  value={this.state.materialesS}></input>
-                        </div>*/}
-                        
+                            
                         <div className="col-2">
                             
                             <input type="text" className="form-control" placeholder="Año" onChange ={this.onChange2}  value={this.state.añoS}></input>
@@ -217,21 +201,12 @@ class Entradasmaterial extends Component{
 
                     </tbody>
                     
-
-
-
                 </table>
-
-
 
                 <footer class="footer">
                     Jacqueline Leal  | 2021© 
                 </footer>
-
                 
-                 
-
-
             </div>
            
         )

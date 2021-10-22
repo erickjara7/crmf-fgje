@@ -129,13 +129,13 @@ class SolicitudesRM extends Component{
                             this.setState({
                                 form3:{
                                     _id:materialesvec.vecIdMatesoli,
-                                },
-                                form2:{
-                                    existencia: materiales.existencia,
                                 }
+                                /*form2:{
+                                    existencia: materiales.existencia,
+                                }*/
                             });
                             console.log(`else cero con ${materialesvec.vecIdMatesoli}`);
-                           //--- this.state.form2.existencia = materiales.existencia;
+                            this.state.form2.existencia = materiales.existencia;
                             axios.delete(putmatesoli+this.state.form3._id).then(response=>{
 
                             });
@@ -146,14 +146,14 @@ class SolicitudesRM extends Component{
                                 form3:{
                                     _id:materialesvec.vecIdMatesoli,
                                     cantidadsolicitada: materiales.existencia
-                                },
-                                form2:{
+                                }
+                              /*  form2:{
                                     existencia: materiales.existencia - this.state.form3.cantidadsolicitada,
                                     _id: materialesvec.vecMateid
-                                }
+                                }*/
                             });
-                            //-----this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
-                            //-----this.state.form2._id = materialesvec.vecMateid;
+                            this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
+                            this.state.form2._id = materialesvec.vecMateid;
                             console.log(`else menor qe con ${materialesvec.vecIdMatesoli}`);
 
                             axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
@@ -163,14 +163,14 @@ class SolicitudesRM extends Component{
                            // this.generatePDF(solicitudes,materialesSolicitados)
                         // si la existencia es mayor a la cantidad solicitada se cambia la existencia restando lo solicitado
                         }else{
-                            this.setState({
+                           /* this.setState({
                                 form2:{
                                     _id: materialesvec.vecMateid,
                                     existencia: materiales.existencia - materialesvec.vecCanSol
                                 }
-                            })
-                           //-------- this.state.form2._id = materialesvec.vecMateid;
-                            //-----------this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
+                            })*/
+                            this.state.form2._id = materialesvec.vecMateid;
+                            this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
                             console.log(`otro else ${materialesvec.vecIdMatesoli}`);
 
                         }

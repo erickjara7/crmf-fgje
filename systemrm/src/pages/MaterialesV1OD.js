@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { Button,Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
@@ -7,19 +6,14 @@ import '../css/Materiales.css';
 import '../img/logofiscalia.png';
 import Cookies from 'universal-cookie';
 
-
-
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 const aggmatesoli = "http://localhost:4000/materialsolicitado/add";
-
 
 const cookies = new Cookies();
 
 
 class MaterialesV1OD extends Component{
     
-
-
     state={
         existenciatemp: '',
         busqueda:'',
@@ -45,9 +39,10 @@ class MaterialesV1OD extends Component{
     peticionGet = async() =>{
         await  axios.get(vermaterial).then(response =>{
              this.setState({data:response.data});  
+         }).catch(error=>{
+            console.log(error.message);
          })
-     }
-
+    }
 
     validacionPostms = ()=>{
         if(this.state.form.idSolicitud !== undefined ){
@@ -69,14 +64,12 @@ class MaterialesV1OD extends Component{
         }
     }
 
-
     peticionPostms  = async() =>{
         await axios.post(aggmatesoli, this.state.form).then(response=>{
             this.modalInsertar();
             alert('Material agregado exitosamente');
         }).catch(error=>{
             alert('Error al guardar, intentelo nuevamente');
-            //console.log(error.message);
         })
     }
 
@@ -84,7 +77,6 @@ class MaterialesV1OD extends Component{
         this.setState({modalInsertar: !this.state.modalInsertar})
     }
     
-
     handleChange = async e =>{
         e.persist();
         await this.setState({
@@ -92,21 +84,17 @@ class MaterialesV1OD extends Component{
             form:{
                 ...this.state.form,
                 [e.target.name]: e.target.value
-            }
-            
+            }  
         });
-        console.log(this.state.form);
     }
     
-     onChange = async e =>{
-         e.persist();
-         await this.setState({busqueda: e.target.value});
-         console.log(`busqueda=${this.state.busqueda}`);
-     }
+    onChange = async e =>{
+        e.persist();
+        await this.setState({busqueda: e.target.value});
+    }
 
-     listo =()=>{
-        cookies.remove('isolicitud',{path:"/"});
-      
+    listo =()=>{
+        cookies.remove('isolicitud',{path:"/"}); 
     }
 
     seleccionarmaterial = (material) =>{
@@ -130,8 +118,6 @@ class MaterialesV1OD extends Component{
 
     }
 
-    
-
     cerrarSesion=()=>{
         cookies.remove('_id',{path:"/"});
         cookies.remove('nombres',{path:"/"});
@@ -151,11 +137,8 @@ class MaterialesV1OD extends Component{
             window.location.href="./";
         }else if(cookies.get('userType') === 'Administrador'){
             alert('Página no permitida, favor de autenticarse nuevamente.');
-            this.cerrarSesion();
-           
-        }
-
-        
+            this.cerrarSesion();           
+        }        
     }
 
 
@@ -165,7 +148,7 @@ class MaterialesV1OD extends Component{
 
         return(
             
-                <div class="container">
+            <div class="container">
                   
                   
                 <div class="navbar">
@@ -180,174 +163,111 @@ class MaterialesV1OD extends Component{
                     </ul>
                 </div>
             
-                <div class="raya"/>
-                
-              
-
-            
-            <div >
-                <br></br>
-                <h2>Materiales disponibles</h2>
-                <br></br>
-                <br></br>
-                <Button color="primary" href="./solicitudesodep" onClick={this.listo()}>Listo</Button>
-                <br></br> 
-                <br></br>
-
-
-                
-                <div>
-                    <div>
-                    <input
-                            type="text"
-                            placeholder="Buscar"
-                            name="busqueda"
-                            class="form-control" 
+                <div class="raya"/>    
                         
-                            value = {this.state.busqueda}
-                            onChange = {this.onChange}
-                        // onChange={event => {this.setState(event.target.busqueda)}}
-                            
-                        />
-                    </div>
-                   
+                <div>
+                    <br></br>
+                    <h2>Materiales disponibles</h2>
+                    <br></br>
+                    <br></br>
+                    <Button color="primary" href="./solicitudesodep" onClick={this.listo()}>Listo</Button>
+                    <br></br> 
                     <br></br>
 
-                </div>
+
+                    
+                    <div>
+                        <div>
+                            <input
+                                type="text"
+                                placeholder="Buscar"
+                                name="busqueda"
+                                class="form-control" 
+                            
+                                value = {this.state.busqueda}
+                                onChange = {this.onChange}
+                            />
+                        </div>
+                        <br></br>
+                    </div>
 
                     <table class="table table-striped table-bordered" id="dev-table">
 
-                        <thead>
-                            
-                            <tr class="tablaencabezado">
-
-                                
+                        <thead> 
+                            <tr class="tablaencabezado">    
                                 <th>Nombre</th>
                                 <th>Existencia</th>
                                 <th>Unidad de medida</th>
                                 <th>Categoria</th>
-                                <th>Acción</th>
-                                
+                                <th>Acción</th> 
                             </tr>
                         </thead>
                         <tbody>
-                        {this.state.data.map((material)=>{
-                            if (this.state.busqueda === "") {
-                                return(
-                                    <tr>
-                                        <td>{material.nombre}</td>
-                                        <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
-                                        <td>{material.unidadMedida}</td>
-                                        <td>{material.categoria}</td>
-                                        <td>
-                                            <Button color="danger" onClick={()=>  {this.seleccionarmaterial(material); this.modalInsertar()}}>Agregar</Button>
-                                        </td>
-                                    </tr>
-                                )
-                                
-                            }else if (material.nombre.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
-                                    material.unidadMedida.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
-                                    material.categoria.toLowerCase().includes(this.state.busqueda.toLowerCase()))
-                            {
-                                return(
-                                    <tr>
-                                      
-                                        <td>{material.nombre}</td>
-                                        <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
-                                        <td>{material.unidadMedida}</td>
-                                        <td>{material.categoria}</td>
-                                        <td>
-                                            <Button color="danger" onClick={()=> {this.seleccionarmaterial(material); this.modalInsertar()}}>Agregar</Button>
-                                        </td>
-                                    </tr>
-                                )
-                            }
-
-                        })} {/*.map(material =>{
-                            
-                                return(
-                                    
-                        
-                                    <tr>
-                                    
-                                       
-                                        <td>{material.nombre}</td>
-                                        <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
-                                        <td>{material.unidadMedida}</td>
-                                        <td>{material.categoria}</td>
-                                        <td>
-                                                                                    {/**this.seleccionarmaterial(material); this.modalInsertar()  */}
-                                        {  /*  <Button color="danger" onClick={()=> {this.seleccionarmaterial(material)} }>Agregar</Button>
-                                        </td>
-                                    </tr>
-                                )
-
-                            })*/}
-
-                
+                            {this.state.data.map((material)=>{
+                                if (this.state.busqueda === "") {
+                                    return(
+                                        <tr>
+                                            <td>{material.nombre}</td>
+                                            <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                            <td>{material.unidadMedida}</td>
+                                            <td>{material.categoria}</td>
+                                            <td>
+                                                <Button color="danger" onClick={()=>  {this.seleccionarmaterial(material); this.modalInsertar()}}>Agregar</Button>
+                                            </td>
+                                        </tr>
+                                    )   
+                                }else if (material.nombre.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                        material.unidadMedida.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                        material.categoria.toLowerCase().includes(this.state.busqueda.toLowerCase()))
+                                {
+                                    return(
+                                        <tr>
+                                            <td>{material.nombre}</td>
+                                            <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                            <td>{material.unidadMedida}</td>
+                                            <td>{material.categoria}</td>
+                                            <td>
+                                                <Button color="danger" onClick={()=> {this.seleccionarmaterial(material); this.modalInsertar()}}>Agregar</Button>
+                                            </td>
+                                        </tr>
+                                    )
+                                }
+                            })}
                         </tbody>
-
                     </table>
 
 
                     <Modal isOpen={this.state.modalInsertar}>
 
-                         <ModalHeader style={{display: 'block'}} >
+                        <ModalHeader style={{display: 'block'}} >
                             <span style={{float:'left'}}>Usted ha elegido:</span>
                         </ModalHeader>
 
                         <ModalBody>
                             <div>
-                               {/* <label htmlFor='idSolicitud'>Número de solicitud:</label><br/>
-                                <input class="form-control" type="text" name="idSolicitud" id="idSolicitud" readOnly  value={form?form.idSolicitud:''}></input>
-
-                              
-                                
-                                <label htmlFor='idMaterial'>idmaterial:</label><br/>
-                                <input class="form-control" type="text" name="idMaterial" id="idMaterial" readOnly  value={form?form.idMaterial:''}></input>
-
-                                <label htmlFor='nombreMaterial'>Nombre:</label><br/>
-                                <input class="form-control" type="text" name="nombreMaterial" id="nombreMaterial" readOnly  value={form?form.nombreMaterial:''}></input>
-
-                                <label htmlFor='unidadMedidaMS'>unidadMedida:</label><br/>
-                                <input class="form-control" type="text" name="unidadMedidaMS" id="unidadMedidaMS"  readOnly value={form?form.unidadMedidaMS:''}></input>*/}
-
-                                
-
                                 <label><b>{form?form.nombreMaterial:''} por {form?form.unidadMedidaMS:''}</b></label><br/> 
 
                                 <label htmlFor='cantidadsolicitada'>Cantidad requerida:</label><br/>
-                                <input class="form-control" type="number" name="cantidadsolicitada" id="cantidadsolicitada"  onChange ={this.handleChange}  value={form.cantidadsolicitada}></input>
-
-
-                                
-                                
+                                <input class="form-control" type="number" name="cantidadsolicitada" id="cantidadsolicitada"  
+                                    onChange ={this.handleChange}  value={form.cantidadsolicitada}>
+                                </input>                                    
                             </div>
-
                         </ModalBody>
-
                         <ModalFooter>
-                                                            {/**()=>this.peticionPostms() */}
-                                <button className="btn btn-success" onClick={()=> this.validacionPostms()}>Es correcto</button>
-                                <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>Cancelar</button>
-
+                            <button className="btn btn-success" onClick={()=> this.validacionPostms()}>Es correcto</button>
+                            <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>Cancelar</button>
                         </ModalFooter>
 
                     </Modal>
-                    
-            </div>
+                        
+                </div>
 
-
-                    <br></br>
-                    <br></br>
-                    <br></br>
-                    <footer class="footer">
-                        Jacqueline Leal  | 2021© 
-                    </footer>
-                  
-{/*--------------SOLICITUDES-----------------------------------------------------------------------------------------------------------------------------*/}
-
-                   
+                <br/>
+                <br/>
+                <br/>
+                <footer class="footer">
+                    Jacqueline Leal  | 2021© 
+                </footer>
             </div>
        
         );

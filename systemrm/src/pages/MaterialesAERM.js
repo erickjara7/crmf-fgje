@@ -4,8 +4,6 @@ import {Button,Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import axios from 'axios';
 import '../css/Materiales.css';
 
-
-
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 const aggmatesoli = "http://localhost:4000/materialsolicitado/add";
 
@@ -38,11 +36,13 @@ class MaterialesAERM extends Component{
 
     peticionGet = async() =>{
         await  axios.get(vermaterial).then(response =>{
-             this.setState({data:response.data});  
-         })
+            this.setState({data:response.data});  
+        }).catch(error=>{
+            console.log(error.message);
+        })
+        
     }
-
-    
+   
     validacionPostms = ()=>{
         if(this.state.form.idSolicitud !== undefined ){
             if(this.state.form.cantidadsolicitada === undefined){
@@ -63,18 +63,14 @@ class MaterialesAERM extends Component{
          }
     }
 
-   
-
     peticionPostms  = async() =>{
         await axios.post(aggmatesoli, this.state.form).then(response=>{
             this.modalInsertar();
             alert('Material agregado exitosamente');
         }).catch(error=>{
             alert('Error al guardar, intentelo nuevamente');
-            //console.log(error.message);
         })
     }
-
 
     handleChange = async e =>{
         e.persist();
@@ -86,19 +82,15 @@ class MaterialesAERM extends Component{
             }
             
         });
-        console.log(this.state.form);
     }
-
 
     onChange = async e =>{
         e.persist();
         await this.setState({busqueda: e.target.value});
-        console.log(`busqueda=${this.state.busqueda}`);
     }
 
     listo =()=>{
-        cookies.remove('isolicitud',{path:"/"});
-      
+        cookies.remove('isolicitud',{path:"/"}); 
     }
 
     modalInsertar = () =>{
@@ -125,8 +117,6 @@ class MaterialesAERM extends Component{
         }
 
     }
-
-
 
     cerrarSesion =() =>{
         //eliminar cookies para no ir a paginas sin autenticarse
@@ -172,10 +162,8 @@ class MaterialesAERM extends Component{
 
                 </div>
                 <div class="raya"/>
-
                 <br/>
               
-
                 <div>
                    
                     <h2>Materiales disponibles</h2>
@@ -187,7 +175,6 @@ class MaterialesAERM extends Component{
 
                     <div>
                         <div>
-
                             <input
                                 type="text"
                                 placeholder="Buscar"
@@ -196,7 +183,6 @@ class MaterialesAERM extends Component{
                             
                                 value = {this.state.busqueda}
                                 onChange = {this.onChange}
-                            
                             />
                         </div>
                     </div>
@@ -264,11 +250,7 @@ class MaterialesAERM extends Component{
                             })*/}
 
                         </tbody>
-
-                        
-
                     </table>
-
 
 
                     <Modal isOpen={this.state.modalInsertar}>
@@ -279,7 +261,6 @@ class MaterialesAERM extends Component{
                         <ModalBody>
                             <div>
                                 <label><b>{form?form.nombreMaterial:''} por {form?form.unidadMedidaMS:''}</b></label><br/>
-
                                 <label htmlFor='cantidadsolicitada'>Cantidad requerida:</label><br/>
                                 <input class="form-control" type="number" name="cantidadsolicitada" id="cantidadsolicitada"  onChange ={this.handleChange}  value={form.cantidadsolicitada}></input>
                             </div>
@@ -293,28 +274,14 @@ class MaterialesAERM extends Component{
                         </ModalFooter>
                     </Modal>
 
-
-
-
                 </div>
 
 
                 <footer class="footer">
                     Jacqueline Leal  | 2021© 
                 </footer>
-
-
-
-
-
-
-
-
-
-           </div>
-           
+           </div> 
        );
-
     }
 }
 

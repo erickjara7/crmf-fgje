@@ -11,12 +11,9 @@ const vermateriales ="http://localhost:4000/materialsolicitado/getms";
 
 class ReportexMate extends Component{
     state={
-        // meses:['01','02','03','04','05','06','07','08','09','10','11','12'],
          datasolicitudes:[],
          datamateriales:[],
- 
-         
- 
+
          materialesS:'',   
          mesS:'',
          añoS:'',
@@ -27,39 +24,33 @@ class ReportexMate extends Component{
     onChange = async e =>{
         e.persist();
         await this.setState({materialesS: e.target.value});
-        console.log(`materiales=${this.state.materialesS}`);
     }
    //captura lo que se escribe en el input para la variable mes del estado
     onChange1 = async e =>{
         e.persist();
         await this.setState({mesS: e.target.value});
-        console.log(`mes=${this.state.mesS}`);
     }
     //captura lo que se escribe en el input para la variable año del estado
     onChange2 = async e =>{
         e.persist();
         await this.setState({añoS: e.target.value});
-        console.log(`año=${this.state.añoS}`);
     }
 
     peticionGetsolicitudes = async()=>{
         await  axios.get(versolicitudes).then(response =>{
             this.setState({datasolicitudes:response.data});  
-           
-        }) 
+        }).catch(error=>{
+            console.log(error.message);
+        })
     }
-
-    
 
     peticionGetmateriales = async()=>{
         await  axios.get(vermateriales).then(response =>{
             this.setState({datamateriales:response.data});  
+        }).catch(error=>{
+            console.log(error.message);
         })
     }
-
-
-
-
 
     cerrarSesion =() =>{
         cookies.remove('_id',{path:"/"});
@@ -73,10 +64,7 @@ class ReportexMate extends Component{
         window.location.href='./';
     }
 
-
-
     componentDidMount(){
-        // this.linktoreportes();
          this.peticionGetsolicitudes();
          this.peticionGetmateriales();
          if (!cookies.get('username')){
@@ -85,7 +73,8 @@ class ReportexMate extends Component{
              alert('Página no permitida, favor de autenticarse nuevamente.');
              this.cerrarSesion(); 
          }
-     }
+    }
+
     render(){
         return(
             <div class="container">
@@ -234,8 +223,7 @@ class ReportexMate extends Component{
                 <footer class="footer">
                     Jacqueline Leal  | 2021© 
                 </footer>
-
-
+                
             </div>                                       
         )
     }
