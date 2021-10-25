@@ -22,9 +22,6 @@ const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 
 const today = new Date(),
 date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate();
-//const horaaa =  today.getHours() +':' + today.getMinutes(); 
-//const date = fecha +''+''+'' + ':'+horaaa;
-
 
 
 class SoliRMExterna extends Component{
@@ -54,102 +51,79 @@ class SoliRMExterna extends Component{
 
     peticionGet = async() =>{
         await  axios.get(versolicitud).then(response =>{
-             this.setState({data:response.data});
-             //console.log(this.state.data);
-            
-             
-            // console.log(`busqueda=${this.state.busqueda}`);
-             
-         })
+             this.setState({data:response.data});        
+         }).catch(error=>{
+            console.log(error);         
+        })
     }
 
     peticiongetmatesoli = async() =>{
          await axios.get(vermaterialsoli).then(response =>{
-             this.setState({datamate:response.data});
-            
-         })
+             this.setState({datamate:response.data});            
+         }).catch(error=>{
+            console.log(error);          
+        })
     }
 
-     peticionPutestadoSoli = ()=>{
+    peticionPutestadoSoli = ()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEnviarsoli();
             this.peticionGet();
+        }).catch(error=>{
+            alert("Error al cambiar estado");            
         })
-           
-        
-
     }
 
 
     peticionpostsoli =async ()=>{
-        console.log(`post: ${this.state.form.solicitante}`);
+        
         await axios.post(aggsolicitud,this.state.form).then(response=>{
             this.modalInsertar();
             alert("SOLICITUD CREADA, AHORA ELIJA LA SOLICITUD Y PROCEDA A ELEGIR LOS MATERIALES ");   
             this.peticionGet();
        })
        .catch(error=>{
-           alert('error en la peticion')
-       })
-       
-      
+           alert('Error al crear la solicitud')
+       })          
     }
+
+
     modalInsertar = () =>{
         this.setState({
-            modalInsertar: !this.state.modalInsertar,
-            
+            modalInsertar: !this.state.modalInsertar,            
         })
     }
 
-
-
     modalEnviarsoli =()=>{
         this.setState({modalEnviarsoli: !this.state.modalEnviarsoli})
-
     }
 
     validaciónmodal =()=>{
         if(this.state.form.solicitante === ''  || this.state.form.municipiosoli ==='' || this.state.form.departamentosoli === ''
-            || this.state.form.area === ''  || this.state.form.tipoSolicitud === ''){
-            console.log("nulñl");
+            || this.state.form.area === ''  || this.state.form.tipoSolicitud === ''){           
             alert("Favor de llenar todos los campos");
-
         }else{
-             this.peticionpostsoli();
-            
-        }
-       
+             this.peticionpostsoli();            
+        }       
     }
-
-    //this.setState({form:null});
-
 
     handleChange = async e =>{
         e.persist();
-        await this.setState({
-            
+        await this.setState({            
             form:{
                 ...this.state.form,
-                [e.target.name]: e.target.value, 
-               // estado:'Iniciada',
-               // fecha: date
-            }
-            
+                [e.target.name]: e.target.value,             
+            }            
         });
-        console.log(this.state.form);
     }
 
-    seleccionarsolicitud =(solicitudes)=>{
-       
-        this.setState({
-            
+    seleccionarsolicitud =(solicitudes)=>{       
+        this.setState({            
             form:{
                 _id: solicitudes._id
-            }
-            
+            }            
         })
        cookies.set('isolicitud',this.state.form._id,{path:"/"})
-       console.log(`log: ${this.state.form._id}`)
        if(cookies.get('isolicitud') && solicitudes.estado==='Iniciada'){
         window.location.href="./materialesaerm";
        }else{
@@ -163,8 +137,7 @@ class SoliRMExterna extends Component{
                 _id:solicitudes._id,
                 estado:'Pendiente'
             }
-        })
-        console.log(this.state.form)
+        })        
         if(this.state.form._id === ''){
 
         }else{
@@ -173,9 +146,7 @@ class SoliRMExterna extends Component{
             }else{
                 cookies.remove('isolicitud',{path:"/"});
             }
-            //alert('elsee');
         }
-
     }
 
     cerrarSesion =() =>{
@@ -193,8 +164,7 @@ class SoliRMExterna extends Component{
     
     componentDidMount(){
         this.peticionGet();
-        this.peticiongetmatesoli();
-        // this.peticiongetsoli();
+        this.peticiongetmatesoli();       
         //cookies para no ir a paginas sin autenticarse
         if (!cookies.get('username')){
             window.location.href="./";
@@ -231,9 +201,7 @@ class SoliRMExterna extends Component{
                 <div class="raya"/>
 
                 <br/>
-                
-
-                 
+                                 
                 <button type="button" className="btn btn-outline-light col-4" onClick={()=> window.location.href="./solicitudes"}>Solicitudes Pendientes</button> 
                 <button type="button" className="btn btn-outline-light col-4" onClick={()=> window.location.href="./solicitudesrmen"}>Solicitudes Entregadas</button>
                 <button type="button" className="ssmbutton col-4 " disabled color="black" onClick={()=> window.location.href="./solicitudesrmext"}>Solicitudes Externas</button>
@@ -258,7 +226,7 @@ class SoliRMExterna extends Component{
                    
                    this.modalInsertar()}}>Crear Solicitud</Button>
 
-               {this.state.data.map((solicitudes, index)=>{
+                {this.state.data.map((solicitudes, index)=>{
                    if((solicitudes.estado === 'Iniciada' || solicitudes.estado ==='Pendiente') && (solicitudes.municipiosoli !== 'Hermosillo')){
                        return(
                            <Accordion key={index}>
@@ -308,11 +276,9 @@ class SoliRMExterna extends Component{
                                                        }
                                                     })}
 
-                                                        <Button color="primary" onClick={()=>this.seleccionarsolicitud(solicitudes)} >Agregar Material</Button>
-                                                        <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}} >Enviar</Button>
-
+                                                    <Button color="primary" onClick={()=>this.seleccionarsolicitud(solicitudes)} >Agregar Material</Button>
+                                                    <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}} >Enviar</Button>
                                                 </tbody>
-
                                             </table>
                                        </Card.Body>
                                    </Accordion.Collapse>
@@ -320,10 +286,10 @@ class SoliRMExterna extends Component{
                            </Accordion>
                        )
                    }
-               })}
+                })}
 
-               <br/><br/><br/>
-               <Modal isOpen={this.state.modalInsertar}>
+                <br/><br/><br/>
+                <Modal isOpen={this.state.modalInsertar}>
                    <ModalHeader style={{display: 'block'}}>
                         <span style={{float:'left'}}>Llene los campos área y tipo de solicitud</span>
                    </ModalHeader>
@@ -438,41 +404,32 @@ class SoliRMExterna extends Component{
 
                             <label htmlFor='estado'>Estatus:</label><br/>
                             <input class="form-control" type="text" name="estado" id="estado"   readOnly  value={form.estado}></input>
-                            <br/>
-                           
+                            <br/>                           
                        </div>
-
                    </ModalBody>
 
                    <ModalFooter>
                         <button className="btn btn-success" onClick={ () => {this.validaciónmodal() }}>Es correcto</button>
                         <button className="btn btn-danger" onClick={()=> this.modalInsertar()}>Cancelar</button>
                    </ModalFooter>
-               </Modal>
-
-
-               <Modal isOpen={this.state.modalEnviarsoli}>
-                            <ModalBody>
-                                He verificado mis datos y terminé de elegir materiales.
-
-                                Estoy seguro de enviar esta solicitud.
-                                
-
-                            </ModalBody>
-                            <ModalFooter>
-                                <button className="btn btn-success" onClick={()=>this.peticionPutestadoSoli()}>Si</button>
-                                <button className="btn btn-danger" onClick={()=> this.modalEnviarsoli()}>No</button>
-                            </ModalFooter>
-
-
                 </Modal>
 
 
+                <Modal isOpen={this.state.modalEnviarsoli}>
+                    <ModalBody>
+                        He verificado mis datos y terminé de elegir materiales.
+
+                        Estoy seguro de enviar esta solicitud.                            
+                    </ModalBody>
+                    <ModalFooter>
+                        <button className="btn btn-success" onClick={()=>this.peticionPutestadoSoli()}>Si</button>
+                        <button className="btn btn-danger" onClick={()=> this.modalEnviarsoli()}>No</button>
+                    </ModalFooter>
+                </Modal>
+
                 <footer class="footer">
                     Jacqueline Leal  | 2021© 
-                </footer>
-
-                
+                </footer>                
            </div> 
        );
 

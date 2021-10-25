@@ -1,16 +1,10 @@
 import React, {Component} from 'react';
 import Cookies from 'universal-cookie';
-
 import { Button, Modal, ModalBody, ModalFooter} from 'reactstrap';
 import {Card, Accordion} from 'react-bootstrap';
 import axios from 'axios';
-
 import '../css/solisunmenu.css';
 
-
-//const today = new Date(),
-//date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate() +': ' + today.getHours() +':' + today.getMinutes() ;
-//const imgg = new Imgg();
 const cookies = new Cookies();
 
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
@@ -61,57 +55,55 @@ class SolicitudesRM extends Component{
         }
     }
     
-
     peticiongetsoli = async()=>{
         await axios.get(versolicitud).then(response=>{
             this.setState({data:response.data})
-        })
-        console.log(this.state.data);
-
+        }).catch(error=>{
+            console.log(error.message);
+        })    
     }
 
     peticiongetmatesoli = async()=>{
         await axios.get(vermaterialsoli).then(response=>{
             this.setState({datamatesoli: response.data});
-        })
+        }).catch(error=>{
+            console.log(error.message);
+        })  
 
     }
 
-  
     peticionPutestadoSoli = ()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEntregarMaterial();
             alert("Si desea descargar la solicitud, dirijase a solicitudes entregadas");
             window.location.href='./solicitudes';
-        })
+        }).catch(error=>{
+            alert("Error al entregar");
+           
+        })  
            
     }
 
     modalEntregarMaterial =()=>{
         this.setState({modalEntregarMaterial: !this.state.modalEntregarMaterial});
         window.location.href='./solicitudes';
-
     }
 
     selecMaterialaCambiar=async(materialesSolicitados)=>{
-        //console.log(`solicitudID: ${solicitudID} estado:${estadosoli}`);
         if(solicitudID !== ''){
-                if(materialesSolicitados.idSolicitud === solicitudID){
-                    this.state.form2._id = materialesSolicitados.idMaterial;
-                    this.state.form2.tipoSolicitud = typesoli;
-                    vecIdMatesoli = materialesSolicitados._id;
-                    vecCanSol = materialesSolicitados.cantidadsolicitada;
-                    vecMateid = this.state.form2._id;  
+            if(materialesSolicitados.idSolicitud === solicitudID){
+                this.state.form2._id = materialesSolicitados.idMaterial;
+                this.state.form2.tipoSolicitud = typesoli;
+                vecIdMatesoli = materialesSolicitados._id;
+                vecCanSol = materialesSolicitados.cantidadsolicitada;
+                vecMateid = this.state.form2._id;  
 
-                    vector.push({vecIdMatesoli, vecMateid,vecCanSol});
+                vector.push({vecIdMatesoli, vecMateid,vecCanSol});
                     
-                }
-                console.log('entre al ciclo');
-        } 
-        
+            }
+        }   
     }
     
-   
     peticionPutExistencia=()=>{
         //se llena un nuevo vector con la mitad del vector de los materiales solicitados
         for(  i = i; i < vector.length/2; i ++){
@@ -129,12 +121,9 @@ class SolicitudesRM extends Component{
                             this.setState({
                                 form3:{
                                     _id:materialesvec.vecIdMatesoli,
-                                }
-                                /*form2:{
-                                    existencia: materiales.existencia,
-                                }*/
+                                }                            
                             });
-                            console.log(`else cero con ${materialesvec.vecIdMatesoli}`);
+                           
                             this.state.form2.existencia = materiales.existencia;
                             axios.delete(putmatesoli+this.state.form3._id).then(response=>{
 
@@ -146,69 +135,39 @@ class SolicitudesRM extends Component{
                                 form3:{
                                     _id:materialesvec.vecIdMatesoli,
                                     cantidadsolicitada: materiales.existencia
-                                }
-                              /*  form2:{
-                                    existencia: materiales.existencia - this.state.form3.cantidadsolicitada,
-                                    _id: materialesvec.vecMateid
-                                }*/
+                                }                            
                             });
                             this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
                             this.state.form2._id = materialesvec.vecMateid;
-                            console.log(`else menor qe con ${materialesvec.vecIdMatesoli}`);
+                           
 
                             axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
-                                console.log(`putix`);
-                                console.log(`idSolici: ${this.state.form3._id}  existencia:${materiales.existencia} cantidadsolinew:${this.state.form3.cantidadsolicitada}`);
-                            });
-                           // this.generatePDF(solicitudes,materialesSolicitados)
+                            }).catch(error=>{
+                                alert("Error al entregar los materiales");
+                            })
+                           
                         // si la existencia es mayor a la cantidad solicitada se cambia la existencia restando lo solicitado
-                        }else{
-                           /* this.setState({
-                                form2:{
-                                    _id: materialesvec.vecMateid,
-                                    existencia: materiales.existencia - materialesvec.vecCanSol
-                                }
-                            })*/
+                        }else{                           
                             this.state.form2._id = materialesvec.vecMateid;
                             this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
-                            console.log(`otro else ${materialesvec.vecIdMatesoli}`);
-
-                        }
-
-                        
-                       // this.state.form2.tipoSolicitud = materiales.tipoSolicitud;
+                        }                                            
                     }             
                 })
-                //console.log(`Idmaterial:${this.state.form2._id}  exisnueva:${this.state.form2.existencia}  tiposoli:${this.state.form2.tipoSolicitud}`);
-
+                
 
                 if(this.state.form2.tipoSolicitud === 'Requisición'){
  
-                    axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{
-                        console.log(`axiosput de ${this.state.form2._id}`);
-                        console.log(`id: ${this.state.form2._id} exis:${this.state.form2.existencia}`);
-                       // this.modalEntregarMaterial();
-                        //this.peticiongetsoli();
-              
+                    axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
+                    }).catch(error=>{
+                        alert("Error al entregar los materiales");
                     })
                 }else if(this.state.form2.tipoSolicitud === 'Préstamo'){
-                  //  this.modalEntregarMaterial();
-
-                }
-                //AQUIIIIIIIIIIIII
-              //  axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{
-              //      console.log(`axiosput`);
-              //      this.modalEntregarMaterial();
-                    //this.peticiongetsoli();
-    
-               // })
+                  
+                }               
             })        
         })
     }
-   // ------------------------------------------------------------------------------------
-
-    
-
+      
     seleccionarsoliput =(solicitudes)=>{
         //cambia los valores segun la solicitud seleccionada para hacer el put
         this.setState({
@@ -239,8 +198,6 @@ class SolicitudesRM extends Component{
 
     }
 
-
-
     cerrarSesion =() =>{
     //eliminar cookies para no ir a paginas sin autenticarse
         cookies.remove('_id',{path:"/"});
@@ -257,6 +214,7 @@ class SolicitudesRM extends Component{
     componentDidMount(){
         this.peticiongetmatesoli();
         this.peticiongetsoli();
+
         //cookies para no ir a paginas sin autenticarse
         if (!cookies.get('username')){
             window.location.href="./";
@@ -267,12 +225,6 @@ class SolicitudesRM extends Component{
     }
 
     
-
-
-    
-
-
-
     render(){
         return(
             <div class="container">
@@ -293,23 +245,17 @@ class SolicitudesRM extends Component{
                 <div class="raya"/>
 
                 <br/>
-               
-                
-                
-                
+                                                               
                 <button type="button" className="ssmbutton col-4" disabled onClick={()=> window.location.href="./solicitudes"}>Solicitudes Pendientes</button> 
                 <button type="button" className="btn btn-outline-light col-4" onClick={()=> window.location.href="./solicitudesrmen"}>Solicitudes Entregadas</button>
                 <button type="button" className="btn btn-outline-light col-4"  onClick={()=> window.location.href="./solicitudesrmext"}>Solicitudes Externas</button>
                 <br/>
                 <h2>Solicitudes Pendientes</h2>
-               
-                                <br/> <br/> <br/>
+                <br/> <br/> <br/>
                 
 
                 {this.state.data.map((solicitudes,index)=>{
-                    if(solicitudes.estado === 'Pendiente'){
-                       
-
+                    if(solicitudes.estado === 'Pendiente'){                       
                         return(
 
                             <Accordion key={index}>
@@ -319,8 +265,7 @@ class SolicitudesRM extends Component{
                                     </Accordion.Toggle>
 
                                     <Accordion.Collapse eventKey={solicitudes}>
-                                        <Card.Body>
-                                        {/*/doc.text()*/}
+                                        <Card.Body>                                    
                                             <div id="invoice" >
                                                 <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
                                                 <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
@@ -336,69 +281,41 @@ class SolicitudesRM extends Component{
                                                 <h5>Materiales:</h5>
                                             </div>
 
-                                                <table className="table table-bordered" id="tablamate">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Nombre</th>
-                                                            <th>Cantidad</th>
-                                                            <th>Unidad de medida</th>
-                                                        </tr>
-                                                    </thead>
+                                            <table className="table table-bordered" id="tablamate">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nombre</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Unidad de medida</th>
+                                                    </tr>
+                                                </thead>
 
-                                                    <tbody>
-                                                        {this.state.datamatesoli.map(materialsoli=>{
-                                                            if(materialsoli.idSolicitud === solicitudes._id){
+                                                <tbody>
+                                                    {this.state.datamatesoli.map(materialsoli=>{
+                                                        if(materialsoli.idSolicitud === solicitudes._id){
                                                                 
-                                                                materialesSolicitados = materialsoli;
-                                                                this.selecMaterialaCambiar(materialesSolicitados);
-                                                                return(
-                                                                    <tr>
-                                                                        <td>{materialsoli.nombreMaterial}</td>
-                                                                        <td>{materialsoli.cantidadsolicitada}</td>
-                                                                        <td>{materialsoli.unidadMedidaMS}</td>
-                                                                    </tr>
-                                                                    
-                                                                )
-                                                                
-                                                    
-                                                                
-                                                            }
-                                                            //this.selecMaterialaCambiar(materialesSolicitados);
-                                                        
-                                                            
-                                                            
-                                                            
-                                                           // varidparPDF= solicitudes._id;
-                                                            /*   if(materialsoli.idMaterial === materiales._id){
-                                                                    this.selecMaterialaCambiar(materiales,materialsoli);
-                                                                }
-                                                            })*/
-                                                           // this.generatePDF(solicitudes);
-
-                    
-                                                        })}
-                                                        
-                                                        
-
-                                                    </tbody>
-                                                </table>
+                                                            materialesSolicitados = materialsoli;
+                                                            this.selecMaterialaCambiar(materialesSolicitados);
+                                                            return(
+                                                                <tr>
+                                                                    <td>{materialsoli.nombreMaterial}</td>
+                                                                    <td>{materialsoli.cantidadsolicitada}</td>
+                                                                    <td>{materialsoli.unidadMedidaMS}</td>
+                                                                </tr>                                                                    
+                                                            )                                                                                                                                                                                    
+                                                        }                                                    
+                                                    })}                                                                                                                
+                                                </tbody>
+                                            </table>
                                           
 
-                                            <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}}>Entregar</Button>
-
-                                            {/**onClick={()=>this.generatePDF(solicitudes)} */}
-                                            
-
+                                            <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}}>Entregar</Button>                                                                                  
                                         </Card.Body>
                                     </Accordion.Collapse>
                                 </Card> 
-                            </Accordion>
-                            
-
+                            </Accordion>                        
                         )
-
                     }
-
                 })}
 
 
@@ -406,25 +323,15 @@ class SolicitudesRM extends Component{
                     <ModalBody>
                         ¿Esta solicitud ya fue entregada?
                     </ModalBody>
-                    <ModalFooter>
-                    {/*this.peticionPutExistencia();                onClick={()=> {  this.peticionPutExistencia();     this.peticionPutestadoSoli()}}*/}
+                    <ModalFooter>                
                         <button className="btn btn-success" onClick={()=> {this.peticionPutExistencia();     this.peticionPutestadoSoli();  }}>Si</button>
                         <button className="btn btn-danger" onClick={()=> this.modalEntregarMaterial()}>No</button>
-
                     </ModalFooter>
-
-
                 </Modal>
 
                 <footer class="footer">
                     Jacqueline Leal  | 2021© 
-                </footer>
-
-
-
-{/*------------------------------------------------------------------------------------------------------------------------------------------------*/}
-  
-            
+                </footer>           
             </div>
         );
     }

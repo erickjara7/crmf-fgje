@@ -5,7 +5,6 @@ import '../css/solisunmenu.css';
 import { Button, Modal, ModalBody, ModalFooter} from 'reactstrap';
 import {Card, Accordion} from 'react-bootstrap';
 import axios from 'axios';
-
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Imgg from '../img/logofiscalia.png';
@@ -18,22 +17,19 @@ const horaaa =  today.getHours() +':' + today.getMinutes();
 const date = fecha +''+''+'' + '  Hora:'+horaaa;
 
 
-
-//const aggsolicitud = "http://localhost:4000/solicitud/add";
-
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
 
 const putsoli = "http://localhost:4000/solicitud/";
 
 const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 
-//const doc = new jsPDF();
+
 const cookies = new Cookies();
 class SolicitudesRMEntregadas extends Component{
      
     state={
         data:[],
-        datamatesoli:[],
+        datamatesoli:[], 
         modalEnviarsoli: false,
 
         form:{
@@ -45,24 +41,22 @@ class SolicitudesRMEntregadas extends Component{
     peticionGet = async() =>{
         await  axios.get(versolicitud).then(response =>{
              this.setState({data:response.data});
-             //console.log(this.state.data);
-            
-             
-            // console.log(`busqueda=${this.state.busqueda}`);
-             
-         })
+         }).catch(error=>{
+           console.log(error);
+        })
     }
 
     peticiongetmatesoli = async() =>{
         await axios.get(vermaterialsoli).then(response =>{
-            this.setState({datamatesoli:response.data});
-           
+            this.setState({datamatesoli:response.data});           
+        }).catch(error=>{
+            console.log(error);
         })
     }
+
     modalEnviarsoli =()=>{
         this.setState({modalEnviarsoli: !this.state.modalEnviarsoli});
         window.location.href="./solicitudesrmen";
-
     }
 
     generatePDF=(solicitudes)=>{
@@ -80,11 +74,9 @@ class SolicitudesRMEntregadas extends Component{
              var cs = materialsoli.cantidadsolicitada;
              var umms = materialsoli.unidadMedidaMS;
              arreglo.push([nm,cs,umms]);
-            }
-           
-            
- 
+            }                   
         });
+
         var columns = ['Material', 'Cantidad', 'Unidad de medida'];
 
         docc.autoTable(columns,arreglo,
@@ -98,18 +90,14 @@ class SolicitudesRMEntregadas extends Component{
                 },
                 bodyStyles: {
                     fontSize: 8.5,
-                    padding: 0,
-                    
+                    padding: 0,                    
                 }
-            },
-            
+            },            
         );
 
         //Logos 
         docc.addImage(Imgg,'PNG',8,8,180,25);
-       
-                                            //docc.setFontType('bold');
-                                            // docc.setTextColor('yellow');
+    
 
         //Titulo
         docc.setFontSize(15);
@@ -154,13 +142,8 @@ class SolicitudesRMEntregadas extends Component{
         docc.text(`Tipo de solicitud:`,15,85);
         docc.text(`Fecha de Entrega:`,15,90);
 
-        //crear tabla 
-       // docc.autoTable({html:'#tablamate'});
-
         //Descargar documento 
        docc.save(`${solicitudes.departamentosoli}.${solicitudes.area}.pdf`);
-
-
 
     }
     
@@ -176,52 +159,48 @@ class SolicitudesRMEntregadas extends Component{
             cookies.remove('departamento',{path:"/"});
             cookies.remove('userType',{path:"/"});
             window.location.href='./';
-        }
+    }
 
-        quitar=(solicitudes)=>{
-           // console.log(solicitudes._id);
-            this.setState({
-                form:{
-                    _id: solicitudes._id,
-                    estado: 'Obsolet'
-                }
+    quitar=(solicitudes)=>{          
+        this.setState({
+            form:{
+                _id: solicitudes._id,
+                estado: 'Obsolet'
+            }
 
-            })
+        })
 
-            if(this.state.form._id === ''){
+        if(this.state.form._id === ''){
 
-            }else{
+        }else{
                 
-                this.setState({modalEnviarsoli: true}) 
-                console.log(`log: ${this.state.form._id}`);
-            }
-            //cookies.set('isolicitud',this.state.form._id,{path:"/"})
-            //console.log(`log: ${this.state.form._id}`)
-           // console.log(this.state.form._id);
-           // console.log(this.state.form.estado);
+            this.setState({modalEnviarsoli: true}) 
+            console.log(`log: ${this.state.form._id}`);
+        }
+    }
 
-        }
-        peticionPutestadoSoli=()=>{
-            axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
-                this.modalEnviarsoli();
-                this.peticionGet();
-            })
-        }
-    
-        componentDidMount(){
-            this.peticiongetmatesoli();
-            //this.peticiongetsoli();
-            //cookies para no ir a paginas sin autenticarse
+
+    peticionPutestadoSoli=()=>{
+        axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
+            this.modalEnviarsoli();
             this.peticionGet();
-            if (!cookies.get('username')){
-                window.location.href="./";
-            }else if(cookies.get('userType') === 'Usuario'){
-                alert('Página no permitida, favor de autenticarse nuevamente.');
-                this.cerrarSesion(); 
-            }
+        }).catch(error=>{
+            alert("Error al cambiar estado");            
+        })
+    }
+    
+    componentDidMount(){
+        this.peticiongetmatesoli();
+            
+        //cookies para no ir a paginas sin autenticarse
+        this.peticionGet();
+        if (!cookies.get('username')){
+            window.location.href="./";
+        }else if(cookies.get('userType') === 'Usuario'){
+            alert('Página no permitida, favor de autenticarse nuevamente.');
+            this.cerrarSesion(); 
         }
-
-
+    }
 
 
     render(){
@@ -296,8 +275,7 @@ class SolicitudesRMEntregadas extends Component{
                                                     <tbody>
                                                         {this.state.datamatesoli.map(materialsoli=>{
                                                             if(materialsoli.idSolicitud === solicitudes._id){
-                                                                //materialesSolicitados = materialsoli;
-                                                                //this.selecMaterialaCambiar(materialesSolicitados);
+                                                             
                                                                 return(
                                                                     <tr>
                                                                         <td>{materialsoli.nombreMaterial}</td>
@@ -321,32 +299,20 @@ class SolicitudesRMEntregadas extends Component{
                                         </Accordion.Collapse>
                                     </Card>
                                 </Accordion>
-
-                            )
-                           
-                                
-                        
-
-                            
+                            )                                                                                                       
                         }
-
                     })}
-
                 </div>
 
 
               
-              <Modal isOpen={this.state.modalEnviarsoli}>
-
-                    
+                <Modal isOpen={this.state.modalEnviarsoli}>                    
                     <ModalBody>
                         ¿Seguro de querer quitar permanentemente esta solicitud?
-
                     </ModalBody>
                     <ModalFooter>
                         <button className="btn btn-success" onClick={()=>this.peticionPutestadoSoli()}>Si</button>
                         <button className="btn btn-danger" onClick={()=> this.modalEnviarsoli()}>No</button>
-
                     </ModalFooter>
                 </Modal>
 
