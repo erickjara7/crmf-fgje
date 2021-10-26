@@ -6,14 +6,20 @@ import '../css/Materiales.css';
 import '../img/logofiscalia.png';
 import Cookies from 'universal-cookie';
 
+
+//Ruta traer datos de la coleccion Materiales
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
+
+//Ruta para hacer post y agg materiales a la solicitud
 const aggmatesoli = "http://localhost:4000/materialsolicitado/add";
 
+//Traer cookies de inicio de sesión
 const cookies = new Cookies();
 
 
 class MaterialesV1OD extends Component{
-    
+
+    //Estado para guardar valores
     state={
         existenciatemp: '',
         busqueda:'',
@@ -36,6 +42,7 @@ class MaterialesV1OD extends Component{
         }
     }
 
+    //Petición para traer los datos de la url "vermaterial" y guardar en la variable data del estado
     peticionGet = async() =>{
         await  axios.get(vermaterial).then(response =>{
              this.setState({data:response.data});  
@@ -44,6 +51,7 @@ class MaterialesV1OD extends Component{
          })
     }
 
+    //Validar  input del modalInsertar 
     validacionPostms = ()=>{
         if(this.state.form.idSolicitud !== undefined ){
            if(this.state.form.cantidadsolicitada === undefined){
@@ -64,6 +72,7 @@ class MaterialesV1OD extends Component{
         }
     }
 
+    //Petición post a url "aggmatesoli" para registrar los materiales seleccionados en la solicitud
     peticionPostms  = async() =>{
         await axios.post(aggmatesoli, this.state.form).then(response=>{
             this.modalInsertar();
@@ -73,10 +82,12 @@ class MaterialesV1OD extends Component{
         })
     }
 
+    //Cambia el estado del modal (abrir y cerrar)
     modalInsertar = () =>{
         this.setState({modalInsertar: !this.state.modalInsertar})
     }
     
+    //Cambia el valor de las variables del form según lo que se escribe en el input
     handleChange = async e =>{
         e.persist();
         await this.setState({
@@ -88,15 +99,18 @@ class MaterialesV1OD extends Component{
         });
     }
     
+    //Cambia el valor de la variable "busqueda" según lo que se escribe en el input
     onChange = async e =>{
         e.persist();
         await this.setState({busqueda: e.target.value});
     }
 
+    //Eliminar cookies isolicitud
     listo =()=>{
         cookies.remove('isolicitud',{path:"/"}); 
     }
 
+    //Cambia los variables del material por el material seleccionado
     seleccionarmaterial = (material) =>{
         this.setState({
             tipoModal:'actualizar',
@@ -118,6 +132,7 @@ class MaterialesV1OD extends Component{
 
     }
 
+    //Elimina las cookies de sesión y redirige al login
     cerrarSesion=()=>{
         cookies.remove('_id',{path:"/"});
         cookies.remove('nombres',{path:"/"});
@@ -131,6 +146,8 @@ class MaterialesV1OD extends Component{
         window.location.href='./';
     }
 
+    //Ciclo del vida: se ejecuta siempre.
+    //Valída los permisos de usuario
     componentDidMount(){
         this.peticionGet();
         if (!cookies.get('username')){
@@ -144,6 +161,8 @@ class MaterialesV1OD extends Component{
 
 
     render(){
+
+        //Variable para escribir solo "form.(variable)" en vez de "this.state.form.(variable)"
         const {form} = this.state;
 
         return(

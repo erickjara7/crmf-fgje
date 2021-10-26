@@ -5,23 +5,44 @@ import {Card, Accordion} from 'react-bootstrap';
 import axios from 'axios';
 import '../css/solisunmenu.css';
 
+//Traer cookies de inicio de sesión
 const cookies = new Cookies();
 
+//Ruta traer datos de la coleccion solicitud
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
+
+//Ruta traer datos de la coleccion materialsolicitados
 const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
+
+//Ruta para modificar un registro en especifico de la coleccion solicitud
 const putsoli = "http://localhost:4000/solicitud/";
+
+//Ruta traer datos de la coleccion materiales
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
+
+//Ruta para eliminar y/o modificar un registro en especifico de materiales
 const dpsidmaterial = "http://localhost:4000/materiales/";
+
+//Ruta para modificar un registro en especifico de la coleccion materialsolicitados
 const putmatesoli = "http://localhost:4000/materialsolicitado/";
 
 
-
+//Arreglo para copiar los datos guardados en "datamatesoli" para mantenerlo publico
 var materialesSolicitados = [];
+
+//variable para copiar el valor del id de una solicitud seleccionada para mantenerlo publico
 var solicitudID = '';
+
+//variable para copiar el valor tipodesolicitud de una solicitud seleccionada para mantenerlo publico
 var typesoli = '';
+
+//variable para copiar el valor del id de cada 1 de las materiales solicitados para ser agg al vector
 var vecIdMatesoli ='';
+
 const vector =[];
 let newvector =[];
+
+//variable para copiar el valor del id de cada 1 de las solicitudes para ser agg al vector
 var vecMateid='';
 var vecCanSol='';
 var i =0;
@@ -38,17 +59,21 @@ class SolicitudesRM extends Component{
         data:[],
         datamatesoli:[],
         modalEntregarMaterial: false,
+
+        //Solicitudes
         form:{ 
             _id:'',
             tipoSolicitud:''
            
         },
+        //Materiales
         form2:{
             _id:'',
             existencia:'',
             tipoSolicitud:''
 
         },
+        //Materiales solicitados
         form3:{
             _id:'',
             cantidadsolicitada:''

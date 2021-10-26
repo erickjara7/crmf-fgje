@@ -7,11 +7,13 @@ import {Button} from 'reactstrap';
 import Cookies from 'universal-cookie';
 
 
-//VARIABLE URL API LOGIN
+//Ruta traer datos de la coleccion User
 const loginurl="http://localhost:4000/users/getuser";
+
+//Traer cookies de inicio de sesión
 const cookies = new Cookies();
 
-//Login
+
 class Login extends Component{
 //ESTADO LOGIN PARA GUARDAR LOS VALORES
     state={
@@ -32,7 +34,9 @@ class Login extends Component{
         });   
     }
 
-//METODO INICIAR SESION 
+//METODO INICIAR SESION
+//Valída que los campos esten llenos y que la información corresponda 
+//Genera las cookies de inicio de sesión  
     iniciarSesion=async()=>{
         await axios.get(loginurl)
         .then(response=>{
@@ -86,16 +90,19 @@ class Login extends Component{
         })
     }
 
+    //Alert para el link de "Aun no tengo una cuenta"
     aunnotengocuenta=async()=>{
-        alert("Favor de pasar al departamento de Recursos Materiales a registrarse.");
-        
+        alert("Favor de pasar al departamento de Recursos Materiales a registrarse.");        
     }
 
+    //Alert para el link de "Olvidé mi contraseña"
     olvidecontraseña=async()=>{
         alert("Favor de pasar al departamento de Recursos Materiales a solicitar la información correspondiente.");
    
     }
 
+    //Ciclo del vida: se ejecuta siempre.
+    //Valída los permisos de usuario
     componentDidMount(){  
         if (cookies.get('username')){
             if(cookies.get('userType') === 'Usuario'){

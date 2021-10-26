@@ -6,234 +6,257 @@ import '../css/Materiales.css';
 import '../img/logofiscalia.png';
 import Cookies from 'universal-cookie';
 
-
+//Ruta para hacer post y agg las entradas de material
 const aggEntradaMate ="http://localhost:4000/entradasmate/add";
+
+//Ruta traer datos de la coleccion Materiales
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
+
+//Ruta para hacer post y agg materiales
 const aggmaterial = "http://localhost:4000/materiales/add";
+
+//Ruta para borrar / modificar un material en especifico
 const dpsidmaterial = "http://localhost:4000/materiales/";
 
-
+//Variables para traer la fecha actual
 const today = new Date(),
 date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate() ;
 
+//Traer cookies de inicio de sesión
 const cookies = new Cookies();
 
+//Variable para modificar la existencia de los materiales
 var existencianueva = 0;
+
+//Arreglo para almacenar solo nombres de los materiales
 const nombrematerialesArray = [];
 
 
 class MaterialesV1RM extends Component{
-
-
-state={
-    busqueda:'',
-    data:[],
-    datamedida:['','Paquete','Pieza','Caja'],
-    datacategoria:['','Consumible','Limpieza','Embalaje','Reactivos y material químicos','Material de Id. Humana','Material de oficina','Tintas y toner'],
-    modalAggmaterial: false,
-    modalInsertar: false,
+    //Estado para guardar valores
+    state={
+        busqueda:'',
+        data:[],
+        datamedida:['','Paquete','Pieza','Caja'],
+        datacategoria:['','Consumible','Limpieza','Embalaje','Reactivos y material químicos','Material de Id. Humana','Material de oficina','Tintas y toner'],
+        modalAggmaterial: false,
+        modalInsertar: false,
+        
+        //form de material
+        form:{
+            _id:'',
+            nombre:'',
+            existencia:'',
+            unidadMedida:'',
+            categoria:'',        
+            marcamate:''              
+        },
+        //form de entradas material
+        form2:{
+            idmaterialEM:'',
+            nombreEM:'',
+            cantidadaggEM:'',
+            unidadMedidaEM:'',
+            categoriaEM:'',
+            marcamateEM:'',
+            caducidadmateEM:'',
+            tipomaterialEM:'',
+            loteEM:'',
+            fechaEM:'',
+            usuarioEM:''
+        }  
+    }
     
-    //form de material
-    form:{
-        _id:'',
-        nombre:'',
-        existencia:'',
-        unidadMedida:'',
-        categoria:'',        
-        marcamate:''              
-    },
-    //form de entradas material
-    form2:{
-        idmaterialEM:'',
-        nombreEM:'',
-        cantidadaggEM:'',
-        unidadMedidaEM:'',
-        categoriaEM:'',
-        marcamateEM:'',
-        caducidadmateEM:'',
-        tipomaterialEM:'',
-        loteEM:'',
-        fechaEM:'',
-        usuarioEM:''
-    }  
-}
- 
 
-peticionGet = async() =>{
-   await  axios.get(vermaterial).then(response =>{
-        this.setState({data:response.data});
-    }).catch(error=>{
-        console.log(error.message);
-    })
-}
+    //Petición para traer los datos de la url "vermaterial" y guardar en la variable data del estado
+    peticionGet = async() =>{
+    await  axios.get(vermaterial).then(response =>{
+            this.setState({data:response.data});
+        }).catch(error=>{
+            console.log(error.message);
+        })
+    }
 
+    //Petición post a url "aggmaterial" para registrar material
+    peticionPost=async()=>{
+        await axios.post(aggmaterial, this.state.form).then(response=>{
+            this.modalInsertar();
+            this.peticionGet();
+            alert("Se insertó correctamente")
+        }).catch(error=>{
+            alert("Error al guardar")
+            console.log(error.message);
+        })
+    }
 
-peticionPost=async()=>{
-    await axios.post(aggmaterial, this.state.form).then(response=>{
-        this.modalInsertar();
-        this.peticionGet();
-        alert("Se insertó correctamente")
-    }).catch(error=>{
-        alert("Error al guardar")
-        console.log(error.message);
-    })
-}
-
-peticionPostEntradasMate=async()=>{
-    await axios.post(aggEntradaMate, this.state.form2).then(response=>{
-        alert("Se registró correctamente")
-    }).catch(error=>{
-        alert("Error al guardar el registro de entrada de material")
-        console.log(error.message);
-    })
-
-}
-
-//PUT a existencia de los materiales
-peticionPut2 =()=>{
-    axios.put(dpsidmaterial+this.state.form._id, this.state.form).then(response=>{
-        alert (`La existencia de: ${this.state.form.nombre} se actualizó exitosamente.`);       
-        this.peticionGet();
-    })
-}
-
-validacionaggExistencia=async()=>{
-    this.modalAggmaterial();
-
-    if(this.state.form2.cantidadaggEM ===undefined || this.state.form2.tipomaterialEM === undefined || this.state.form2.loteEM===undefined){
-        alert("Favor de llenar todos los campos");
-    }else{
-        if(this.state.form2.cantidadaggEM <= 0){
-            alert("El valor Cantidad a agregar, no es válido");
-
-        }else{
-            existencianueva =  this.state.form.existencia + + this.state.form2.cantidadaggEM;
-            this.state.form.existencia = existencianueva;
-            this.peticionPostEntradasMate();
+    //Petición post a url "aggEntradaMate" para registrar la entrada de material
+    peticionPostEntradasMate=async()=>{
+        await axios.post(aggEntradaMate, this.state.form2).then(response=>{
+            alert("Se registró correctamente")
             this.peticionPut2();
+        }).catch(error=>{
+            alert("Error al guardar el registro de entrada de material")
+            console.log(error.message);
+        })
 
+    }
+
+    //Petición put a url "dpsidmaterial" para modificar la existencia de los materiales
+    peticionPut2 =()=>{
+        axios.put(dpsidmaterial+this.state.form._id, this.state.form).then(response=>{
+            alert (`La existencia de: ${this.state.form.nombre} se actualizó exitosamente.`);       
+            this.peticionGet();
+        })
+    }
+
+    //Validar los inputs del modalAggmaterial 
+    validacionaggExistencia=async()=>{
+        this.modalAggmaterial();
+
+        if(this.state.form2.cantidadaggEM ===undefined || this.state.form2.tipomaterialEM === undefined || this.state.form2.loteEM===undefined){
+            alert("Favor de llenar todos los campos");
+        }else{
+            if(this.state.form2.cantidadaggEM <= 0){
+                alert("El valor Cantidad a agregar, no es válido");
+
+            }else{
+                existencianueva =  this.state.form.existencia + + this.state.form2.cantidadaggEM;
+                this.state.form.existencia = existencianueva;
+                this.peticionPostEntradasMate();
+                //this.peticionPut2();
+
+            }
         }
     }
-}
 
-modalInsertar = () =>{
-    this.setState({modalInsertar: !this.state.modalInsertar})
-}
+    //Cambia el estado del modal (abrir y cerrar)
+    modalInsertar = () =>{
+        this.setState({modalInsertar: !this.state.modalInsertar})
+    }
 
-modalAggmaterial = () =>{
-    this.setState({modalAggmaterial: !this.state.modalAggmaterial})
-}
+    //Cambia el estado del modal (abrir y cerrar)
+    modalAggmaterial = () =>{
+        this.setState({modalAggmaterial: !this.state.modalAggmaterial})
+    }
 
-seleccionarMaterial = (material) =>{ 
-    this.setState({
-        tipoModal:'actualizar',
-        form:{
-            _id: material._id,
-            nombre: material.nombre,
-            existencia: material.existencia,
-            unidadMedida: material.unidadMedida,
-            categoria: material.categoria,
-            marcamate: material.marcamate,
+    //Cambia los variables del material por el material seleccionado
+    seleccionarMaterial = (material) =>{ 
+        this.setState({
+            tipoModal:'actualizar',
+            form:{
+                _id: material._id,
+                nombre: material.nombre,
+                existencia: material.existencia,
+                unidadMedida: material.unidadMedida,
+                categoria: material.categoria,
+                marcamate: material.marcamate,
 
-        },
-        form2:{
-            idmaterialEM: material._id,
-            nombreEM:material.nombre,           
-            unidadMedidaEM:material.unidadMedida,
-            categoriaEM:material.categoria,
-            marcamateEM:material.marcamate,                      
-            fechaEM:date,
-            usuarioEM:cookies.get('nombres')+' '+ cookies.get('apellidoP')+' '+ cookies.get('apellidoM'),
+            },
+            form2:{
+                idmaterialEM: material._id,
+                nombreEM:material.nombre,           
+                unidadMedidaEM:material.unidadMedida,
+                categoriaEM:material.categoria,
+                marcamateEM:material.marcamate,                      
+                fechaEM:date,
+                usuarioEM:cookies.get('nombres')+' '+ cookies.get('apellidoP')+' '+ cookies.get('apellidoM'),
 
-        }
-    })  
-}
+            }
+        })  
+    }
 
-validacionaggmaterial = () =>{
+    //Validar los inputs del modalInsertar y revisar si ya existe el material
+    validacionaggmaterial = () =>{
 
-    if((this.state.form.nombre === '' || this.state.form.existencia === '' || this.state.form.unidadMedida === '' || this.state.form.categoria ==='')){
-        alert("Favor de llenar todos los campos");
-    }else{
-
-        if(this.state.form.existencia <= 0){
-            alert("Valor existencia NO VÁLIDO")
-
+        if((this.state.form.nombre === '' || this.state.form.existencia === '' || this.state.form.unidadMedida === '' || this.state.form.categoria ==='')){
+            alert("Favor de llenar todos los campos");
         }else{
-            const resultado = nombrematerialesArray.find(nombres => nombres === this.state.form.nombre || 
-            nombres.toLowerCase() === this.state.form.nombre || 
-            nombres.toUpperCase() === this.state.form.nombre ||
 
-            nombres.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === this.state.form.nombre || 
-            nombres.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() === this.state.form.nombre || 
-            nombres.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase() === this.state.form.nombre )
-            
-            if (resultado){                
-                alert("Pueda que el producto ya exista, si no es así detalle el nombre del producto")
-            }else{                
-                this.peticionPost();
-            }                       
-        }        
-    }    
-}
+            if(this.state.form.existencia <= 0){
+                alert("Valor existencia NO VÁLIDO")
 
+            }else{
+                const resultado = nombrematerialesArray.find(nombres => nombres === this.state.form.nombre || 
+                nombres.toLowerCase() === this.state.form.nombre || 
+                nombres.toUpperCase() === this.state.form.nombre ||
 
-handleChange = async e =>{
-    e.persist();
-    await this.setState({
-        form:{
-            ...this.state.form,
-            [e.target.name]: e.target.value
-        }   
-    });
-}
+                nombres.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === this.state.form.nombre || 
+                nombres.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() === this.state.form.nombre || 
+                nombres.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase() === this.state.form.nombre )
+                
+                if (resultado){                
+                    alert("Pueda que el producto ya exista, si no es así detalle el nombre del producto")
+                }else{                
+                    this.peticionPost();
+                }                       
+            }        
+        }    
+    }
 
-onchangeform2 = async e =>{
-    e.persist();
-    await this.setState({
-        form2:{
-            ...this.state.form2,
-            [e.target.name]: e.target.value
-        }   
-    });
+    //Cambia el valor de las variables del form según lo que se escribe en el input
+    handleChange = async e =>{
+        e.persist();
+        await this.setState({
+            form:{
+                ...this.state.form,
+                [e.target.name]: e.target.value
+            }   
+        });
+    }
 
-}
+    //Cambia el valor de las variables del form2 según lo que se escribe en el input
+    onchangeform2 = async e =>{
+        e.persist();
+        await this.setState({
+            form2:{
+                ...this.state.form2,
+                [e.target.name]: e.target.value
+            }   
+        });
 
-onChange = async e =>{
-    e.persist();
-    await this.setState({busqueda: e.target.value});
-}
+    }
 
-cerrarSesion = () =>{
-    cookies.remove('_id',{path:"/"});
-    cookies.remove('nombres',{path:"/"});
-    cookies.remove('apellidoP',{path:"/"});
-    cookies.remove('apellidoM',{path:"/"});
-    cookies.remove('municipious',{path:"/"});
-    cookies.remove('username',{path:"/"});
-    cookies.remove('departamento',{path:"/"});
-    cookies.remove('userType',{path:"/"});
-    window.location.href='./';
-}
+    //Cambia el valor de la variable "busqueda" según lo que se escribe en el input
+    onChange = async e =>{
+        e.persist();
+        await this.setState({busqueda: e.target.value});
+    }
 
+    //Elimina las cookies de sesión y redirige al login
+    cerrarSesion = () =>{
+        cookies.remove('_id',{path:"/"});
+        cookies.remove('nombres',{path:"/"});
+        cookies.remove('apellidoP',{path:"/"});
+        cookies.remove('apellidoM',{path:"/"});
+        cookies.remove('municipious',{path:"/"});
+        cookies.remove('username',{path:"/"});
+        cookies.remove('departamento',{path:"/"});
+        cookies.remove('userType',{path:"/"});
+        window.location.href='./';
+    }
 
-listamateriales=()=>{
-    this.state.data.map(materiales=>{
-        nombrematerialesArray.push(materiales.nombre);
-    })
-}
+    //Llenado del arreglo "nombrematerialessArray" 
+    listamateriales=()=>{
+        this.state.data.map(materiales=>{
+            nombrematerialesArray.push(materiales.nombre);
+        })
+    }
 
-componentDidMount(){
-    this.peticionGet();
-    if(!cookies.get('username') ){
-        window.location.href="./";
-    }else if(cookies.get('userType') === 'Usuario'){
-        alert('Página no permitida, favor de autenticarse nuevamente.');
-        this.cerrarSesion();
-    }    
-}
+    //Ciclo del vida: se ejecuta siempre.
+    //Valída los permisos de usuario
+    componentDidMount(){
+        this.peticionGet();
+        if(!cookies.get('username') ){
+            window.location.href="./";
+        }else if(cookies.get('userType') === 'Usuario'){
+            alert('Página no permitida, favor de autenticarse nuevamente.');
+            this.cerrarSesion();
+        }    
+    }
 
     render(){
 
+        //Variable para escribir solo "form.(variable)" en vez de "this.state.form.(variable)"
         const {form} = this.state;
 
         return(
