@@ -26,7 +26,6 @@ const dpsidmaterial = "http://localhost:4000/materiales/";
 //Ruta para modificar un registro en especifico de la coleccion materialsolicitados
 const putmatesoli = "http://localhost:4000/materialsolicitado/";
 
-
 //Arreglo para copiar los datos guardados en "datamatesoli" para mantenerlo publico
 var materialesSolicitados = [];
 
@@ -39,14 +38,21 @@ var typesoli = '';
 //variable para copiar el valor del id de cada 1 de las materiales solicitados para ser agg al vector
 var vecIdMatesoli ='';
 
+//Arreglo guardar materiales solicitados de una solicitud seleccionada(se guardan doble)
 const vector =[];
+
+//Arreglo guarda materiales solicitados de una solicitud seleccionada(la mitad del arreglo Vector)
 let newvector =[];
 
 //variable para copiar el valor del id de cada 1 de las solicitudes para ser agg al vector
 var vecMateid='';
-var vecCanSol='';
-var i =0;
 
+//variable para copiar el valor de cantidad solicitada de cada 1 de las solicitudes para ser agg al vector
+var vecCanSol='';
+
+//Para iniciar el ciclo for
+var i =0;
+ 
 
 
 
@@ -54,6 +60,7 @@ var i =0;
 
 class SolicitudesRM extends Component{
 
+    //Estado para guardar valores
     state={
         datamate:[],
         data:[],
@@ -79,7 +86,8 @@ class SolicitudesRM extends Component{
             cantidadsolicitada:''
         }
     }
-    
+
+    //Petición para traer los datos de la url "versolicitud" y guardar en la variable data del estado
     peticiongetsoli = async()=>{
         await axios.get(versolicitud).then(response=>{
             this.setState({data:response.data})
@@ -88,6 +96,7 @@ class SolicitudesRM extends Component{
         })    
     }
 
+    //Petición para traer los datos de la url "vermaterialsoli" y guardar en la variable datamatesoli del estado
     peticiongetmatesoli = async()=>{
         await axios.get(vermaterialsoli).then(response=>{
             this.setState({datamatesoli: response.data});
@@ -97,6 +106,7 @@ class SolicitudesRM extends Component{
 
     }
 
+    //Petición para modificar las solicitudes(cambiar estado a entregada)
     peticionPutestadoSoli = ()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEntregarMaterial();
@@ -109,11 +119,14 @@ class SolicitudesRM extends Component{
            
     }
 
+    //Cambia el estado del modal (abrir y cerrar)
     modalEntregarMaterial =()=>{
         this.setState({modalEntregarMaterial: !this.state.modalEntregarMaterial});
         window.location.href='./solicitudes';
     }
 
+    //Se llena el vector con id del material, y cantidad solicitada y id de registro del material solicitado
+    //correspondientes a la solicitud seleccionada
     selecMaterialaCambiar=async(materialesSolicitados)=>{
         if(solicitudID !== ''){
             if(materialesSolicitados.idSolicitud === solicitudID){
@@ -129,6 +142,8 @@ class SolicitudesRM extends Component{
         }   
     }
     
+    //Entrega de material, se modifica la existencia de la tabla materiales
+    //se descuentan los materiales que se pidieron en la solicitud
     peticionPutExistencia=()=>{
         //se llena un nuevo vector con la mitad del vector de los materiales solicitados
         for(  i = i; i < vector.length/2; i ++){
@@ -192,7 +207,8 @@ class SolicitudesRM extends Component{
             })        
         })
     }
-      
+    
+    //Cambia los valores de las solicitudes por la de la solicitud seleccionada
     seleccionarsoliput =(solicitudes)=>{
         //cambia los valores segun la solicitud seleccionada para hacer el put
         this.setState({
@@ -223,6 +239,7 @@ class SolicitudesRM extends Component{
 
     }
 
+    //Elimina las cookies de sesión y redirige al login
     cerrarSesion =() =>{
     //eliminar cookies para no ir a paginas sin autenticarse
         cookies.remove('_id',{path:"/"});
@@ -236,6 +253,8 @@ class SolicitudesRM extends Component{
         window.location.href='./';
     }
 
+    //Ciclo del vida: se ejecuta siempre.
+    //Valída los permisos de usuario
     componentDidMount(){
         this.peticiongetmatesoli();
         this.peticiongetsoli();

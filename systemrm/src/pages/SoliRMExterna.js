@@ -9,23 +9,29 @@ import '../css/solisunmenu.css';
 import '../img/logofiscalia.png';
 
 
-
+//Traer cookies de inicio de sesión
 const cookies = new Cookies();
 
+//Ruta para hacer post y agg solicitudes
 const aggsolicitud = "http://localhost:4000/solicitud/add";
 
+//Ruta traer datos de la coleccion solicitud
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
 
+//Ruta para modificar un registro en especifico de la coleccion solicitud
 const putsoli = "http://localhost:4000/solicitud/";
 
+//Ruta traer datos de la coleccion materialsolicitados
 const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 
+//Variables para traer la fecha actual
 const today = new Date(),
 date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate();
 
 
 class SoliRMExterna extends Component{
 
+    //Estado para guardar valores
     state={
        
         solicitudid:'',
@@ -49,6 +55,7 @@ class SoliRMExterna extends Component{
         }
     }
 
+    //Petición para traer los datos de la url "versolicitud" y guardar en la variable data del estado
     peticionGet = async() =>{
         await  axios.get(versolicitud).then(response =>{
              this.setState({data:response.data});        
@@ -57,6 +64,7 @@ class SoliRMExterna extends Component{
         })
     }
 
+    //Petición para traer los datos de la url "vermaterialsoli" y guardar en la variable datamate del estado
     peticiongetmatesoli = async() =>{
          await axios.get(vermaterialsoli).then(response =>{
              this.setState({datamate:response.data});            
@@ -65,6 +73,7 @@ class SoliRMExterna extends Component{
         })
     }
 
+    //Petición para modificar las solicitudes
     peticionPutestadoSoli = ()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEnviarsoli();
@@ -74,7 +83,7 @@ class SoliRMExterna extends Component{
         })
     }
 
-
+    //Petición post a url "aggsolicitud" para registrar solicitudes
     peticionpostsoli =async ()=>{
         
         await axios.post(aggsolicitud,this.state.form).then(response=>{
@@ -87,17 +96,19 @@ class SoliRMExterna extends Component{
        })          
     }
 
-
+    //Cambia el estado del modal (abrir y cerrar)
     modalInsertar = () =>{
         this.setState({
             modalInsertar: !this.state.modalInsertar,            
         })
     }
 
+    //Cambia el estado del modal (abrir y cerrar)
     modalEnviarsoli =()=>{
         this.setState({modalEnviarsoli: !this.state.modalEnviarsoli})
     }
 
+    //Validar los inputs del modalInsertar
     validaciónmodal =()=>{
         if(this.state.form.solicitante === ''  || this.state.form.municipiosoli ==='' || this.state.form.departamentosoli === ''
             || this.state.form.area === ''  || this.state.form.tipoSolicitud === ''){           
@@ -107,6 +118,7 @@ class SoliRMExterna extends Component{
         }       
     }
 
+    //Cambia el valor de las variables del form según lo que se escribe en el input
     handleChange = async e =>{
         e.persist();
         await this.setState({            
@@ -117,6 +129,7 @@ class SoliRMExterna extends Component{
         });
     }
 
+    //Guarda en cookies el valor id de la solicitud seleccionada y te redirige a la ventana de materiales a elegir
     seleccionarsolicitud =(solicitudes)=>{       
         this.setState({            
             form:{
@@ -131,6 +144,8 @@ class SoliRMExterna extends Component{
        }      
     }
 
+    //Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Pendiente"
+    //Desactiva botones si la solicitud ya fue enviada
     seleccionarsoliput =(solicitudes)=>{
         this.setState({
             form:{
@@ -149,6 +164,7 @@ class SoliRMExterna extends Component{
         }
     }
 
+    //Elimina las cookies de sesión y redirige al login
     cerrarSesion =() =>{
         //eliminar cookies para no ir a paginas sin autenticarse
             cookies.remove('_id',{path:"/"});
@@ -162,6 +178,8 @@ class SoliRMExterna extends Component{
             window.location.href='./';
     }
     
+    //Ciclo del vida: se ejecuta siempre.
+    //Valída los permisos de usuario
     componentDidMount(){
         this.peticionGet();
         this.peticiongetmatesoli();       
@@ -178,6 +196,8 @@ class SoliRMExterna extends Component{
 
 
     render(){
+
+        //Variable para escribir solo "form.(variable)" en vez de "this.state.form.(variable)"
         const {form} = this.state;
        
         return(
