@@ -179,6 +179,8 @@ class SolicitudesRM extends Component{
                             });
                             this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
                             this.state.form2._id = materialesvec.vecMateid;
+                            //linea nueva
+                           // this.state.form3.cantidadsolicitada = this.state.form2.existencia;
                            
 
                             axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
@@ -374,7 +376,7 @@ class SolicitudesRM extends Component{
                 </Modal>
 
                 <footer class="footer">
-                    Jacqueline Leal  | 2021© 
+                    <a class= "a" href="https://github.com/JacquelineLeal"> Jacqueline Leal  | 2021© </a>
                 </footer>           
             </div>
         );

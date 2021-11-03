@@ -237,7 +237,7 @@ class ReportexMate extends Component{
 
 
                 <footer class="footer">
-                    Jacqueline Leal  | 2021© 
+                    <a class= "a" href="https://github.com/JacquelineLeal"> Jacqueline Leal  | 2021© </a>
                 </footer>
                 
             </div>                                       
