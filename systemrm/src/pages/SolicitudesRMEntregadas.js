@@ -250,18 +250,20 @@ class SolicitudesRMEntregadas extends Component{
                 <div>
                     {this.state.data.map((solicitudes, index)=>{
                         if(solicitudes.estado === 'Entregada'){
+                            var solifech = solicitudes.fecha;
+                            var cutfechacompleta = solifech.substr(0,10);      
                             return(
                                 <Accordion key={index}>
                                     <Card>
                                         <Accordion.Toggle as={Card.Header}eventKey={solicitudes}>
-                                            {solicitudes.departamentosoli + '/' + solicitudes.area +'--' + solicitudes.fecha}<br/>
+                                            {solicitudes.departamentosoli + '/' + solicitudes.area +'--' + cutfechacompleta}<br/>
                                             <button className="btn btn-info btn-sm" onClick={()=> this.quitar(solicitudes)}>Quitar</button>
                                         </Accordion.Toggle>
 
                                         <Accordion.Collapse eventKey={solicitudes}>
                                             <Card.Body>
                                                 <div id = "invoice">
-                                                    <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
+                                                    <label><b>Fecha:</b> {cutfechacompleta}</label><br/>
                                                     <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
                                                     <label><b>Municipio:</b> {solicitudes.municipiosoli}</label><br/>
                                                     <label><b>Departamento: </b>{solicitudes.departamentosoli}</label><br/>

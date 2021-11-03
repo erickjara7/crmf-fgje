@@ -38,6 +38,7 @@ class SolicitudesOD extends Component{
         data:[],
         modalInsertar: false,
         modalEnviarsoli: false,
+        modalCancelarsoli: false,
         form:{
             _id:'',
             fecha:date,
@@ -68,7 +69,7 @@ class SolicitudesOD extends Component{
         })
     }
 
-    //Petición para modificar las solicitudes
+    //Petición para modificar las solicitudes (enviar soli)
     peticionPutestadoSoli = ()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEnviarsoli();
@@ -76,6 +77,16 @@ class SolicitudesOD extends Component{
         }).catch(error=>{
             alert("Error al enviar")
         })                    
+    }
+
+    //Petición para modificar las solicitudes (cancelar soli)
+    peticionputcancelarSoli = () =>{
+        axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
+            this.modalCancelarsoli();
+            this.peticionGet();
+        }).catch(error=>{
+            alert("Error al enviar")
+        })
     }
 
     //Petición post a url "aggsolicitud" para registrar solicitudes
@@ -110,6 +121,11 @@ class SolicitudesOD extends Component{
         this.setState({modalEnviarsoli: !this.state.modalEnviarsoli})
     }
 
+    //Cambia el estado del modal (abrir y cerrar)
+    modalCancelarsoli=()=>{
+        this.setState({modalCancelarsoli: !this.state.modalCancelarsoli})
+    }
+
     //Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Pendiente"
     //Desactiva botones si la solicitud ya fue enviada
     seleccionarsoliput =(solicitudes)=>{
@@ -130,6 +146,23 @@ class SolicitudesOD extends Component{
             }
         }
 
+    }
+
+    //Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Cancelada"
+    selecSoliCancelar=(solicitudes)=>{
+        this.setState({
+            form:{
+                _id: solicitudes._id,
+                estado: 'Cancelada'
+            }
+        })
+        console.log(this.state.form._id)
+        if(this.state.form._id === ''){
+
+        }else{
+            this.setState({modalCancelarsoli :true})
+            console.log(`ya tengo: ${this.state.form._id}`);
+        }
     }
 
     //Guarda en cookies el valor id de la solicitud seleccionada y te redirige a la ventana de materiales a elegir
@@ -233,17 +266,19 @@ class SolicitudesOD extends Component{
                 {this.state.data.map((solicitudes,index)  =>{
 
                     if((solicitudes.estado === 'Iniciada' || solicitudes.estado ==='Pendiente') && (solicitudes.solicitante === cookies.get('nombres') +' '+ cookies.get('apellidoP') +' '+ cookies.get('apellidoM'))){
+                        var solifech = solicitudes.fecha;
+                        var cutfechacompleta = solifech.substr(0,10);      
                         return(
                             <Accordion key={index}>
                                  <Card>
                                     <Accordion.Toggle as={Card.Header} eventKey={solicitudes}>
-                                        {solicitudes.departamentosoli + ' / ' + solicitudes.area + ' -- ' + solicitudes.fecha}                                                                                                       
+                                        {solicitudes.departamentosoli + ' / ' + solicitudes.area + ' -- ' + cutfechacompleta}                                                                                                       
                                     </Accordion.Toggle>
     
                                     <Accordion.Collapse eventKey={solicitudes}>                                              
                                         <Card.Body>
                                                         
-                                            <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
+                                            <label><b>Fecha:</b> {cutfechacompleta}</label><br/>
                                             <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
                                             <label><b>Municipio:</b> {solicitudes.municipiosoli}</label><br/>
                                             <label><b>Departamento: </b>{solicitudes.departamentosoli}</label><br/>
@@ -285,6 +320,9 @@ class SolicitudesOD extends Component{
                                             
                                             <Button color="primary" onClick={()=>this.seleccionarsolicitud(solicitudes)} >Agregar Material</Button>
                                             <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}} >Enviar</Button>
+                                            <br/><br/>
+                                            <h6>De click si desea cancelar la solicitud y eliminarla</h6>
+                                            <Button color="danger" onClick={()=>this.selecSoliCancelar(solicitudes)}>Cancelar Solicitud</Button>
                                                     
                                                         
                                                        
@@ -369,6 +407,18 @@ class SolicitudesOD extends Component{
                     </ModalFooter>
 
 
+                </Modal>
+
+
+                <Modal isOpen={this.state.modalCancelarsoli}>
+                    <ModalBody>
+                        ¿Seguro de cancelar esta solicitud?
+                        La solicitud será eliminada permanentemente
+                    </ModalBody>
+                    <ModalFooter>
+                        <button className="btn btn-success"  onClick={()=>this.peticionputcancelarSoli()} >Si</button>
+                        <button className="btn btn-danger"  onClick={()=> this.modalCancelarsoli()}>No</button>
+                    </ModalFooter>
                 </Modal>
 
                 <footer class="footer">

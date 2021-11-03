@@ -10,7 +10,7 @@ const SolicitudSchema = Schema({
     departamentosoli:{type:String,required:true},
     area:{type:String,required:true},
     tipoSolicitud:{type:String,required:true, enum: ['Requisición','Préstamo']},
-    estado:{type:String,required:true, enum:['Iniciada','Pendiente','Entregada','Obsolet']}
+    estado:{type:String,required:true, enum:['Iniciada','Pendiente','Entregada','Obsolet', 'Cancelada','Prestado']}
 });
 
 module.exports = mongoose.model('Solicitud', SolicitudSchema)

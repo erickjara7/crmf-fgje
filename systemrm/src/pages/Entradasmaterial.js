@@ -166,6 +166,7 @@ class Entradasmaterial extends Component{
                                                 var fechEntrada = material.fechaEM;
                                                 var cutfechaaño = fechEntrada.substr(0,4);
                                                 var cutfechames = fechEntrada.substr(5,2);
+                                                var cutfechacompleta = fechEntrada.substr(0,10);
                                                 
                                                 if(cutfechaaño === this.state.añoS && this.state.mesS === 'TODOS'){
                                                     return(
@@ -177,7 +178,7 @@ class Entradasmaterial extends Component{
                                                             <td>{material.tipomaterialEM}</td>
                                                             <td>{material.loteEM}</td>
                                                             <td>{material.usuarioEM}</td>
-                                                            <td>{material.fechaEM}</td>
+                                                            <td>{cutfechacompleta}</td>
                                                                                                                 
                                                         </tr>
                                                     )
@@ -193,7 +194,7 @@ class Entradasmaterial extends Component{
                                                                 <td>{material.tipomaterialEM}</td>
                                                                 <td>{material.loteEM}</td>
                                                                 <td>{material.usuarioEM}</td> 
-                                                                <td>{material.fechaEM}</td>
+                                                                <td>{cutfechacompleta}</td>
                                                                                                                 
                                                             </tr>                                                    
                                                         )

@@ -194,6 +194,9 @@ class ReportesRM extends Component{
                                         var solifech = solicitudes.fecha;
                                         var cutfechaaño = solifech.substr(0,4);
                                         var cutfechames = solifech.substr(5,2);
+                                        var cutfechacompleta = solifech.substr(0,10);
+
+
 
                                         if(cutfechaaño === this.state.añoS && this.state.mesS === 'TODOS'){
                                                     
@@ -210,7 +213,7 @@ class ReportesRM extends Component{
                                                                         <td>{solicitudes.solicitante}</td>
                                                                         <td>{solicitudes.departamentosoli}</td>
                                                                         <td>{solicitudes.area}</td>
-                                                                        <td>{solicitudes.fecha}</td>
+                                                                        <td>{cutfechacompleta}</td>
                                                                     </tr>
                                                                 )                    
                                                             }
@@ -234,7 +237,7 @@ class ReportesRM extends Component{
                                                                             <td>{solicitudes.solicitante}</td>
                                                                             <td>{solicitudes.departamentosoli}</td>
                                                                             <td>{solicitudes.area}</td>
-                                                                            <td>{solicitudes.fecha}</td>
+                                                                            <td>{cutfechacompleta}</td>
                                                                         </tr>
                                                                     )                        
                                                                 }

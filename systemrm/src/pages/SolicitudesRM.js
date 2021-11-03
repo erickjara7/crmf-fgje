@@ -154,8 +154,79 @@ class SolicitudesRM extends Component{
             axios.get(vermaterial)
             .then(response=>{
                 response.data.map(materiales=>{
+                    if(this.state.form2.tipoSolicitud === 'Requisición'){
+                        console.log("requisiscion");
+                        //se busca el material por id y si es igual al del arreglo se cambian el valor exixtencia 
+                        if(materiales._id === materialesvec.vecMateid){
+                            // si no hay material se elimina de la solicitud la requsicion de ese material 
+                            if(materiales.existencia === 0){
+                                this.setState({
+                                    form3:{
+                                        _id:materialesvec.vecIdMatesoli,                                        
+                                    }                            
+                                });
+                            
+                                //this.state.form2.existencia = materiales.existencia;
+                                axios.delete(putmatesoli+this.state.form3._id).then(response=>{
+
+                                });
+
+                               /* axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
+                                }).catch(error=>{
+                                    alert("Error al entregar los materiales");
+                                })*/
+
+                            // si lo que hay es menor a lo que pidió se modifica la cantidad solicitada por la existencia
+                            }else if(materiales.existencia <= materialesvec.vecCanSol){
+                                this.setState({
+                                    form3:{
+                                        _id:materialesvec.vecIdMatesoli,
+                                        cantidadsolicitada: materiales.existencia
+                                    }                            
+                                });
+                                this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
+                                this.state.form2._id = materialesvec.vecMateid;
+                                //linea nueva
+                            // this.state.form3.cantidadsolicitada = this.state.form2.existencia;
+                            
+
+                                axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
+                                }).catch(error=>{
+                                    alert("Error al entregar los materiales");
+                                });
+
+                                axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
+                                }).catch(error=>{
+                                    alert("Error al entregar los materiales");
+                                })
+
+
+                            
+                            // si la existencia es mayor a la cantidad solicitada se cambia la existencia restando lo solicitado
+                            }else{                           
+                                this.state.form2._id = materialesvec.vecMateid;
+                                this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
+
+                                axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
+                                }).catch(error=>{
+                                    alert("Error al entregar los materiales");
+                                })
+                            }                                            
+                        }   
+
+                        }else{
+                            if(this.state.form2.tipoSolicitud === 'Préstamo'){
+                                console.log("prestamoo");
+
+                            }
+                        }
+
+
+
+
+
                     //se busca el material por id y si es igual al del arreglo se cambian el valor exixtencia 
-                    if(materiales._id === materialesvec.vecMateid){
+                /*    if(materiales._id === materialesvec.vecMateid){
                         // si no hay material se elimina de la solicitud la requsicion de ese material 
                         if(materiales.existencia === 0){
                             this.setState({
@@ -193,11 +264,11 @@ class SolicitudesRM extends Component{
                             this.state.form2._id = materialesvec.vecMateid;
                             this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
                         }                                            
-                    }             
+                    } */            
                 })
                 
 
-                if(this.state.form2.tipoSolicitud === 'Requisición'){
+              /*  if(this.state.form2.tipoSolicitud === 'Requisición'){
  
                     axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
                     }).catch(error=>{
@@ -205,7 +276,7 @@ class SolicitudesRM extends Component{
                     })
                 }else if(this.state.form2.tipoSolicitud === 'Préstamo'){
                   
-                }               
+                }  */            
             })        
         })
     }
@@ -301,19 +372,21 @@ class SolicitudesRM extends Component{
                 
 
                 {this.state.data.map((solicitudes,index)=>{
-                    if(solicitudes.estado === 'Pendiente'){                       
+                    if(solicitudes.estado === 'Pendiente'){ 
+                        var solifech = solicitudes.fecha;
+                        var cutfechacompleta = solifech.substr(0,10);                      
                         return(
 
                             <Accordion key={index}>
                                 <Card>
                                     <Accordion.Toggle as={Card.Header} eventKey={solicitudes}>
-                                        {solicitudes.departamentosoli + ' / ' + solicitudes.area + ' -- ' + solicitudes.fecha}
+                                        {solicitudes.departamentosoli + ' / ' + solicitudes.area + ' -- ' + cutfechacompleta}
                                     </Accordion.Toggle>
 
                                     <Accordion.Collapse eventKey={solicitudes}>
                                         <Card.Body>                                    
                                             <div id="invoice" >
-                                                <label><b>Fecha:</b> {solicitudes.fecha}</label><br/>
+                                                <label><b>Fecha:</b> {cutfechacompleta}</label><br/>
                                                 <label><b>Solicitante:</b> {solicitudes.solicitante}</label><br/>
                                                 <label><b>Municipio:</b> {solicitudes.municipiosoli}</label><br/>
                                                 <label><b>Departamento: </b>{solicitudes.departamentosoli}</label><br/>
