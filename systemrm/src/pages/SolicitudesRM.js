@@ -119,6 +119,14 @@ class SolicitudesRM extends Component{
            
     }
 
+    peticiongetColletionMateriales=async()=>{
+        await axios.get(vermaterial).then(response=>{
+            this.setState({datamate: response.data});
+        }).catch(error=>{
+            console.log(error.message);
+        })
+    }
+
     //Cambia el estado del modal (abrir y cerrar)
     modalEntregarMaterial =()=>{
         this.setState({modalEntregarMaterial: !this.state.modalEntregarMaterial});
@@ -155,9 +163,11 @@ class SolicitudesRM extends Component{
             .then(response=>{
                 response.data.map(materiales=>{
                     if(this.state.form2.tipoSolicitud === 'Requisición'){
-                        console.log("requisiscion");
+                        //console.log("requisiscion");
                         //se busca el material por id y si es igual al del arreglo se cambian el valor exixtencia 
                         if(materiales._id === materialesvec.vecMateid){
+                            console.log(`material : ${materialesvec.vecMateid}`);
+                            console.log(`cantidad: ${materialesvec.vecCanSol}`);
                             // si no hay material se elimina de la solicitud la requsicion de ese material 
                             if(materiales.existencia === 0){
                                 this.setState({
@@ -166,15 +176,154 @@ class SolicitudesRM extends Component{
                                     }                            
                                 });
                             
+                                console.log(`MATERIAL EXIS = 0 `);
+                                console.log("------------------------");
                                 //this.state.form2.existencia = materiales.existencia;
                                 axios.delete(putmatesoli+this.state.form3._id).then(response=>{
 
                                 });
+                               
 
                                /* axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
                                 }).catch(error=>{
                                     alert("Error al entregar los materiales");
                                 })*/
+
+                                // si lo que hay es menor a lo que pidió se modifica la cantidad solicitada por la existencia
+                            }else{
+                                if(materiales.existencia === materialesvec.vecCanSol){
+                                    this.setState({
+                                        form3:{
+                                            _id:materialesvec.vecIdMatesoli,
+                                            cantidadsolicitada: materialesvec.vecCanSol
+                                        }
+                                    })
+                                    console.log(`EXIS = CANSOL  existencia = ${materiales.existencia}`);
+                                    this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
+                                    this.state.form2._id = materialesvec.vecMateid;
+
+                                    axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
+                                    }).catch(error=>{
+                                        alert("Error al entregar los materiales");
+                                    })
+                                    
+
+
+                                }else{
+                                    if(materiales.existencia < materialesvec.vecCanSol){
+                                        this.setState({
+                                            form3:{
+                                                _id:materialesvec.vecIdMatesoli,
+                                                cantidadsolicitada: materiales.existencia
+                                            }                            
+                                        });
+                                        console.log(`EXIS MENOR A CANSOL mate exis: ${materiales.existencia}`);
+                                        console.log(`CANSOL: ${this.state.form3.cantidadsolicitada}`);
+                                        this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
+                                        this.state.form2._id = materialesvec.vecMateid;
+                                        
+
+                                        axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
+                                        }).catch(error=>{
+                                            alert("Error al entregar los materiales");
+                                        });
+                                        //this.state.form3.cantidadsolicitada = materiales.existencia;
+
+                                        axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
+                                        }).catch(error=>{
+                                            alert("Error al entregar los materiales");
+                                        });
+                                        
+
+                                    }else{
+                                        if(materiales.existencia > materialesvec.vecCanSol){
+                                            this.state.form2._id = materialesvec.vecMateid;
+                                            this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
+                                            console.log(`EXIS MAYOR mate exis ${materiales.existencia}`);
+        
+                                            axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{         
+                                            }).catch(error=>{
+                                                alert("Error al entregar los materiales");
+                                            })
+                                            
+
+                                        }
+                                    }
+                                }
+
+                                //--------------------------------------------------------------------------
+                              /*  if(materiales.existencia <= materialesvec.vecCanSol){
+                                    this.setState({
+                                        form3:{
+                                            _id:materialesvec.vecIdMatesoli,
+                                            cantidadsolicitada: materiales.existencia
+                                        }                            
+                                    });
+                                    this.state.form3.cantidadsolicitada = materiales.existencia;
+                                    this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
+                                    this.state.form2._id = materialesvec.vecMateid;
+                                    
+                                    //linea nueva
+                                    // this.state.form3.cantidadsolicitada = this.state.form2.existencia;
+                                
+
+                                    axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
+                                        console.log("-------------------------------------------------------------");
+                                        console.log(`VALOR MAYOR put mate soli con: ${materialesvec.vecCanSol} `);
+                                        console.log(`existencia de material: ${materiales.existencia}`);
+                                        console.log(`quedan ${this.state.form2.existencia}`);
+                                        console.log("-------------------------------------------------");
+                                    }).catch(error=>{
+                                        alert("Error al entregar los materiales");
+                                    });
+
+                                    axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
+                                    }).catch(error=>{
+                                        alert("Error al entregar los materiales");
+                                    })
+                                
+
+                            
+                                // si la existencia es mayor a la cantidad solicitada se cambia la existencia restando lo solicitado
+                                }else{                           
+                                    this.state.form2._id = materialesvec.vecMateid;
+                                    this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
+
+                                    axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{ 
+                                        console.log(`Normal materialexistencia ${materiales.existencia}`);  
+                                        console.log(`VALOR NORMAL put material con ${materialesvec.vecCanSol}`);      
+                                        console.log(`y quedan: ${this.state.form2.existencia}`);           
+                                    }).catch(error=>{
+                                        alert("Error al entregar los materiales");
+                                    })
+                                }     */                                       
+                            }   
+
+                        }else{
+                            if(this.state.form2.tipoSolicitud === 'Préstamo'){
+                                console.log("prestamoo");
+
+                            }
+                        }
+
+
+
+
+
+                        //se busca el material por id y si es igual al del arreglo se cambian el valor exixtencia 
+                     /*    if(materiales._id === materialesvec.vecMateid){
+                            // si no hay material se elimina de la solicitud la requsicion de ese material 
+                            if(materiales.existencia === 0){
+                                this.setState({
+                                    form3:{
+                                        _id:materialesvec.vecIdMatesoli,
+                                    }                            
+                                });
+                            
+                                this.state.form2.existencia = materiales.existencia;
+                                axios.delete(putmatesoli+this.state.form3._id).then(response=>{
+
+                                });
 
                             // si lo que hay es menor a lo que pidió se modifica la cantidad solicitada por la existencia
                             }else if(materiales.existencia <= materialesvec.vecCanSol){
@@ -193,78 +342,15 @@ class SolicitudesRM extends Component{
                                 axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
                                 }).catch(error=>{
                                     alert("Error al entregar los materiales");
-                                });
-
-                                axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
-                                }).catch(error=>{
-                                    alert("Error al entregar los materiales");
                                 })
-
-
                             
                             // si la existencia es mayor a la cantidad solicitada se cambia la existencia restando lo solicitado
                             }else{                           
                                 this.state.form2._id = materialesvec.vecMateid;
                                 this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
-
-                                axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
-                                }).catch(error=>{
-                                    alert("Error al entregar los materiales");
-                                })
                             }                                            
-                        }   
-
-                        }else{
-                            if(this.state.form2.tipoSolicitud === 'Préstamo'){
-                                console.log("prestamoo");
-
-                            }
-                        }
-
-
-
-
-
-                    //se busca el material por id y si es igual al del arreglo se cambian el valor exixtencia 
-                /*    if(materiales._id === materialesvec.vecMateid){
-                        // si no hay material se elimina de la solicitud la requsicion de ese material 
-                        if(materiales.existencia === 0){
-                            this.setState({
-                                form3:{
-                                    _id:materialesvec.vecIdMatesoli,
-                                }                            
-                            });
-                           
-                            this.state.form2.existencia = materiales.existencia;
-                            axios.delete(putmatesoli+this.state.form3._id).then(response=>{
-
-                            });
-
-                        // si lo que hay es menor a lo que pidió se modifica la cantidad solicitada por la existencia
-                        }else if(materiales.existencia <= materialesvec.vecCanSol){
-                            this.setState({
-                                form3:{
-                                    _id:materialesvec.vecIdMatesoli,
-                                    cantidadsolicitada: materiales.existencia
-                                }                            
-                            });
-                            this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
-                            this.state.form2._id = materialesvec.vecMateid;
-                            //linea nueva
-                           // this.state.form3.cantidadsolicitada = this.state.form2.existencia;
-                           
-
-                            axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
-                            }).catch(error=>{
-                                alert("Error al entregar los materiales");
-                            })
-                           
-                        // si la existencia es mayor a la cantidad solicitada se cambia la existencia restando lo solicitado
-                        }else{                           
-                            this.state.form2._id = materialesvec.vecMateid;
-                            this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
-                        }                                            
-                    } */            
+                        } */ 
+                    }           
                 })
                 
 
@@ -277,7 +363,7 @@ class SolicitudesRM extends Component{
                 }else if(this.state.form2.tipoSolicitud === 'Préstamo'){
                   
                 }  */            
-            })        
+            }) //del   esteee tambien     
         })
     }
     
@@ -331,6 +417,7 @@ class SolicitudesRM extends Component{
     componentDidMount(){
         this.peticiongetmatesoli();
         this.peticiongetsoli();
+        this.peticiongetColletionMateriales();
 
         //cookies para no ir a paginas sin autenticarse
         if (!cookies.get('username')){
@@ -368,7 +455,8 @@ class SolicitudesRM extends Component{
                 <button type="button" className="btn btn-outline-light col-4"  onClick={()=> window.location.href="./solicitudesrmext"}>Solicitudes Externas</button>
                 <br/>
                 <h2>Solicitudes Pendientes</h2>
-                <br/> <br/> <br/>
+                <br/> <br/> 
+                <h6>De click en una solicitud para ver su información</h6>
                 
 
                 {this.state.data.map((solicitudes,index)=>{

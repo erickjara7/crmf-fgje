@@ -225,7 +225,7 @@ class MaterialesAERM extends Component{
                                             <td>{material.unidadMedida}</td>
                                             <td>{material.categoria}</td>
                                             <td>
-                                                <Button color="danger" onClick={()=>  { this.seleccionarmaterial(material); this.modalInsertar()}}>Agregar</Button>
+                                                <Button color="danger" onClick={()=>  { this.seleccionarmaterial(material)}}>Agregar</Button>
                                             </td>
                                         </tr>
                                     )

@@ -100,7 +100,8 @@ class SoliRMExterna extends Component{
         await axios.post(aggsolicitud,this.state.form).then(response=>{
             this.modalInsertar();
             alert("SOLICITUD CREADA, AHORA ELIJA LA SOLICITUD Y PROCEDA A ELEGIR LOS MATERIALES ");   
-            this.peticionGet();
+            window.location.href="./solicitudesrmext"
+            //this.peticionGet();
        })
        .catch(error=>{
            alert('Error al crear la solicitud')
@@ -153,7 +154,10 @@ class SoliRMExterna extends Component{
             }            
         })
        cookies.set('isolicitud',this.state.form._id,{path:"/"})
-       if(cookies.get('isolicitud') && solicitudes.estado==='Iniciada'){
+       
+       if(cookies.get('isolicitud')  && solicitudes.estado==='Iniciada'){
+        console.log(cookies.get('isolicitud'));
+
         window.location.href="./materialesaerm";
        }else{
 

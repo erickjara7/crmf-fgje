@@ -94,8 +94,8 @@ class SolicitudesOD extends Component{
         axios.post(aggsolicitud,this.state.form).then(response=>{
             this.modalInsertar();
             alert("SOLICITUD CREADA, AHORA ELIJA LA SOLICITUD Y PROCEDA A ELEGIR LOS MATERIALES ");
-
-            this.peticionGet();
+            window.location.href="./solicitudesodep"
+            //this.peticionGet();
         })
         .catch(error=>{
             alert('Error al crear la solicitud')

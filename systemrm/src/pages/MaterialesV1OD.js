@@ -127,7 +127,11 @@ class MaterialesV1OD extends Component{
         if(material.existencia === 0){
             alert("Este material no se encuentra disponible por el momento");
         }else{
-            this.modalInsertar();
+            if(material.existencia > 0){
+                this.modalInsertar();
+
+            }
+            
         }
 
     }
@@ -231,7 +235,7 @@ class MaterialesV1OD extends Component{
                                             <td>{material.unidadMedida}</td>
                                             <td>{material.categoria}</td>
                                             <td>
-                                                <Button color="danger" onClick={()=>  {this.seleccionarmaterial(material); this.modalInsertar()}}>Agregar</Button>
+                                                <Button color="danger" onClick={()=>  {this.seleccionarmaterial(material)}}>Agregar</Button>
                                             </td>
                                         </tr>
                                     )   
