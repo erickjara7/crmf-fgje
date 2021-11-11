@@ -63,6 +63,7 @@ class SolicitudesRM extends Component{
     //Estado para guardar valores
     state={
         datamate:[],
+        newdatamate:[],
         data:[],
         datamatesoli:[],
         modalEntregarMaterial: false,
@@ -111,7 +112,7 @@ class SolicitudesRM extends Component{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEntregarMaterial();
             alert("Si desea descargar la solicitud, dirijase a solicitudes entregadas");
-            window.location.href='./solicitudes';
+           // window.location.href='./solicitudes';
         }).catch(error=>{
             alert("Error al entregar");
            
@@ -122,6 +123,8 @@ class SolicitudesRM extends Component{
     peticiongetColletionMateriales=async()=>{
         await axios.get(vermaterial).then(response=>{
             this.setState({datamate: response.data});
+           // console.log("get");
+            //console.log(this.state.datamate);
         }).catch(error=>{
             console.log(error.message);
         })
@@ -130,7 +133,7 @@ class SolicitudesRM extends Component{
     //Cambia el estado del modal (abrir y cerrar)
     modalEntregarMaterial =()=>{
         this.setState({modalEntregarMaterial: !this.state.modalEntregarMaterial});
-        window.location.href='./solicitudes';
+       // window.location.href='./solicitudes';
     }
 
     //Se llena el vector con id del material, y cantidad solicitada y id de registro del material solicitado
@@ -159,13 +162,16 @@ class SolicitudesRM extends Component{
         }
         //se recorre vector, se trae y se recorre los materiales
         newvector.map((materialesvec)=>{
-            axios.get(vermaterial)
-            .then(response=>{
-                response.data.map(materiales=>{
+            //axios.get(vermaterial)
+           // .then(response=>{
+                this.state.datamate.map(materiales=>{
                     if(this.state.form2.tipoSolicitud === 'Requisición'){
+                        
                         //console.log("requisiscion");
                         //se busca el material por id y si es igual al del arreglo se cambian el valor exixtencia 
                         if(materiales._id === materialesvec.vecMateid){
+                            
+                            
                             console.log(`material : ${materialesvec.vecMateid}`);
                             console.log(`cantidad: ${materialesvec.vecCanSol}`);
                             // si no hay material se elimina de la solicitud la requsicion de ese material 
@@ -207,7 +213,14 @@ class SolicitudesRM extends Component{
                                         alert("Error al entregar los materiales");
                                     })
                                     
-
+                                    //this.peticiongetColletionMateriales();
+                                    axios.get(vermaterial).then(response=>{
+                                        this.setState({newdatamate: response.data});
+                                        console.log(response.data);
+                                    })
+                                    console.log("newdatamate");
+                                    console.log(this.state.newdatamate);
+                                    console.log("-----------------------------");
 
                                 }else{
                                     if(materiales.existencia < materialesvec.vecCanSol){
@@ -228,6 +241,15 @@ class SolicitudesRM extends Component{
                                             alert("Error al entregar los materiales");
                                         });
                                         //this.state.form3.cantidadsolicitada = materiales.existencia;
+                                        //this.peticiongetColletionMateriales();
+                                        axios.get(vermaterial).then(response=>{
+                                            this.setState({newdatamate: response.data});
+                                            console.log(response.data);
+                                            
+                                        })
+                                        console.log("newdatamate");
+                                        console.log(this.state.newdatamate);
+                                        console.log("-----------------------------");
 
                                         axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
                                         }).catch(error=>{
@@ -245,58 +267,23 @@ class SolicitudesRM extends Component{
                                             }).catch(error=>{
                                                 alert("Error al entregar los materiales");
                                             })
+
+                                            axios.get(vermaterial).then(response=>{
+                                                this.setState({newdatamate: response.data});
+                                                this.state.datamate = this.state.newdatamate;
+                                                console.log(response.data);
+                                                
+                                            })
+                                            console.log("newdatamate");
+                                            console.log(this.state.datamate);
+                                            console.log("-----------------------------");
+
+                                            //this.peticiongetColletionMateriales();
                                             
 
                                         }
                                     }
-                                }
-
-                                //--------------------------------------------------------------------------
-                              /*  if(materiales.existencia <= materialesvec.vecCanSol){
-                                    this.setState({
-                                        form3:{
-                                            _id:materialesvec.vecIdMatesoli,
-                                            cantidadsolicitada: materiales.existencia
-                                        }                            
-                                    });
-                                    this.state.form3.cantidadsolicitada = materiales.existencia;
-                                    this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
-                                    this.state.form2._id = materialesvec.vecMateid;
-                                    
-                                    //linea nueva
-                                    // this.state.form3.cantidadsolicitada = this.state.form2.existencia;
-                                
-
-                                    axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
-                                        console.log("-------------------------------------------------------------");
-                                        console.log(`VALOR MAYOR put mate soli con: ${materialesvec.vecCanSol} `);
-                                        console.log(`existencia de material: ${materiales.existencia}`);
-                                        console.log(`quedan ${this.state.form2.existencia}`);
-                                        console.log("-------------------------------------------------");
-                                    }).catch(error=>{
-                                        alert("Error al entregar los materiales");
-                                    });
-
-                                    axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
-                                    }).catch(error=>{
-                                        alert("Error al entregar los materiales");
-                                    })
-                                
-
-                            
-                                // si la existencia es mayor a la cantidad solicitada se cambia la existencia restando lo solicitado
-                                }else{                           
-                                    this.state.form2._id = materialesvec.vecMateid;
-                                    this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
-
-                                    axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{ 
-                                        console.log(`Normal materialexistencia ${materiales.existencia}`);  
-                                        console.log(`VALOR NORMAL put material con ${materialesvec.vecCanSol}`);      
-                                        console.log(`y quedan: ${this.state.form2.existencia}`);           
-                                    }).catch(error=>{
-                                        alert("Error al entregar los materiales");
-                                    })
-                                }     */                                       
+                                }                                                            
                             }   
 
                         }else{
@@ -363,7 +350,7 @@ class SolicitudesRM extends Component{
                 }else if(this.state.form2.tipoSolicitud === 'Préstamo'){
                   
                 }  */            
-            }) //del   esteee tambien     
+           // }) //del   esteee tambien     
         })
     }
     
