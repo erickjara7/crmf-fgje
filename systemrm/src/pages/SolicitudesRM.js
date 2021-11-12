@@ -162,9 +162,9 @@ class SolicitudesRM extends Component{
         }
         //se recorre vector, se trae y se recorre los materiales
         newvector.map((materialesvec)=>{
-            //axios.get(vermaterial)
-           // .then(response=>{
-                this.state.datamate.map(materiales=>{
+            axios.get(vermaterial)
+            .then(response=>{
+                response.data.map(materiales=>{
                     if(this.state.form2.tipoSolicitud === 'Requisición'){
                         
                         //console.log("requisiscion");
@@ -213,14 +213,8 @@ class SolicitudesRM extends Component{
                                         alert("Error al entregar los materiales");
                                     })
                                     
-                                    //this.peticiongetColletionMateriales();
-                                    axios.get(vermaterial).then(response=>{
-                                        this.setState({newdatamate: response.data});
-                                        console.log(response.data);
-                                    })
-                                    console.log("newdatamate");
-                                    console.log(this.state.newdatamate);
-                                    console.log("-----------------------------");
+                                    
+                                    
 
                                 }else{
                                     if(materiales.existencia < materialesvec.vecCanSol){
@@ -241,16 +235,7 @@ class SolicitudesRM extends Component{
                                             alert("Error al entregar los materiales");
                                         });
                                         //this.state.form3.cantidadsolicitada = materiales.existencia;
-                                        //this.peticiongetColletionMateriales();
-                                        axios.get(vermaterial).then(response=>{
-                                            this.setState({newdatamate: response.data});
-                                            console.log(response.data);
-                                            
-                                        })
-                                        console.log("newdatamate");
-                                        console.log(this.state.newdatamate);
-                                        console.log("-----------------------------");
-
+                                       
                                         axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
                                         }).catch(error=>{
                                             alert("Error al entregar los materiales");
@@ -268,18 +253,6 @@ class SolicitudesRM extends Component{
                                                 alert("Error al entregar los materiales");
                                             })
 
-                                            axios.get(vermaterial).then(response=>{
-                                                this.setState({newdatamate: response.data});
-                                                this.state.datamate = this.state.newdatamate;
-                                                console.log(response.data);
-                                                
-                                            })
-                                            console.log("newdatamate");
-                                            console.log(this.state.datamate);
-                                            console.log("-----------------------------");
-
-                                            //this.peticiongetColletionMateriales();
-                                            
 
                                         }
                                     }
@@ -350,8 +323,9 @@ class SolicitudesRM extends Component{
                 }else if(this.state.form2.tipoSolicitud === 'Préstamo'){
                   
                 }  */            
-           // }) //del   esteee tambien     
+            }) //del   esteee tambien     
         })
+        this.peticionPutestadoSoli();
     }
     
     //Cambia los valores de las solicitudes por la de la solicitud seleccionada
@@ -517,8 +491,8 @@ class SolicitudesRM extends Component{
                     <ModalBody>
                         ¿Esta solicitud ya fue entregada?
                     </ModalBody>
-                    <ModalFooter>                
-                        <button className="btn btn-success" onClick={()=> {this.peticionPutExistencia();     this.peticionPutestadoSoli();  }}>Si</button>
+                    <ModalFooter>                {/** this.peticionPutestadoSoli();*/}
+                        <button className="btn btn-success" onClick={()=> {this.peticionPutExistencia()  }}>Si</button>
                         <button className="btn btn-danger" onClick={()=> this.modalEntregarMaterial()}>No</button>
                     </ModalFooter>
                 </Modal>
