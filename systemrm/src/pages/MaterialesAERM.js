@@ -208,7 +208,7 @@ class MaterialesAERM extends Component{
                         <thead>
                             <tr class="tablaencabezado">   
                                 <th>Nombre</th>
-                                <th>Existencia</th>
+                                
                                 <th>Unidad de medida</th>
                                 <th>Categoria</th>
                                 <th>Acción</th>
@@ -221,7 +221,7 @@ class MaterialesAERM extends Component{
                                     return(
                                         <tr>
                                             <td>{material.nombre}</td>
-                                            <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                            {/*<td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>*/}
                                             <td>{material.unidadMedida}</td>
                                             <td>{material.categoria}</td>
                                             <td>
@@ -237,7 +237,7 @@ class MaterialesAERM extends Component{
                                     return(
                                         <tr>
                                             <td>{material.nombre}</td>
-                                            <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                           {/* <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>*/}
                                             <td>{material.unidadMedida}</td>
                                             <td>{material.categoria}</td>
                                             <td>
@@ -247,23 +247,9 @@ class MaterialesAERM extends Component{
                                     )
 
                                 }
-
+ 
                             })}
-                            {/*.map((material)=>{
-                                return(
-                                    <tr> 
-                                        <td>{material.nombre}</td>
-                                        <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
-                                        <td>{material.unidadMedida}</td>
-                                        <td>{material.categoria}</td>
-                                        <td>
-                                                                                    {/**this.seleccionarmaterial(material); this.modalInsertar()  */}
-                                          {/*</tbody>  <Button color="danger" onClick={()=> {this.seleccionarmaterial(material)} }>Agregar</Button>
-                                        </td>
-                                    </tr>
-                                )
 
-                            })*/}
 
                         </tbody>
                     </table>

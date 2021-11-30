@@ -67,6 +67,7 @@ class SolicitudesRM extends Component{
         data:[],
         datamatesoli:[],
         modalEntregarMaterial: false,
+        modalCancelarsoli: false,
 
         //Solicitudes
         form:{ 
@@ -107,12 +108,22 @@ class SolicitudesRM extends Component{
 
     }
 
+    //Petición para modificar las solicitudes (cancelar solicitud)
+    peticionputcancelarSoli = () =>{
+        axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
+            this.modalCancelarsoli();
+            this.peticiongetsoli();
+        }).catch(error=>{
+            alert("Error al enviar")
+        })
+    }
+
     //Petición para modificar las solicitudes(cambiar estado a entregada)
     peticionPutestadoSoli = ()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEntregarMaterial();
             alert("Si desea descargar la solicitud, dirijase a solicitudes entregadas");
-           // window.location.href='./solicitudes';
+            window.location.href='./solicitudes';
         }).catch(error=>{
             alert("Error al entregar");
            
@@ -133,7 +144,29 @@ class SolicitudesRM extends Component{
     //Cambia el estado del modal (abrir y cerrar)
     modalEntregarMaterial =()=>{
         this.setState({modalEntregarMaterial: !this.state.modalEntregarMaterial});
-       // window.location.href='./solicitudes';
+        window.location.href='./solicitudes';
+    }
+
+    modalCancelarsoli=()=>{
+        this.setState({modalCancelarsoli: !this.state.modalCancelarsoli})
+    }
+
+
+    //Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Cancelada"
+    selecSoliCancelar=(solicitudes)=>{
+        this.setState({
+            form:{
+                _id: solicitudes._id,
+                estado: 'Cancelada'
+            }
+        })
+        console.log(this.state.form._id)
+        if(this.state.form._id === ''){
+
+        }else{
+            this.setState({modalCancelarsoli :true})
+            console.log(`ya tengo: ${this.state.form._id}`);
+        }
     }
 
     //Se llena el vector con id del material, y cantidad solicitada y id de registro del material solicitado
@@ -214,8 +247,6 @@ class SolicitudesRM extends Component{
                                     })
                                     
                                     
-                                    
-
                                 }else{
                                     if(materiales.existencia < materialesvec.vecCanSol){
                                         this.setState({
@@ -477,7 +508,9 @@ class SolicitudesRM extends Component{
                                             </table>
                                           
 
-                                            <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}}>Entregar</Button>                                                                                  
+                                            <Button color="success" onClick={()=>{this.seleccionarsoliput(solicitudes)}}>Entregar</Button>  
+                                            <h6>De click si desea cancelar la solicitud y eliminarla</h6>
+                                            <Button color="danger" onClick={()=>this.selecSoliCancelar(solicitudes)}>Cancelar Solicitud</Button>                                                                                
                                         </Card.Body>
                                     </Accordion.Collapse>
                                 </Card> 
@@ -496,6 +529,21 @@ class SolicitudesRM extends Component{
                         <button className="btn btn-danger" onClick={()=> this.modalEntregarMaterial()}>No</button>
                     </ModalFooter>
                 </Modal>
+
+
+                <Modal isOpen={this.state.modalCancelarsoli}>
+                    <ModalBody>
+                        ¿Seguro de cancelar esta solicitud?
+                        La solicitud será eliminada permanentemente
+                    </ModalBody>
+                    <ModalFooter>
+                        <button className="btn btn-success"  onClick={()=>this.peticionputcancelarSoli()} >Si</button>
+                        <button className="btn btn-danger"  onClick={()=> this.modalCancelarsoli()}>No</button>
+                    </ModalFooter>
+                </Modal>
+
+
+
 
                 <footer class="footer">
                     <a class= "a" href="https://github.com/JacquelineLeal"> Jacqueline Leal  | 2021© </a>

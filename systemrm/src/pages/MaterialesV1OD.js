@@ -219,7 +219,7 @@ class MaterialesV1OD extends Component{
                         <thead> 
                             <tr class="tablaencabezado">    
                                 <th>Nombre</th>
-                                <th>Existencia</th>
+                               
                                 <th>Unidad de medida</th>
                                 <th>Categoria</th>
                                 <th>Acción</th> 
@@ -231,7 +231,7 @@ class MaterialesV1OD extends Component{
                                     return(
                                         <tr>
                                             <td>{material.nombre}</td>
-                                            <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                           {/* <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>*/}
                                             <td>{material.unidadMedida}</td>
                                             <td>{material.categoria}</td>
                                             <td>
@@ -246,7 +246,7 @@ class MaterialesV1OD extends Component{
                                     return(
                                         <tr>
                                             <td>{material.nombre}</td>
-                                            <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>
+                                           {/* <td>{new Intl.NumberFormat("en-EN").format( material.existencia)}</td>*/}
                                             <td>{material.unidadMedida}</td>
                                             <td>{material.categoria}</td>
                                             <td>
