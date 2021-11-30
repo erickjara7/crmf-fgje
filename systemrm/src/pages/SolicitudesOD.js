@@ -153,7 +153,7 @@ class SolicitudesOD extends Component{
         this.setState({
             form:{
                 _id: solicitudes._id,
-                estado: 'Cancelada'
+              //  estado: 'Cancelada'
             }
         })
         console.log(this.state.form._id)
@@ -286,7 +286,7 @@ class SolicitudesOD extends Component{
                                             <label><b>Tipo de solicitud: </b>{solicitudes.tipoSolicitud}</label><br/>
                                             <label><b>Estado de la solicitud:</b> {solicitudes.estado}</label><br/>
 
-                                            <label><b>idd:</b> {solicitudes._id}</label><br/>
+                                           
                                                        
                                             <br/><br/>
                                             <h5>Materiales:</h5>
