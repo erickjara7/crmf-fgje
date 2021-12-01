@@ -8,22 +8,31 @@ import '../css/Materiales.css';
 import '../css/solisunmenu.css';
 import '../img/logofiscalia.png';
 
+/**
+ * Traer cookies de inicio de sesión
+ */
 
-//Traer cookies de inicio de sesión
 const cookies = new Cookies();
 
-//Ruta para hacer post y agg solicitudes
+/** 
+ * Ruta para hacer post y agg solicitudes
+*/
+
 const aggsolicitud = "http://localhost:4000/solicitud/add";
 
+/** */
 //Ruta traer datos de la coleccion solicitud
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
 
+/** */
 //Ruta para modificar un registro en especifico de la coleccion solicitud
 const putsoli = "http://localhost:4000/solicitud/";
 
+/** */
 //Ruta traer datos de la coleccion materialsolicitados
 const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 
+/** */
 //Variables para traer la fecha actual
 const today = new Date(),
 date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate();
@@ -31,7 +40,9 @@ date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate
 
 class SoliRMExterna extends Component{
 
-    //Estado para guardar valores
+    /**
+     * Estado para guardar valores
+     */
     state={
        
         solicitudid:'',
@@ -56,7 +67,9 @@ class SoliRMExterna extends Component{
         }
     }
 
-    //Petición para traer los datos de la url "versolicitud" y guardar en la variable data del estado
+    /**
+     * Petición para traer los datos de la url "versolicitud" y guardar en la variable data del estado
+     */
     peticionGet = async() =>{
         await  axios.get(versolicitud).then(response =>{
              this.setState({data:response.data});        
@@ -65,7 +78,9 @@ class SoliRMExterna extends Component{
         })
     }
 
-    //Petición para traer los datos de la url "vermaterialsoli" y guardar en la variable datamate del estado
+    /**
+     * Petición para traer los datos de la url "vermaterialsoli" y guardar en la variable datamate del estado
+     */
     peticiongetmatesoli = async() =>{
          await axios.get(vermaterialsoli).then(response =>{
              this.setState({datamate:response.data});            
@@ -74,7 +89,9 @@ class SoliRMExterna extends Component{
         })
     }
 
-    //Petición para modificar las solicitudes (enviar soli)
+    /**
+     * Petición para modificar las solicitudes (enviar soli)
+     */
     peticionPutestadoSoli = ()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEnviarsoli();
@@ -84,17 +101,11 @@ class SoliRMExterna extends Component{
         })
     }
 
-    //Petición para modificar las solicitudes (cancelar solicitud)
-    peticionputcancelarSoli = () =>{
-        axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
-            this.modalCancelarsoli();
-            this.peticionGet();
-        }).catch(error=>{
-            alert("Error al enviar")
-        })
-    }
+   
 
-    //Petición post a url "aggsolicitud" para registrar solicitudes
+    /**
+     * Petición post a url "aggsolicitud" para registrar solicitudes
+     */
     peticionpostsoli =async ()=>{
         
         await axios.post(aggsolicitud,this.state.form).then(response=>{
@@ -108,24 +119,32 @@ class SoliRMExterna extends Component{
        })          
     }
 
-    //Cambia el estado del modal (abrir y cerrar)
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalInsertar = () =>{
         this.setState({
             modalInsertar: !this.state.modalInsertar,            
         })
     }
 
-    //Cambia el estado del modal (abrir y cerrar)
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalEnviarsoli =()=>{
         this.setState({modalEnviarsoli: !this.state.modalEnviarsoli})
     }
 
-    //Cambia el estado del modal (abrir y cerrar)
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalCancelarsoli=()=>{
         this.setState({modalCancelarsoli: !this.state.modalCancelarsoli})
     }
 
-    //Validar los inputs del modalInsertar
+    /**
+     * Validar los inputs del modalInsertar
+     */
     validaciónmodal =()=>{
         if(this.state.form.solicitante === ''  || this.state.form.municipiosoli ==='' || this.state.form.departamentosoli === ''
             || this.state.form.area === ''  || this.state.form.tipoSolicitud === ''){           
@@ -135,7 +154,9 @@ class SoliRMExterna extends Component{
         }       
     }
 
-    //Cambia el valor de las variables del form según lo que se escribe en el input
+    /**
+     * Cambia el valor de las variables del form según lo que se escribe en el input 
+     */
     handleChange = async e =>{
         e.persist();
         await this.setState({            
@@ -146,7 +167,9 @@ class SoliRMExterna extends Component{
         });
     }
 
-    //Guarda en cookies el valor id de la solicitud seleccionada y te redirige a la ventana de materiales a elegir
+    /**
+     * Guarda en cookies el valor id de la solicitud seleccionada y te redirige a la ventana de materiales a elegir
+     */
     seleccionarsolicitud =(solicitudes)=>{       
         this.setState({            
             form:{
@@ -164,8 +187,10 @@ class SoliRMExterna extends Component{
        }      
     }
 
-    //Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Pendiente"
-    //Desactiva botones si la solicitud ya fue enviada
+    /**
+     * Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Pendiente"
+     * Desactiva botones si la solicitud ya fue enviada
+     */
     seleccionarsoliput =(solicitudes)=>{
         this.setState({
             form:{
@@ -184,12 +209,28 @@ class SoliRMExterna extends Component{
         }
     }
 
-    //Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Cancelada"
+    /**
+     * Petición delete a url "putsoli" para eliminar la solicitud
+     */
+    peticionDelete=()=>{
+        axios.delete(putsoli+this.state.form._id).then(response =>{
+            this.setState({modalCancelarsoli:false});
+            this.peticionGet()       
+        }).catch(error=>{
+            console.log(error.message);
+            alert("Error al Eliminar");
+    
+        })
+    }
+
+    /**
+     * Cambia el valor de las variables del usuario por el usuario seleccionado 
+     */
     selecSoliCancelar=(solicitudes)=>{
         this.setState({
             form:{
-                _id: solicitudes._id,
-                estado: 'Cancelada'
+                _id: solicitudes._id
+               
             }
         })
         console.log(this.state.form._id)
@@ -201,9 +242,11 @@ class SoliRMExterna extends Component{
         }
     }
 
-    //Elimina las cookies de sesión y redirige al login
+    /**
+     * Elimina las cookies de sesión y redirige al login
+     */
     cerrarSesion =() =>{
-        //eliminar cookies para no ir a paginas sin autenticarse
+
             cookies.remove('_id',{path:"/"});
             cookies.remove('nombres',{path:"/"});
             cookies.remove('apellidoP',{path:"/"});
@@ -215,12 +258,16 @@ class SoliRMExterna extends Component{
             window.location.href='./';
     }
     
-    //Ciclo del vida: se ejecuta siempre.
-    //Valída los permisos de usuario
+    /**
+     * Ciclo del vida: se ejecuta siempre.
+     * Valída los permisos de usuario
+     */
     componentDidMount(){
         this.peticionGet();
-        this.peticiongetmatesoli();       
-        //cookies para no ir a paginas sin autenticarse
+        this.peticiongetmatesoli();  
+        /**
+         * cookies para no ir a paginas sin autenticarse
+         * */     
         if (!cookies.get('username')){
             window.location.href="./";
         }else if(cookies.get('userType') === 'Usuario'){
@@ -234,7 +281,9 @@ class SoliRMExterna extends Component{
 
     render(){
 
-        //Variable para escribir solo "form.(variable)" en vez de "this.state.form.(variable)"
+        /**
+         * Variable para escribir solo "form.(variable)" en vez de "this.state.form.(variable)"
+         */
         const {form} = this.state;
        
         return(
@@ -495,7 +544,7 @@ class SoliRMExterna extends Component{
                         La solicitud será eliminada permanentemente
                     </ModalBody>
                     <ModalFooter>
-                        <button className="btn btn-success"  onClick={()=>this.peticionputcancelarSoli()} >Si</button>
+                        <button className="btn btn-success"  onClick={()=>this.peticionDelete()} >Si</button>
                         <button className="btn btn-danger"  onClick={()=> this.modalCancelarsoli()}>No</button>
                     </ModalFooter>
                 </Modal>

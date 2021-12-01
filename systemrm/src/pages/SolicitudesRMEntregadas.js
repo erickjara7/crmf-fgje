@@ -9,30 +9,40 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Imgg from '../img/logofiscalia.png';
 
-
-//Variables para traer la fecha y hora actual
+/**
+ * Variables para traer la fecha y hora actual
+ */
 const today = new Date(),
 fecha = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate();
 const horaaa =  today.getHours() +':' + today.getMinutes(); 
 const date = fecha +''+''+'' + '  Hora:'+horaaa;
 
-
-//Ruta traer datos de la coleccion solicitud
+/**
+ * Ruta traer datos de la coleccion solicitud
+ */
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
 
-//Ruta para modificar un registro en especifico de la coleccion solicitud
+/**
+ * Ruta para modificar un registro en especifico de la coleccion solicitud
+ */
 const putsoli = "http://localhost:4000/solicitud/";
 
-//Ruta traer datos de la coleccion materialsolicitados
+/**
+ * Ruta traer datos de la coleccion materialsolicitados
+ */
 const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 
-//Traer cookies de inicio de sesión
+/**
+ * Traer cookies de inicio de sesión
+ */
 const cookies = new Cookies();
 
 
 class SolicitudesRMEntregadas extends Component{
      
-    //Estado para guardar valores
+    /**
+     * Estado para guardar valores
+     */
     state={
         data:[],
         datamatesoli:[], 
@@ -44,7 +54,9 @@ class SolicitudesRMEntregadas extends Component{
         }
     }
 
-    //Petición para traer los datos de la url "versolicitud" y guardar en la variable data del estado
+    /**
+     * Petición para traer los datos de la url "versolicitud" y guardar en la variable data del estado
+     */
     peticionGet = async() =>{
         await  axios.get(versolicitud).then(response =>{
              this.setState({data:response.data});
@@ -53,7 +65,9 @@ class SolicitudesRMEntregadas extends Component{
         })
     }
 
-    //Petición para traer los datos de la url "vermaterialsoli" y guardar en la variable datamatesoli del estado
+    /**
+     * Petición para traer los datos de la url "vermaterialsoli" y guardar en la variable datamatesoli del estado
+     */
     peticiongetmatesoli = async() =>{
         await axios.get(vermaterialsoli).then(response =>{
             this.setState({datamatesoli:response.data});           
@@ -62,13 +76,17 @@ class SolicitudesRMEntregadas extends Component{
         })
     }
 
-    //Cambia el estado del modal (abrir y cerrar)
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalEnviarsoli =()=>{
         this.setState({modalEnviarsoli: !this.state.modalEnviarsoli});
         window.location.href="./solicitudesrmen";
     }
 
-    //Genera el PDF de la solicitud seleccionada
+    /**
+     * Genera el PDF de la solicitud seleccionada
+     */
     generatePDF=(solicitudes)=>{
         //se crea arreglo
         const arreglo = [];
@@ -158,7 +176,9 @@ class SolicitudesRMEntregadas extends Component{
 
     }
     
-    //Elimina las cookies de sesión y redirige al login
+    /**
+     * Elimina las cookies de sesión y redirige al login
+     */
     cerrarSesion =() =>{
         //eliminar cookies para no ir a paginas sin autenticarse
             cookies.remove('_id',{path:"/"});
@@ -172,7 +192,9 @@ class SolicitudesRMEntregadas extends Component{
             window.location.href='./';
     }
 
-    //Cambia el valor estado de la solicitud para que ya no sea visible
+    /**
+     * Cambia el valor estado de la solicitud para que ya no sea visible
+     */
     quitar=(solicitudes)=>{          
         this.setState({
             form:{
@@ -188,8 +210,9 @@ class SolicitudesRMEntregadas extends Component{
         }
     }
 
-
-    //Petición para modificar las solicitudes
+    /**
+     * Petición para modificar las solicitudes
+     */
     peticionPutestadoSoli=()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEnviarsoli();
@@ -199,8 +222,10 @@ class SolicitudesRMEntregadas extends Component{
         })
     }
     
-    //Ciclo del vida: se ejecuta siempre.
-    //Valída los permisos de usuario
+    /**
+     * Ciclo del vida: se ejecuta siempre.
+     * Valída los permisos de usuario
+     */
     componentDidMount(){
         this.peticiongetmatesoli();
             

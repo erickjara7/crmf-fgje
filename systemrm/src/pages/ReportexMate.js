@@ -2,19 +2,27 @@ import React, {Component} from "react";
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 
-
-//Traer cookies de inicio de sesión
+/**
+ * Traer cookies de inicio de sesión
+ */
 const cookies = new Cookies();
 
-//Ruta traer datos de la coleccion solicitudes
+/**
+ * Ruta traer datos de la coleccion solicitudes
+ */
 const versolicitudes ="http://localhost:4000/solicitud/getsoli";
 
-//Ruta traer datos de la coleccion materialsolicitados
+/**
+ * Ruta traer datos de la coleccion materialsolicitados
+ */
 const vermateriales ="http://localhost:4000/materialsolicitado/getms";
 
 
 class ReportexMate extends Component{
-    //Estado para guardar valores
+    
+    /**
+     * Estado para guardar valores
+     */
     state={
         //Arreglo para guardar los datos obtenidos de la ruta versolicitudes
         datasolicitudes:[],
@@ -29,25 +37,33 @@ class ReportexMate extends Component{
        
     }
 
-    //captura lo que se escribe en el input para la variable materialesS del estado
+    /**
+     * captura lo que se escribe en el input para la variable materialesS del estado
+     */
     onChange = async e =>{
         e.persist();
         await this.setState({materialesS: e.target.value});
     }
 
-    //captura lo que se escribe en el input para la variable mesS del estado
+    /**
+     * captura lo que se escribe en el input para la variable mesS del estado
+     */
     onChange1 = async e =>{
         e.persist();
         await this.setState({mesS: e.target.value});
     }
 
-    //captura lo que se escribe en el input para la variable añoS del estado
+    /**
+     * captura lo que se escribe en el input para la variable añoS del estado
+     */
     onChange2 = async e =>{
         e.persist();
         await this.setState({añoS: e.target.value});
     }
 
-    //Petición para traer los datos de la url "versolicitudes" y guardar en la variable datasolicitudes del estado
+    /**
+     * Petición para traer los datos de la url "versolicitudes" y guardar en la variable datasolicitudes del estado
+     */
     peticionGetsolicitudes = async()=>{
         await  axios.get(versolicitudes).then(response =>{
             this.setState({datasolicitudes:response.data});  
@@ -56,7 +72,9 @@ class ReportexMate extends Component{
         })
     }
 
-    //Petición para traer los datos de la url "vermateriales" y guardar en la variable datamateriales del estado
+    /**
+     * Petición para traer los datos de la url "vermateriales" y guardar en la variable datamateriales del estado
+     */
     peticionGetmateriales = async()=>{
         await  axios.get(vermateriales).then(response =>{
             this.setState({datamateriales:response.data});  
@@ -65,7 +83,9 @@ class ReportexMate extends Component{
         })
     }
 
-    //Elimina las cookies de sesión y redirige al login
+    /**
+     * Elimina las cookies de sesión y redirige al login
+     */
     cerrarSesion =() =>{
         cookies.remove('_id',{path:"/"});
         cookies.remove('nombres',{path:"/"});
@@ -78,8 +98,10 @@ class ReportexMate extends Component{
         window.location.href='./';
     }
 
-    //Ciclo del vida: se ejecuta siempre.
-    //Valída los permisos de usuario
+    /**
+     * Ciclo del vida: se ejecuta siempre.
+     * Valída los permisos de usuario
+     */
     componentDidMount(){
          this.peticionGetsolicitudes();
          this.peticionGetmateriales();

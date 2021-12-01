@@ -4,19 +4,26 @@ import {Button,Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import axios from 'axios';
 import '../css/Materiales.css';
 
-
-//Ruta traer datos de la coleccion Materiales
+/**
+ * Ruta traer datos de la coleccion Materiales
+ */
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 
-//Ruta para hacer post y agg materiales a la solicitud
+/**
+ * Ruta para hacer post y agg materiales a la solicitud
+ */
 const aggmatesoli = "http://localhost:4000/materialsolicitado/add";
 
-//Traer cookies de inicio de sesión
+/**
+ * Traer cookies de inicio de sesión
+ */
 const cookies = new Cookies();
 
 class MaterialesAERM extends Component{
 
-    //Estado para guardar valores
+    /**
+     * Estado para guardar valores
+     */
     state={
         existenciatemp: '',
         busqueda:'',
@@ -40,7 +47,9 @@ class MaterialesAERM extends Component{
 
     }
 
-     //Petición para traer los datos de la url "vermaterial" y guardar en la variable data del estado
+    /**
+     * Petición para traer los datos de la url "vermaterial" y guardar en la variable data del estado
+     */
     peticionGet = async() =>{
         await  axios.get(vermaterial).then(response =>{
             this.setState({data:response.data});  
@@ -50,7 +59,9 @@ class MaterialesAERM extends Component{
         
     }
    
-    //Validar  input del modalInsertar 
+    /**
+     * Validar  input del modalInsertar 
+     */
     validacionPostms = ()=>{
         if(this.state.form.idSolicitud !== undefined ){
             if(this.state.form.cantidadsolicitada === undefined){
@@ -71,7 +82,9 @@ class MaterialesAERM extends Component{
          }
     }
 
-     //Petición post a url "aggmatesoli" para registrar los materiales seleccionados en la solicitud
+    /**
+     * Petición post a url "aggmatesoli" para registrar los materiales seleccionados en la solicitud
+     */
     peticionPostms  = async() =>{
         await axios.post(aggmatesoli, this.state.form).then(response=>{
             this.modalInsertar();
@@ -81,7 +94,9 @@ class MaterialesAERM extends Component{
         })
     }
 
-    //Cambia el valor de las variables del form según lo que se escribe en el input
+    /**
+     * Cambia el valor de las variables del form según lo que se escribe en el input
+     */
     handleChange = async e =>{
         e.persist();
         await this.setState({            
@@ -92,23 +107,31 @@ class MaterialesAERM extends Component{
         });
     }
 
-    //Cambia el valor de la variable "busqueda" según lo que se escribe en el input
+    /**
+     * Cambia el valor de la variable "busqueda" según lo que se escribe en el input
+     */
     onChange = async e =>{
         e.persist();
         await this.setState({busqueda: e.target.value});
     }
 
-    //Eliminar cookies isolicitud
+    /**
+     * Eliminar cookies isolicitud
+     */
     listo =()=>{
         cookies.remove('isolicitud',{path:"/"}); 
     }
 
-    //Cambia el estado del modal (abrir y cerrar)
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalInsertar = () =>{
         this.setState({modalInsertar: !this.state.modalInsertar})
     }
 
-    //Cambia los variables del material por el material seleccionado
+    /**
+     * Cambia los variables del material por el material seleccionado
+     */
     seleccionarmaterial = (material) =>{
         this.setState({
             tipoModal:'actualizar',
@@ -130,7 +153,9 @@ class MaterialesAERM extends Component{
 
     }
 
-    //Elimina las cookies de sesión y redirige al login
+    /**
+     * Elimina las cookies de sesión y redirige al login
+     */
     cerrarSesion =() =>{
         //eliminar cookies para no ir a paginas sin autenticarse
             cookies.remove('_id',{path:"/"});
@@ -144,8 +169,10 @@ class MaterialesAERM extends Component{
             window.location.href='./';
     }
     
-    //Ciclo del vida: se ejecuta siempre.
-    //Valída los permisos de usuario
+    /**
+     * Ciclo del vida: se ejecuta siempre.
+     * Valída los permisos de usuario
+     */
     componentDidMount(){
         //cookies para no ir a paginas sin autenticarse
         this.peticionGet();
@@ -161,7 +188,9 @@ class MaterialesAERM extends Component{
 
 
     render(){
-        //Variable para escribir solo "form.(variable)" en vez de "this.state.form.(variable)"
+        /**
+         * Variable para escribir solo "form.(variable)" en vez de "this.state.form.(variable)"
+         */
         const {form} = this.state;
        return(
            <div class="container">

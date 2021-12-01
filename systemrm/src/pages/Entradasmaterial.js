@@ -2,15 +2,22 @@ import React, {Component} from "react";
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 
-//Traer cookies de inicio de sesión
+/**
+ * Traer cookies de inicio de sesión
+ */
 const cookies = new Cookies();
 
-//Ruta traer datos de la coleccion entradasmates
+/**
+ * Ruta traer datos de la coleccion entradasmates
+ */
 const vermaterialesentradas ="http://localhost:4000/entradasmate/get";
 
 
 class Entradasmaterial extends Component{
-    //Estado para guardar valores
+    
+    /**
+     * Estado para guardar valores
+     */
     state={ 
 
          //Arreglo para guardar los datos obtenidos de la ruta vermaterialesentradas
@@ -22,24 +29,33 @@ class Entradasmaterial extends Component{
          añoS:'',        
     }
 
-    //captura lo que se escribe en el input para la variable materialesS del estado
+    /**
+     * captura lo que se escribe en el input para la variable materialesS del estado
+     */
     onChange = async e =>{
         e.persist();
         await this.setState({materialesS: e.target.value});
     }
 
-   //captura lo que se escribe en el input para la variable mesS del estado
+    /**
+     * captura lo que se escribe en el input para la variable mesS del estado
+     */
     onChange1 = async e =>{
         e.persist();
         await this.setState({mesS: e.target.value});
     }
-    //captura lo que se escribe en el input para la variable añoS del estado
+
+    /**
+     * captura lo que se escribe en el input para la variable añoS del estado
+     */
     onChange2 = async e =>{
         e.persist();
         await this.setState({añoS: e.target.value});
     }
 
-    //Petición para traer los datos de la url "vermaterialesentradas" y guardar en la variable dataentradasmateriales del estado
+    /**
+     * Petición para traer los datos de la url "vermaterialesentradas" y guardar en la variable dataentradasmateriales del estado
+     */
     peticionGetmateriales = async()=>{
         await  axios.get(vermaterialesentradas).then(response =>{
             this.setState({dataentradasmateriales:response.data});  
@@ -48,7 +64,9 @@ class Entradasmaterial extends Component{
         })
     }
 
-    //Elimina las cookies de sesión y redirige al login
+    /**
+     * Elimina las cookies de sesión y redirige al login
+     */
     cerrarSesion =() =>{
         cookies.remove('_id',{path:"/"});
         cookies.remove('nombres',{path:"/"});
@@ -61,8 +79,10 @@ class Entradasmaterial extends Component{
         window.location.href='./';
     }
 
-    //Ciclo del vida: se ejecuta siempre.
-    //Valída los permisos de usuario
+    /**
+     * Ciclo del vida: se ejecuta siempre.
+     * Valída los permisos de usuario
+     */
     componentDidMount(){
          this.peticionGetmateriales();
          if (!cookies.get('username')){

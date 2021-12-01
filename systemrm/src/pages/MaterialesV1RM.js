@@ -6,34 +6,53 @@ import '../css/Materiales.css';
 import '../img/logofiscalia.png';
 import Cookies from 'universal-cookie';
 
-//Ruta para hacer post y agg las entradas de material
+/**
+ * Ruta para hacer post y agg las entradas de material
+ */
 const aggEntradaMate ="http://localhost:4000/entradasmate/add";
 
-//Ruta traer datos de la coleccion Materiales
+/**
+ * Ruta traer datos de la coleccion Materiales
+ */
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 
-//Ruta para hacer post y agg materiales
+/**
+ * Ruta para hacer post y agg materiales
+ */
 const aggmaterial = "http://localhost:4000/materiales/add";
 
-//Ruta para borrar / modificar un material en especifico
+/**
+ * Ruta para borrar / modificar un material en especifico
+ */
 const dpsidmaterial = "http://localhost:4000/materiales/";
 
-//Variables para traer la fecha actual
+/**
+ * Variables para traer la fecha actual
+ */
 const today = new Date(),
 date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate() ;
 
-//Traer cookies de inicio de sesión
+/**
+ * Traer cookies de inicio de sesión
+ */
 const cookies = new Cookies();
 
-//Variable para modificar la existencia de los materiales
+/**
+ * Variable para modificar la existencia de los materiales
+ */
 var existencianueva = 0;
 
-//Arreglo para almacenar solo nombres de los materiales
+/**
+ * Arreglo para almacenar solo nombres de los materiales
+ */
 const nombrematerialesArray = [];
 
 
 class MaterialesV1RM extends Component{
-    //Estado para guardar valores
+    
+    /**
+     * Estado para guardar valores
+     */
     state={
         busqueda:'',
         data:[],
@@ -68,7 +87,9 @@ class MaterialesV1RM extends Component{
     }
     
 
-    //Petición para traer los datos de la url "vermaterial" y guardar en la variable data del estado
+    /**
+     * Petición para traer los datos de la url "vermaterial" y guardar en la variable data del estado
+     */
     peticionGet = async() =>{
     await  axios.get(vermaterial).then(response =>{
             this.setState({data:response.data});
@@ -77,7 +98,9 @@ class MaterialesV1RM extends Component{
         })
     }
 
-    //Petición post a url "aggmaterial" para registrar material
+    /**
+     * Petición post a url "aggmaterial" para registrar material
+     */
     peticionPost=async()=>{
         await axios.post(aggmaterial, this.state.form).then(response=>{
             this.modalInsertar();
@@ -89,7 +112,9 @@ class MaterialesV1RM extends Component{
         })
     }
 
-    //Petición post a url "aggEntradaMate" para registrar la entrada de material
+    /**
+     * Petición post a url "aggEntradaMate" para registrar la entrada de material
+     */
     peticionPostEntradasMate=async()=>{
         await axios.post(aggEntradaMate, this.state.form2).then(response=>{
             alert("Se registró correctamente")
@@ -101,7 +126,9 @@ class MaterialesV1RM extends Component{
 
     }
 
-    //Petición put a url "dpsidmaterial" para modificar la existencia de los materiales
+    /**
+     * Petición put a url "dpsidmaterial" para modificar la existencia de los materiales
+     */
     peticionPut2 =()=>{
         axios.put(dpsidmaterial+this.state.form._id, this.state.form).then(response=>{
             alert (`La existencia de: ${this.state.form.nombre} se actualizó exitosamente.`);       
@@ -109,7 +136,9 @@ class MaterialesV1RM extends Component{
         })
     }
 
-    //Validar los inputs del modalAggmaterial 
+    /**
+     * Validar los inputs del modalAggmaterial 
+     */
     validacionaggExistencia=async()=>{
         this.modalAggmaterial();
 
@@ -129,17 +158,23 @@ class MaterialesV1RM extends Component{
         }
     }
 
-    //Cambia el estado del modal (abrir y cerrar)
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalInsertar = () =>{
         this.setState({modalInsertar: !this.state.modalInsertar})
     }
 
-    //Cambia el estado del modal (abrir y cerrar)
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalAggmaterial = () =>{
         this.setState({modalAggmaterial: !this.state.modalAggmaterial})
     }
 
-    //Cambia los variables del material por el material seleccionado
+    /**
+     * Cambia los variables del material por el material seleccionado
+     */
     seleccionarMaterial = (material) =>{ 
         this.setState({
             tipoModal:'actualizar',
@@ -165,7 +200,9 @@ class MaterialesV1RM extends Component{
         })  
     }
 
-    //Validar los inputs del modalInsertar y revisar si ya existe el material
+    /**
+     * Validar los inputs del modalInsertar y revisar si ya existe el material
+     */
     validacionaggmaterial = () =>{
 
         if((this.state.form.nombre === '' || this.state.form.existencia === '' || this.state.form.unidadMedida === '' || this.state.form.categoria ==='')){
@@ -193,7 +230,9 @@ class MaterialesV1RM extends Component{
         }    
     }
 
-    //Cambia el valor de las variables del form según lo que se escribe en el input
+    /**
+     * Cambia el valor de las variables del form según lo que se escribe en el input
+     */
     handleChange = async e =>{
         e.persist();
         await this.setState({
@@ -204,7 +243,9 @@ class MaterialesV1RM extends Component{
         });
     }
 
-    //Cambia el valor de las variables del form2 según lo que se escribe en el input
+    /**
+     * Cambia el valor de las variables del form2 según lo que se escribe en el input
+     */
     onchangeform2 = async e =>{
         e.persist();
         await this.setState({
@@ -216,13 +257,17 @@ class MaterialesV1RM extends Component{
 
     }
 
-    //Cambia el valor de la variable "busqueda" según lo que se escribe en el input
+    /**
+     * Cambia el valor de la variable "busqueda" según lo que se escribe en el input
+     */
     onChange = async e =>{
         e.persist();
         await this.setState({busqueda: e.target.value});
     }
 
-    //Elimina las cookies de sesión y redirige al login
+    /**
+     * Elimina las cookies de sesión y redirige al login
+     */
     cerrarSesion = () =>{
         cookies.remove('_id',{path:"/"});
         cookies.remove('nombres',{path:"/"});
@@ -235,15 +280,19 @@ class MaterialesV1RM extends Component{
         window.location.href='./';
     }
 
-    //Llenado del arreglo "nombrematerialessArray" 
+    /**
+     * Llenado del arreglo "nombrematerialessArray" 
+     */
     listamateriales=()=>{
         this.state.data.map(materiales=>{
             nombrematerialesArray.push(materiales.nombre);
         })
     }
 
-    //Ciclo del vida: se ejecuta siempre.
-    //Valída los permisos de usuario
+    /**
+     * Ciclo del vida: se ejecuta siempre.
+     * Valída los permisos de usuario
+     */
     componentDidMount(){
         this.peticionGet();
         if(!cookies.get('username') ){
@@ -256,7 +305,9 @@ class MaterialesV1RM extends Component{
 
     render(){
 
-        //Variable para escribir solo "form.(variable)" en vez de "this.state.form.(variable)"
+        /**
+         * Variable para escribir solo "form.(variable)" en vez de "this.state.form.(variable)"
+         */
         const {form} = this.state;
 
         return(

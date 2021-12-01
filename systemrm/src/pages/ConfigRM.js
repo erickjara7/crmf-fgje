@@ -7,24 +7,36 @@ import '../img/logofiscalia.png';
 import Cookies from 'universal-cookie';
 import md5 from 'md5';
 
-//Ruta traer datos de la coleccion User
+/**
+ * Ruta traer datos de la coleccion User
+ */
 const usersurl="http://localhost:4000/users/getuser";
 
-//Ruta para hacer post y agg usuarios
+/**
+ * Ruta para hacer post y agg usuarios
+ */
 const agguser = "http://localhost:4000/users/add";
 
-//Ruta para eliminar usuarios
+/**
+ * Ruta para eliminar usuarios
+ */
 const deleteuser = "http://localhost:4000/users/";
 
-//Arreglo para almacenar nombres de usuarios Nombre+ApellidoP+ApellidoM
+/**
+ * Arreglo para almacenar nombres de usuarios Nombre+ApellidoP+ApellidoM
+ */
 const nombresUsuariosArray = [];
 
-//Traer cookies de inicio de sesión
+/**
+ * Traer cookies de inicio de sesión
+ */
 const cookies = new Cookies();
 
 class ConfigRM extends Component{
 
-    //Estado para guardar valores
+    /**
+     * Estado para guardar valores
+     */
     state={
         //Guardar lo que se escribe en el input de barra buscadora
         busqueda:'',
@@ -50,7 +62,9 @@ class ConfigRM extends Component{
         }
     }
 
-    //Petición para traer los datos de la url "usersurl" y guardar en la variable data del estado
+    /**
+     * Petición para traer los datos de la url "usersurl" y guardar en la variable data del estado
+     */
     peticionGet = async() =>{
         await  axios.get(usersurl).then(response =>{
              this.setState({data:response.data});
@@ -60,7 +74,9 @@ class ConfigRM extends Component{
          })
     }
 
-    //Validar los inputs del modalInsertar y revisar si ya existe el usuario 
+    /**
+     * Validar los inputs del modalInsertar y revisar si ya existe el usuario 
+     */
     validacionModalReUser = () =>{
         if(this.state.form.nombres === '' || this.state.form.apellidoP === '' || this.state.form.apellidoM === '' || this.state.form.departamento === '' 
            || this.state.form.municipio === '' || this.state.form.username === '' || this.state.form.password === '' || this.state.form.userType === '' 
@@ -95,7 +111,9 @@ class ConfigRM extends Component{
         }
     }
 
-    //Petición post a url "agguser" para registrar usuario 
+    /**
+     * Petición post a url "agguser" para registrar usuario 
+     */
     peticionPost=async()=>{
         await axios.post(agguser, this.state.form).then(response=>{
             this.modalInsertar();
@@ -107,7 +125,9 @@ class ConfigRM extends Component{
         
     }
 
-    //Petición delete a url "deleteuser" para eliminar el usuario
+    /**
+     * Petición delete a url "deleteuser" para eliminar el usuario
+     */
     peticionDelete=()=>{
         axios.delete(deleteuser+this.state.form._id).then(response =>{
             this.setState({modalEliminar:false});
@@ -119,22 +139,30 @@ class ConfigRM extends Component{
          })
     }
     
-    //Cambia el estado del modal (abrir y cerrar)
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalInsertar=()=>{
         this.setState({modalInsertar: !this.state.modalInsertar});
     }
 
-    //Cambia el estado del modal (abrir y cerrar)
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalEliminar=()=>{
         this.setState({modalEliminar: !this.state.modalEliminar});
     }
 
-    //Encripta la contraseña que se va a insertar a la BD
+    /**
+     * Encripta la contraseña que se va a insertar a la BD
+     */
     convertirmd5password=()=>{
         this.state.form.password = md5(this.state.form.password)
     }
 
-    //Llenado del arreglo "nombresUsuariosArray" nombres completos
+    /**
+     * Llenado del arreglo "nombresUsuariosArray" nombres completos
+     */
     listausers=()=>{
         this.state.data.map((nombresusers) =>{
             nombresUsuariosArray.push(nombresusers.nombres+' '+nombresusers.apellidoP+' '+nombresusers.apellidoM);
@@ -142,6 +170,7 @@ class ConfigRM extends Component{
 
     }
 
+    /** */
     //Cambia los variables del usuario por el usuario seleccionado
     seleccionarUsuario = (usuario)=>{
         this.setState({
@@ -161,7 +190,9 @@ class ConfigRM extends Component{
         })
     }
 
-    //Cambia el valor de las variables del form según lo que se escribe en el input
+    /**
+     * Cambia el valor de las variables del form según lo que se escribe en el input
+     */
     handleChange = async e =>{
         e.persist();
         await this.setState({
@@ -175,13 +206,17 @@ class ConfigRM extends Component{
        
     }
 
-    //Cambia el valor de la variable "busqueda" según lo que se escribe en el input
+    /**
+     * Cambia el valor de la variable "busqueda" según lo que se escribe en el input
+     */
     onChange = async e =>{
         e.persist();
         await this.setState({busqueda: e.target.value});        
     }
 
-    //Elimina las cookies de sesión y redirige al login
+    /**
+     * Elimina las cookies de sesión y redirige al login
+     */
     cerrarSesion =() =>{
         cookies.remove('_id',{path:"/"});
         cookies.remove('nombres',{path:"/"});
@@ -194,8 +229,10 @@ class ConfigRM extends Component{
         window.location.href='./';
     }
 
-    //Ciclo del vida: se ejecuta siempre.
-    //Valída los permisos de usuario
+    /**
+     * Ciclo del vida: se ejecuta siempre.
+     * Valída los permisos de usuario
+     */
     componentDidMount(){
         this.peticionGet();
         if (!cookies.get('username')){
@@ -209,7 +246,9 @@ class ConfigRM extends Component{
 
 
     render(){
-        //Variable para escribir solo "form.(variable)" en vez de "this.state.form.(variable)"
+        /**
+         * Variable para escribir solo "form.(variable)" en vez de "this.state.form.(variable)"
+         */
         const {form} = this.state;
 
         return(

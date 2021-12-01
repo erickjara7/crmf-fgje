@@ -6,16 +6,21 @@ import md5 from 'md5';
 import {Button} from 'reactstrap';
 import Cookies from 'universal-cookie';
 
-
-//Ruta traer datos de la coleccion User
+/**
+ * Ruta traer datos de la coleccion User
+ */
 const loginurl="http://localhost:4000/users/getuser";
 
-//Traer cookies de inicio de sesión
+/**
+ * Traer cookies de inicio de sesión
+ */
 const cookies = new Cookies();
 
 
 class Login extends Component{
-//ESTADO LOGIN PARA GUARDAR LOS VALORES
+    /**
+     * ESTADO LOGIN PARA GUARDAR LOS VALORES
+     */
     state={
         form:{
             username:'',
@@ -24,7 +29,9 @@ class Login extends Component{
         }
     }
 
-//GUARDA EN EL ESTADO LOGIN DE ACUERDO AL INPUT
+    /**
+     * GUARDA EN EL ESTADO LOGIN DE ACUERDO AL INPUT
+     */
     handleChange=async e=>{
         await this.setState({
             form:{
@@ -34,9 +41,11 @@ class Login extends Component{
         });   
     }
 
-//METODO INICIAR SESION
-//Valída que los campos esten llenos y que la información corresponda 
-//Genera las cookies de inicio de sesión  
+    /**
+     * METODO INICIAR SESION
+     * Valída que los campos esten llenos y que la información corresponda 
+     * Genera las cookies de inicio de sesión  
+     * */ 
     iniciarSesion=async()=>{
         await axios.get(loginurl)
         .then(response=>{
@@ -90,19 +99,25 @@ class Login extends Component{
         })
     }
 
-    //Alert para el link de "Aun no tengo una cuenta"
+    /**
+     * Alert para el link de "Aun no tengo una cuenta"
+     */
     aunnotengocuenta=async()=>{
         alert("Favor de pasar al departamento de Recursos Materiales a registrarse.");        
     }
 
-    //Alert para el link de "Olvidé mi contraseña"
+    /**
+     * Alert para el link de "Olvidé mi contraseña"
+     */
     olvidecontraseña=async()=>{
         alert("Favor de pasar al departamento de Recursos Materiales a solicitar la información correspondiente.");
    
     }
 
-    //Ciclo del vida: se ejecuta siempre.
-    //Valída los permisos de usuario
+    /**
+     * Ciclo del vida: se ejecuta siempre.
+     * Valída los permisos de usuario
+     */
     componentDidMount(){  
         if (cookies.get('username')){
             if(cookies.get('userType') === 'Usuario'){

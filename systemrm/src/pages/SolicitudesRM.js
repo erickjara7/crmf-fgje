@@ -5,52 +5,84 @@ import {Card, Accordion} from 'react-bootstrap';
 import axios from 'axios';
 import '../css/solisunmenu.css';
 
-//Traer cookies de inicio de sesión
+/**
+ * Traer cookies de inicio de sesión
+ */
 const cookies = new Cookies();
 
-//Ruta traer datos de la coleccion solicitud
+/**
+ * Ruta traer datos de la coleccion solicitud
+ */
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
 
-//Ruta traer datos de la coleccion materialsolicitados
+/**
+ * Ruta traer datos de la coleccion materialsolicitados
+ */
 const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 
-//Ruta para modificar un registro en especifico de la coleccion solicitud
+/**
+ * Ruta para modificar un registro en especifico de la coleccion solicitud
+ */
 const putsoli = "http://localhost:4000/solicitud/";
 
-//Ruta traer datos de la coleccion materiales
+/**
+ * Ruta traer datos de la coleccion materiales
+ */
 const vermaterial = "http://localhost:4000/materiales/getmaterial";
 
-//Ruta para eliminar y/o modificar un registro en especifico de materiales
+/**
+ * Ruta para eliminar y/o modificar un registro en especifico de materiales
+ */
 const dpsidmaterial = "http://localhost:4000/materiales/";
 
-//Ruta para modificar un registro en especifico de la coleccion materialsolicitados
+/**
+ * Ruta para modificar un registro en especifico de la coleccion materialsolicitados
+ */
 const putmatesoli = "http://localhost:4000/materialsolicitado/";
 
-//Arreglo para copiar los datos guardados en "datamatesoli" para mantenerlo publico
+/**
+ * Arreglo para copiar los datos guardados en "datamatesoli" para mantenerlo publico
+ */
 var materialesSolicitados = [];
 
-//variable para copiar el valor del id de una solicitud seleccionada para mantenerlo publico
+/**
+ * variable para copiar el valor del id de una solicitud seleccionada para mantenerlo publico
+ */
 var solicitudID = '';
 
-//variable para copiar el valor tipodesolicitud de una solicitud seleccionada para mantenerlo publico
+/**
+ * variable para copiar el valor tipodesolicitud de una solicitud seleccionada para mantenerlo publico
+ */
 var typesoli = '';
 
-//variable para copiar el valor del id de cada 1 de las materiales solicitados para ser agg al vector
+/**
+ * variable para copiar el valor del id de cada 1 de las materiales solicitados para ser agg al vector
+ */
 var vecIdMatesoli ='';
 
-//Arreglo guardar materiales solicitados de una solicitud seleccionada(se guardan doble)
+/**
+ * Arreglo guardar materiales solicitados de una solicitud seleccionada(se guardan doble)
+ */
 const vector =[];
 
-//Arreglo guarda materiales solicitados de una solicitud seleccionada(la mitad del arreglo Vector)
+/**
+ * Arreglo guarda materiales solicitados de una solicitud seleccionada(la mitad del arreglo Vector)
+ */
 let newvector =[];
 
-//variable para copiar el valor del id de cada 1 de las solicitudes para ser agg al vector
+/**
+ * variable para copiar el valor del id de cada 1 de las solicitudes para ser agg al vector
+ */
 var vecMateid='';
 
-//variable para copiar el valor de cantidad solicitada de cada 1 de las solicitudes para ser agg al vector
+/**
+ * variable para copiar el valor de cantidad solicitada de cada 1 de las solicitudes para ser agg al vector
+ */
 var vecCanSol='';
 
-//Para iniciar el ciclo for
+/**
+ * Para iniciar el ciclo for
+ */
 var i =0;
  
 
@@ -60,7 +92,9 @@ var i =0;
 
 class SolicitudesRM extends Component{
 
-    //Estado para guardar valores
+    /**
+     * Estado para guardar valores
+     */
     state={
         datamate:[],
         newdatamate:[],
@@ -89,7 +123,9 @@ class SolicitudesRM extends Component{
         }
     }
 
-    //Petición para traer los datos de la url "versolicitud" y guardar en la variable data del estado
+    /**
+     * Petición para traer los datos de la url "versolicitud" y guardar en la variable data del estado
+     */
     peticiongetsoli = async()=>{
         await axios.get(versolicitud).then(response=>{
             this.setState({data:response.data})
@@ -98,7 +134,9 @@ class SolicitudesRM extends Component{
         })    
     }
 
-    //Petición para traer los datos de la url "vermaterialsoli" y guardar en la variable datamatesoli del estado
+    /**
+     * Petición para traer los datos de la url "vermaterialsoli" y guardar en la variable datamatesoli del estado
+     */
     peticiongetmatesoli = async()=>{
         await axios.get(vermaterialsoli).then(response=>{
             this.setState({datamatesoli: response.data});
@@ -108,17 +146,9 @@ class SolicitudesRM extends Component{
 
     }
 
-    //Petición para modificar las solicitudes (cancelar solicitud)
-    peticionputcancelarSoli = () =>{
-        axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
-            this.modalCancelarsoli();
-            this.peticiongetsoli();
-        }).catch(error=>{
-            alert("Error al enviar")
-        })
-    }
-
-    //Petición para modificar las solicitudes(cambiar estado a entregada)
+    /**
+     * Petición para modificar las solicitudes(cambiar estado a entregada)
+     */
     peticionPutestadoSoli = ()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEntregarMaterial();
@@ -131,6 +161,9 @@ class SolicitudesRM extends Component{
            
     }
 
+    /** 
+     * Petición para traer los datos de la url "vermaterial" y guardar en la variable datamate del estado 
+     */
     peticiongetColletionMateriales=async()=>{
         await axios.get(vermaterial).then(response=>{
             this.setState({datamate: response.data});
@@ -141,23 +174,44 @@ class SolicitudesRM extends Component{
         })
     }
 
-    //Cambia el estado del modal (abrir y cerrar)
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalEntregarMaterial =()=>{
         this.setState({modalEntregarMaterial: !this.state.modalEntregarMaterial});
         window.location.href='./solicitudes';
     }
 
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalCancelarsoli=()=>{
         this.setState({modalCancelarsoli: !this.state.modalCancelarsoli})
     }
 
+    /**
+     * Petición delete a url "putsoli" para eliminar la solicitud
+     */
+    peticionDelete=()=>{
+        axios.delete(putsoli+this.state.form._id).then(response =>{
+            this.setState({modalCancelarsoli:false});
+            this.peticiongetsoli();       
+        }).catch(error=>{
+            console.log(error.message);
+            alert("Error al Eliminar");
+    
+        })
+    }
 
-    //Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Cancelada"
+
+    /**
+     * Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Cancelada"
+     */
     selecSoliCancelar=(solicitudes)=>{
         this.setState({
             form:{
-                _id: solicitudes._id,
-                estado: 'Cancelada'
+                _id: solicitudes._id
+               
             }
         })
         console.log(this.state.form._id)
@@ -169,8 +223,10 @@ class SolicitudesRM extends Component{
         }
     }
 
-    //Se llena el vector con id del material, y cantidad solicitada y id de registro del material solicitado
-    //correspondientes a la solicitud seleccionada
+    /**
+     * Se llena el vector con id del material, y cantidad solicitada y id de registro del material solicitado
+     * correspondientes a la solicitud seleccionada
+     */
     selecMaterialaCambiar=async(materialesSolicitados)=>{
         if(solicitudID !== ''){
             if(materialesSolicitados.idSolicitud === solicitudID){
@@ -186,13 +242,16 @@ class SolicitudesRM extends Component{
         }   
     }
     
-    //Entrega de material, se modifica la existencia de la tabla materiales
-    //se descuentan los materiales que se pidieron en la solicitud
+    /**
+     * Entrega de material, se modifica la existencia de la tabla materiales
+     * se descuentan los materiales que se pidieron en la solicitud
+     */
     peticionPutExistencia=()=>{
         //se llena un nuevo vector con la mitad del vector de los materiales solicitados
         for(  i = i; i < vector.length/2; i ++){
             newvector.push(vector[i]);
         }
+        
         //se recorre vector, se trae y se recorre los materiales
         newvector.map((materialesvec)=>{
             axios.get(vermaterial)
@@ -223,10 +282,7 @@ class SolicitudesRM extends Component{
                                 });
                                
 
-                               /* axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
-                                }).catch(error=>{
-                                    alert("Error al entregar los materiales");
-                                })*/
+                            
 
                                 // si lo que hay es menor a lo que pidió se modifica la cantidad solicitada por la existencia
                             }else{
@@ -297,69 +353,18 @@ class SolicitudesRM extends Component{
                             }
                         }
 
-
-
-
-
-                        //se busca el material por id y si es igual al del arreglo se cambian el valor exixtencia 
-                     /*    if(materiales._id === materialesvec.vecMateid){
-                            // si no hay material se elimina de la solicitud la requsicion de ese material 
-                            if(materiales.existencia === 0){
-                                this.setState({
-                                    form3:{
-                                        _id:materialesvec.vecIdMatesoli,
-                                    }                            
-                                });
-                            
-                                this.state.form2.existencia = materiales.existencia;
-                                axios.delete(putmatesoli+this.state.form3._id).then(response=>{
-
-                                });
-
-                            // si lo que hay es menor a lo que pidió se modifica la cantidad solicitada por la existencia
-                            }else if(materiales.existencia <= materialesvec.vecCanSol){
-                                this.setState({
-                                    form3:{
-                                        _id:materialesvec.vecIdMatesoli,
-                                        cantidadsolicitada: materiales.existencia
-                                    }                            
-                                });
-                                this.state.form2.existencia = materiales.existencia - this.state.form3.cantidadsolicitada;
-                                this.state.form2._id = materialesvec.vecMateid;
-                                //linea nueva
-                            // this.state.form3.cantidadsolicitada = this.state.form2.existencia;
-                            
-
-                                axios.put(putmatesoli+ this.state.form3._id, this.state.form3).then(response=>{
-                                }).catch(error=>{
-                                    alert("Error al entregar los materiales");
-                                })
-                            
-                            // si la existencia es mayor a la cantidad solicitada se cambia la existencia restando lo solicitado
-                            }else{                           
-                                this.state.form2._id = materialesvec.vecMateid;
-                                this.state.form2.existencia = materiales.existencia - materialesvec.vecCanSol;
-                            }                                            
-                        } */ 
                     }           
                 })
                 
-
-              /*  if(this.state.form2.tipoSolicitud === 'Requisición'){
  
-                    axios.put(dpsidmaterial+this.state.form2._id, this.state.form2).then(response=>{                    
-                    }).catch(error=>{
-                        alert("Error al entregar los materiales");
-                    })
-                }else if(this.state.form2.tipoSolicitud === 'Préstamo'){
-                  
-                }  */            
-            }) //del   esteee tambien     
+            })  
         })
         this.peticionPutestadoSoli();
     }
     
-    //Cambia los valores de las solicitudes por la de la solicitud seleccionada
+    /**
+     * Cambia los valores de las solicitudes por la de la solicitud seleccionada
+     */
     seleccionarsoliput =(solicitudes)=>{
         //cambia los valores segun la solicitud seleccionada para hacer el put
         this.setState({
@@ -390,7 +395,9 @@ class SolicitudesRM extends Component{
 
     }
 
-    //Elimina las cookies de sesión y redirige al login
+    /**
+     * Elimina las cookies de sesión y redirige al login
+     */
     cerrarSesion =() =>{
     //eliminar cookies para no ir a paginas sin autenticarse
         cookies.remove('_id',{path:"/"});
@@ -404,14 +411,15 @@ class SolicitudesRM extends Component{
         window.location.href='./';
     }
 
-    //Ciclo del vida: se ejecuta siempre.
-    //Valída los permisos de usuario
+    /**
+     * Ciclo del vida: se ejecuta siempre.
+     * Valída los permisos de usuario
+     */
+    
     componentDidMount(){
         this.peticiongetmatesoli();
         this.peticiongetsoli();
         this.peticiongetColletionMateriales();
-
-        //cookies para no ir a paginas sin autenticarse
         if (!cookies.get('username')){
             window.location.href="./";
         }else if(cookies.get('userType') === 'Usuario'){
@@ -537,7 +545,7 @@ class SolicitudesRM extends Component{
                         La solicitud será eliminada permanentemente
                     </ModalBody>
                     <ModalFooter>
-                        <button className="btn btn-success"  onClick={()=>this.peticionputcancelarSoli()} >Si</button>
+                        <button className="btn btn-success"  onClick={()=>this.peticionDelete()} >Si</button>
                         <button className="btn btn-danger"  onClick={()=> this.modalCancelarsoli()}>No</button>
                     </ModalFooter>
                 </Modal>

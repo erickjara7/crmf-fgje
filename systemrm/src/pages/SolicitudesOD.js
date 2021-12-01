@@ -7,22 +7,34 @@ import '../css/Materiales.css';
 import '../img/logofiscalia.png';
 import Cookies from 'universal-cookie';
 
-//Ruta para hacer post y agg solicitudes
+/**
+ * Ruta para hacer post y agg solicitudes
+ */
 const aggsolicitud = "http://localhost:4000/solicitud/add";
 
-//Ruta traer datos de la coleccion solicitud
+/**
+ * Ruta traer datos de la coleccion solicitud
+ */
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
 
-//Ruta para modificar un registro en especifico de la coleccion solicitud
+/**
+ * Ruta para modificar un registro en especifico de la coleccion solicitud
+ */
 const putsoli = "http://localhost:4000/solicitud/";
 
-//Ruta traer datos de la coleccion materialsolicitados
+/**
+ * Ruta traer datos de la coleccion materialsolicitados
+ */
 const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 
-//Traer cookies de inicio de sesión
+/**
+ * Traer cookies de inicio de sesión
+ */
 const cookies = new Cookies();
 
-//Variables para traer la fecha actual
+/**
+ * Variables para traer la fecha actual
+ */
 const today = new Date(),
 date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate() ;
 
@@ -30,7 +42,9 @@ date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate
 class SolicitudesOD extends Component{
     
 
-    //Estado para guardar valores
+    /**
+     * Estado para guardar valores
+     */
     state={
         solicitudid:'',
         datatiposoli:['','Requisición','Préstamo'],
@@ -51,7 +65,9 @@ class SolicitudesOD extends Component{
         }
     }
 
-    //Petición para traer los datos de la url "versolicitud" y guardar en la variable data del estado
+    /**
+     * Petición para traer los datos de la url "versolicitud" y guardar en la variable data del estado
+     */
     peticionGet = async() =>{
         await  axios.get(versolicitud).then(response =>{
             this.setState({data:response.data});
@@ -60,7 +76,9 @@ class SolicitudesOD extends Component{
         })
     }
 
-    //Petición para traer los datos de la url "vermaterialsoli" y guardar en la variable datamate del estado
+    /**
+     * Petición para traer los datos de la url "vermaterialsoli" y guardar en la variable datamate del estado
+     */
     peticiongetmatesoli = async() =>{
         await axios.get(vermaterialsoli).then(response =>{
             this.setState({datamate:response.data});
@@ -69,7 +87,9 @@ class SolicitudesOD extends Component{
         })
     }
 
-    //Petición para modificar las solicitudes (enviar soli)
+    /**
+     * Petición para modificar las solicitudes (enviar soli)
+     */
     peticionPutestadoSoli = ()=>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalEnviarsoli();
@@ -79,7 +99,9 @@ class SolicitudesOD extends Component{
         })                    
     }
 
-    //Petición para modificar las solicitudes (cancelar soli)
+    /**
+     * Petición para modificar las solicitudes (cancelar soli)
+     */
     peticionputcancelarSoli = () =>{
         axios.put(putsoli+this.state.form._id, this.state.form).then(response=>{
             this.modalCancelarsoli();
@@ -89,20 +111,24 @@ class SolicitudesOD extends Component{
         })
     }
 
-    //Petición post a url "aggsolicitud" para registrar solicitudes
+    /**
+     * Petición post a url "aggsolicitud" para registrar solicitudes
+     */
     peticionpostsoli = ()=>{
         axios.post(aggsolicitud,this.state.form).then(response=>{
             this.modalInsertar();
             alert("SOLICITUD CREADA, AHORA ELIJA LA SOLICITUD Y PROCEDA A ELEGIR LOS MATERIALES ");
             window.location.href="./solicitudesodep"
-            //this.peticionGet();
+           
         })
         .catch(error=>{
             alert('Error al crear la solicitud')
         })
     }
 
-    //Validar los inputs del modalInsertar
+    /**
+     * Validar los inputs del modalInsertar
+     */
     validaciónmodal =()=>{
         if ((this.state.form.area === '') || (this.state.form.tipoSolicitud === '')){
             alert('Favor de llenar todos los campos');
@@ -111,23 +137,31 @@ class SolicitudesOD extends Component{
         }
     }
 
-    //Cambia el estado del modal (abrir y cerrar)
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalInsertar = () =>{
         this.setState({modalInsertar: !this.state.modalInsertar})
     }
 
-    //Cambia el estado del modal (abrir y cerrar)
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalEnviarsoli =()=>{
         this.setState({modalEnviarsoli: !this.state.modalEnviarsoli})
     }
 
-    //Cambia el estado del modal (abrir y cerrar)
+    /**
+     * Cambia el estado del modal (abrir y cerrar)
+     */
     modalCancelarsoli=()=>{
         this.setState({modalCancelarsoli: !this.state.modalCancelarsoli})
     }
 
-    //Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Pendiente"
-    //Desactiva botones si la solicitud ya fue enviada
+    /**
+     * Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Pendiente"
+     * Desactiva botones si la solicitud ya fue enviada
+     */
     seleccionarsoliput =(solicitudes)=>{
         this.setState({
             form:{
@@ -148,7 +182,23 @@ class SolicitudesOD extends Component{
 
     }
 
-    //Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Cancelada"
+    /**
+     * Petición delete a url "putsoli" para eliminar la solicitud
+     */
+    peticionDelete=()=>{
+        axios.delete(putsoli+this.state.form._id).then(response =>{
+            this.setState({modalCancelarsoli:false});
+            this.peticionGet()       
+        }).catch(error=>{
+            console.log(error.message);
+            alert("Error al Eliminar");
+    
+        })
+    }
+
+    /**
+     * Cambia el valor de las variables del usuario por el usuario seleccionado 
+     */
     selecSoliCancelar=(solicitudes)=>{
         this.setState({
             form:{
@@ -165,7 +215,10 @@ class SolicitudesOD extends Component{
         }
     }
 
-    //Guarda en cookies el valor id de la solicitud seleccionada y te redirige a la ventana de materiales a elegir
+
+    /**
+     * Guarda en cookies el valor id de la solicitud seleccionada y te redirige a la ventana de materiales a elegir
+     */
     seleccionarsolicitud =(solicitudes)=>{
         this.setState({ 
             form:{
@@ -180,7 +233,9 @@ class SolicitudesOD extends Component{
        }   
     }
 
-    //Cambia el valor de las variables del form según lo que se escribe en el input
+    /**
+     * Cambia el valor de las variables del form según lo que se escribe en el input
+     */
     handleChange = async e =>{
         e.persist();
         await this.setState({            
@@ -191,7 +246,9 @@ class SolicitudesOD extends Component{
         });
     }
     
-    //Elimina las cookies de sesión y redirige al login
+    /**
+     * Elimina las cookies de sesión y redirige al login
+     */
     cerrarSesion=()=>{
         cookies.remove('_id',{path:"/"});
         cookies.remove('nombres',{path:"/"});
@@ -204,8 +261,10 @@ class SolicitudesOD extends Component{
         window.location.href='./';
     }
 
-    //Ciclo del vida: se ejecuta siempre.
-    //Valída los permisos de usuario
+    /**
+     * Ciclo del vida: se ejecuta siempre.
+     * Valída los permisos de usuario
+     */
     componentDidMount(){
         this.peticionGet();
         this.peticiongetmatesoli();
@@ -221,7 +280,9 @@ class SolicitudesOD extends Component{
 
     render(){
 
-        //Variable para escribir solo "form.(variable)" en vez de "this.state.form.(variable)"
+        /**
+         * Variable para escribir solo "form.(variable)" en vez de "this.state.form.(variable)"
+         */
         const {form} = this.state;
 
         return(
@@ -416,7 +477,7 @@ class SolicitudesOD extends Component{
                         La solicitud será eliminada permanentemente
                     </ModalBody>
                     <ModalFooter>
-                        <button className="btn btn-success"  onClick={()=>this.peticionputcancelarSoli()} >Si</button>
+                        <button className="btn btn-success"  onClick={()=>this.peticionDelete()} >Si</button>
                         <button className="btn btn-danger"  onClick={()=> this.modalCancelarsoli()}>No</button>
                     </ModalFooter>
                 </Modal>
