@@ -20,6 +20,9 @@ const cookies = new Cookies();
 class Login extends Component{
     /**
      * ESTADO LOGIN PARA GUARDAR LOS VALORES
+     * @param   {Object}    form    Guardar cada uno de los datos de la api users
+     * @param   {String}    username    Guarda el nombre de usuario del usuario
+     * @param   {String}    password     Guarda la contraseña del usuario
      */
     state={
         form:{

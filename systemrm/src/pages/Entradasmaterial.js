@@ -17,6 +17,10 @@ class Entradasmaterial extends Component{
     
     /**
      * Estado para guardar valores
+     * @param   {Array} dataentradasmateriales  Guarda los datos de las entradas de material, obtenidos de la peticon get a la api
+     * @param   {String}    materialesS Guarda lo que se escribe en el input 
+     * @param   {String}    mesS    Guarda lo que se escribe en el input
+     * @param   {String}    añoS    Guarda lo que se escribe en el input
      */
     state={ 
 

@@ -52,6 +52,32 @@ class MaterialesV1RM extends Component{
     
     /**
      * Estado para guardar valores
+     * 
+     * @param   {String}    busqueda    Guarda lo que escribe el input de barra de busqueda
+     * @param   {Array}     data    Arreglo para guardar los datos obtenidos de la ruta vermaterial
+     * @param   {Array}     datamedida    Arreglo para guardar los datos de diferentes unidades de medida
+     * @param   {Array}     datacategoria    Arreglo para guardar los datos de diferentes categorias
+     * @param   {Boolean}    modalAggmaterial  Guarda el valor del modal si es false=modal cerrado y si es true=modal abierto
+     * @param   {Boolean}    modalInsertar  Guarda el valor del modal si es false=modal cerrado y si es true=modal abierto
+     * @param   {Object}    form     Guardar cada uno de los datos de los materiales
+     * @param   {String}    _id     Guarda el id del material
+     * @param   {String}    nombre  Guarda el nombre del material
+     * @param   {String}    existencia  Guarda la existencia del material
+     * @param   {String}    unidadMedida    Guarda la unidad de medida del material
+     * @param   {String}    categoria   Guarda la categoria del material
+     * @param   {String}    marcamate   Guarda la categoria del material
+     * @param   {Object}    form2     Guardar cada uno de los datos de las entradas de materiales
+     * @param   {String}    idmaterialEM    Guarda el id del material en la tabla de entradas de material
+     * @param   {String}    nombreEM    Guarda el nombre del material en la tabla de entradas de material
+     * @param   {String}    cantidadaggEM   Guarda la cantidad a agg del material en la tabla de entradas de material
+     * @param   {String}    unidadMedidaEM  Guarda la unidad de medida del material en la tabla de entradas de material
+     * @param   {String}    categoriaEM      Guarda la categoria del material en la tabla de entradas de material
+     * @param   {String}    marcamateEM     Guarda la marca del material a agg
+     * @param   {String}    caducidadmateEM     Guarda la fecha de caducidad del material a agg
+     * @param   {String}    tipomaterialEM      Guarda el tipo del material en la tabla de entradas de material
+     * @param   {String}    loteEM      Guarda el lote del material en la tabla de entradas de material
+     * @param   {String}    fechaEM     Guarda la fecha del registro del material a agg
+     * @param   {String}    usuarioEM   Guarda el usuario que realizó el registro del material a agg
      */
     state={
         busqueda:'',
@@ -174,6 +200,7 @@ class MaterialesV1RM extends Component{
 
     /**
      * Cambia los variables del material por el material seleccionado
+     * @param {String}  material Guarda todos los datos del material seleccionado
      */
     seleccionarMaterial = (material) =>{ 
         this.setState({

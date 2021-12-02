@@ -94,6 +94,22 @@ class SolicitudesRM extends Component{
 
     /**
      * Estado para guardar valores
+     * @param   {Array}    datamate      Arreglo para guardar los datos obtenidos de la ruta vermaterial
+     * @param   {Array}    newdatamate      Arreglo para guardar datos del material
+     * @param   {Array}    data      Arreglo para guardar los datos obtenidos de la ruta versolicitud
+     * @param   {Array}    datamatesoli      Arreglo para guardar los datos obtenidos de la ruta vermaterialsoli
+     * @param   {Boolean}    modalEntregarMaterial      Guarda el valor del modal si es false=modal cerrado y si es true=modal abierto
+     * @param   {Boolean}    modalCancelarsoli     Guarda el valor del modal si es false=modal cerrado y si es true=modal abierto
+     * @param   {Object}    form        Guardar cada uno de los datos de las solicitudes
+     * @param   {String}    _id     Guarda _id de la solicitud
+     * @param   {String}    tipoSolicitud   Guarda el tipo de solicitud de la solicitud
+     * @param   {Object}    form2        Guardar cada uno de los datos de los materiales
+     * @param   {String}    _id     Guarda _id del material
+     * @param   {String}    existencia     Guarda la existencia del material
+     * @param   {String}    tipoSolicitud   Guarda el tipo de solicitud de la solicitud
+     * @param   {Object}    form3        Guardar cada uno de los datos de los materiales solicitados
+     * @param   {String}    _id     Guarda _id de los materiales solicitados
+     * @param   {String}    cantidadsolicitada     Guarda cantidad solicitada de los materiales solicitados de la solicitud
      */
     state={
         datamate:[],
@@ -206,6 +222,7 @@ class SolicitudesRM extends Component{
 
     /**
      * Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Cancelada"
+     * @param {String}  solicitudes Guarda todos los datos de la solicitud seleccionada
      */
     selecSoliCancelar=(solicitudes)=>{
         this.setState({
@@ -226,6 +243,7 @@ class SolicitudesRM extends Component{
     /**
      * Se llena el vector con id del material, y cantidad solicitada y id de registro del material solicitado
      * correspondientes a la solicitud seleccionada
+     * @param {String}  materialesSolicitados Guarda todos los datos de los materiales solicitados en la solicitud seleccionada
      */
     selecMaterialaCambiar=async(materialesSolicitados)=>{
         if(solicitudID !== ''){
@@ -364,6 +382,7 @@ class SolicitudesRM extends Component{
     
     /**
      * Cambia los valores de las solicitudes por la de la solicitud seleccionada
+     * @param {String}  solicitudes Guarda todos los datos de la solicitud seleccionada
      */
     seleccionarsoliput =(solicitudes)=>{
         //cambia los valores segun la solicitud seleccionada para hacer el put

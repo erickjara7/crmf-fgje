@@ -26,6 +26,21 @@ class MaterialesV1OD extends Component{
 
     /**
      * Estado para guardar valores
+     * @param   {String}    existenciatemp  Guarda la existencia temporalmente
+     * @param   {String}    busqueda    Guarda lo que escribe el input de barra de busqueda
+     * @param   {Boolean}    modalInsertar  Guarda el valor del modal si es false=modal cerrado y si es true=modal abierto
+     * @param   {Array}     data    Arreglo para guardar los datos obtenidos de la ruta vermaterial
+     * @param   {Object}    form     Guardar cada uno de los datos de las solicitudes y materiales
+     * @param   {String}    _id     Guarda el id del material
+     * @param   {String}    nombre  Guarda el nombre del material
+     * @param   {String}    existencia  Guarda la existencia del material
+     * @param   {String}    unidadMedida    Guarda la unidad de medida del material
+     * @param   {String}    categoria   Guarda la categoria del material
+     * @param   {String}    idSolicitud Guarda el id de la solicitud
+     * @param   {String}    idMaterial  Guarda el id del material en la tabla de material solicitado
+     * @param   {String}    cantidadsolicitada  Guarda la cantidad del material solicitado
+     * @param   {String}    nombreMaterial  Guarda el nombre del material solicitado
+     * @param   {String}    unidadMedidaMS  Guarda la unidad de medida del material solicitado
      */
     state={
         existenciatemp: '',
@@ -133,6 +148,7 @@ class MaterialesV1OD extends Component{
 
     /**
      * Cambia los variables del material por el material seleccionado
+     * @param {String}  material Guarda todos los datos del material seleccionado
      */
     seleccionarmaterial = (material) =>{
         this.setState({

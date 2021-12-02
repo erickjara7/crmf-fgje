@@ -36,6 +36,21 @@ class ConfigRM extends Component{
 
     /**
      * Estado para guardar valores
+     * @param   {String}    busqueda    Guarda lo que escribe el input de barra de busqueda
+     * @param   {Array}     data    Arreglo para guardar los datos obtenidos de la ruta usersurl
+     * @param   {Array}     datausertype    Guarda los tipos de usuario
+     * @param   {Boolean}   modalInsertar   Guarda el valor del modal si es false=modal cerrado y si es true=modal abierto
+     * @param   {Boolean}   modalEliminar   Guarda el valor del modal si es false=modal cerrado y si es true=modal abierto
+     * @param   {Object}    form    Guardar cada uno de los datos de la api users
+     * @param   {String}    _id     Guarda el id del usuario                                       
+     * @param   {String}    nombres     Guarda el nombre del usuario
+     * @param   {String}    apellidoP   Guarda el apellido paterno del usuario
+     * @param   {String}    apellidoM   Guarda el apellido materno del usuario
+     * @param   {String}    username    Guarda el nombre de usuario del usuario
+     * @param   {String}    password    Guarda la contraseña del usuario
+     * @param   {String}    municipio   Guarda el municipio del usuario
+     * @param   {String}    departamento    Guarda el departamento en el cual trabaja el usuario
+     * @param   {String}    userType    Guarda el id tipo de usuario
      */
     state={
         //Guardar lo que se escribe en el input de barra buscadora
@@ -170,8 +185,10 @@ class ConfigRM extends Component{
 
     }
 
-    /** */
-    //Cambia los variables del usuario por el usuario seleccionado
+    /**
+     * Cambia los variables del usuario por el usuario seleccionado
+     * @param {String}  usuario Guarda todos los datos del usuario seleccionado
+     */
     seleccionarUsuario = (usuario)=>{
         this.setState({
             tipoModal:'actualizar',

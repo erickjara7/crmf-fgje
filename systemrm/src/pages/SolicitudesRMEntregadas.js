@@ -42,6 +42,12 @@ class SolicitudesRMEntregadas extends Component{
      
     /**
      * Estado para guardar valores
+     * @param   {Array}    data      Arreglo para guardar los datos obtenidos de la ruta versolicitud
+     * @param   {Array}    datamatesoli      Arreglo para guardar los datos obtenidos de la ruta vermaterialsoli
+     * @param   {Boolean}    modalEnviarsoli     Guarda el valor del modal si es false=modal cerrado y si es true=modal abierto
+     * @param   {Object}    form        Guardar cada uno de los datos de las solicitudes
+     * @param   {String}    _id     Guarda _id de la solicitud
+     * @param   {String}    estado  Guarda el estado en el qe se encuentra la solicitud
      */
     state={
         data:[],
@@ -86,6 +92,7 @@ class SolicitudesRMEntregadas extends Component{
 
     /**
      * Genera el PDF de la solicitud seleccionada
+     * @param {String}  solicitudes Guarda todos los datos de la solicitud seleccionada
      */
     generatePDF=(solicitudes)=>{
         //se crea arreglo
@@ -194,6 +201,7 @@ class SolicitudesRMEntregadas extends Component{
 
     /**
      * Cambia el valor estado de la solicitud para que ya no sea visible
+     * @param {String}  solicitudes Guarda todos los datos de la solicitud seleccionada
      */
     quitar=(solicitudes)=>{          
         this.setState({

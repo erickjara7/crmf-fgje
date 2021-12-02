@@ -20,20 +20,24 @@ const cookies = new Cookies();
 
 const aggsolicitud = "http://localhost:4000/solicitud/add";
 
-/** */
-//Ruta traer datos de la coleccion solicitud
+/**
+ * Ruta traer datos de la coleccion solicitud
+ */
 const versolicitud = "http://localhost:4000/solicitud/getsoli";
 
-/** */
-//Ruta para modificar un registro en especifico de la coleccion solicitud
+/**
+ * Ruta para modificar un registro en especifico de la coleccion solicitud
+ */
 const putsoli = "http://localhost:4000/solicitud/";
 
-/** */
-//Ruta traer datos de la coleccion materialsolicitados
+/**
+ * Ruta traer datos de la coleccion materialsolicitados
+ */
 const vermaterialsoli = "http://localhost:4000/materialsolicitado/getms";
 
-/** */
-//Variables para traer la fecha actual
+/**
+ * Variables para traer la fecha actual
+ */
 const today = new Date(),
 date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +  today.getDate();
 
@@ -42,6 +46,22 @@ class SoliRMExterna extends Component{
 
     /**
      * Estado para guardar valores
+     * @param   {String}    solicitudid     Guarda el id de la solicitud temporalmente
+     * @param   {Array}    datatiposoli     Arreglo para guardar los datos de diferentes tipo de solicitud
+     * @param   {Array}    datamate      Arreglo para guardar los datos obtenidos de la ruta vermaterialsoli
+     * @param   {Array}    data      Arreglo para guardar los datos obtenidos de la ruta versolicitud
+     * @param   {Boolean}    modalInsertar      Guarda el valor del modal si es false=modal cerrado y si es true=modal abierto
+     * @param   {Boolean}    modalEnviarsoli        Guarda el valor del modal si es false=modal cerrado y si es true=modal abierto
+     * @param   {Boolean}    modalCancelarsoli      Guarda el valor del modal si es false=modal cerrado y si es true=modal abierto
+     * @param   {Object}    form        Guardar cada uno de los datos de las solicitudes
+     * @param   {String}    _id     Guarda _id de la solicitud
+     * @param   {String}    fecha   Guarda fecha de la solicitud
+     * @param   {String}    solicitante Guarda solicitante de la solicitud
+     * @param   {String}    departamentosoli    Guarda el departamento de trabajo al que pertenece el solicitante de la solicitud
+     * @param   {String}    municipiosoli   Guarda municipio al que pertenece el solicitante de la solicitud
+     * @param   {String}    area    Guarda el area para la cual será pedido el material de la solicitud
+     * @param   {String}    tipoSolicitud   Guarda el tipo de solicitud de la solicitud
+     * @param   {String}    estado  Guarda el estado en el qe se encuentra la solicitud
      */
     state={
        
@@ -169,6 +189,7 @@ class SoliRMExterna extends Component{
 
     /**
      * Guarda en cookies el valor id de la solicitud seleccionada y te redirige a la ventana de materiales a elegir
+     * @param {String}  solicitudes Guarda todos los datos de la solicitud seleccionada
      */
     seleccionarsolicitud =(solicitudes)=>{       
         this.setState({            
@@ -190,6 +211,7 @@ class SoliRMExterna extends Component{
     /**
      * Cambia el valor de las variables del usuario por el usuario seleccionado y estado "Pendiente"
      * Desactiva botones si la solicitud ya fue enviada
+     * @param {String}  solicitudes Guarda todos los datos de la solicitud seleccionada
      */
     seleccionarsoliput =(solicitudes)=>{
         this.setState({
@@ -225,6 +247,7 @@ class SoliRMExterna extends Component{
 
     /**
      * Cambia el valor de las variables del usuario por el usuario seleccionado 
+     * @param {String}  solicitudes Guarda todos los datos de la solicitud seleccionada
      */
     selecSoliCancelar=(solicitudes)=>{
         this.setState({
