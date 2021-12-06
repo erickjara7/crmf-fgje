@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Login.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Login.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component } from 'react';
+import'../css/Login.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';  
+import md5 from 'md5';
+import {Button} from 'reactstrap';
+import Cookies from 'universal-cookie';
+
+/**
+ * Ruta traer datos de la coleccion User
+ */
+const loginurl="http://localhost:4000/users/getuser";
+
+/**
+ * Traer cookies de inicio de sesión
+ */
+const cookies = new Cookies();
+
+
+class Login extends Component{
+    /**
+     * ESTADO LOGIN PARA GUARDAR LOS VALORES
+     * @param   {Object}    form    Guardar cada uno de los datos de la api users
+     * @param   {String}    username    Guarda el nombre de usuario del usuario
+     * @param   {String}    password     Guarda la contraseña del usuario
+     */
+    state={
+        form:{
+            username:'',
+            password:''
+            
+        }
+    }
+
+    /**
+     * GUARDA EN EL ESTADO LOGIN DE ACUERDO AL INPUT
+     */
+    handleChange=async e=>{
+        await this.setState({
+            form:{
+                ...this.state.form,
+                [e.target.name]: e.target.value
+            }
+        });   
+    }
+
+    /**
+     * METODO INICIAR SESION
+     * Valída que los campos esten llenos y que la información corresponda 
+     * Genera las cookies de inicio de sesión  
+     * */ 
+    iniciarSesion=async()=>{
+        await axios.get(loginurl)
+        .then(response=>{
+            if(this.state.form.username === "" || this.state.form.password === ""){
+                alert("Favor de llenar todos los campos")
+            }else{
+                response.data.map(usuarios=>{
+                    if (usuarios.username.includes(this.state.form.username)  &amp;&amp; usuarios.password.includes(md5(this.state.form.password))){
+                        response[0] = usuarios;
+                        response.length = 0;
+                        response.data = response[0];
+                    }
+                    
+                })    
+            }
+            return response;
+            
+        })
+        .then(response=>{
+           
+                if(response.length === 0){
+                   
+                    var respuesta = response[0];
+                    
+                    cookies.set('_id',respuesta._id,{path:"/"});
+                    cookies.set('nombres',respuesta.nombres,{path:"/"});
+                    cookies.set('apellidoP',respuesta.apellidoP,{path:"/"});
+                    cookies.set('apellidoM',respuesta.apellidoM,{path:"/"});
+                    cookies.set('municipious', respuesta.municipio,{path:"/"});
+                    cookies.set('username',respuesta.username,{path:"/"});
+                    cookies.set('departamento',respuesta.departamento,{path:"/"});
+                    cookies.set('userType',respuesta.userType,{path:"/"});
+                    alert(`Bienvenido(a)  ${respuesta.nombres} ${respuesta.apellidoP}`)
+                    if(respuesta.userType === 'Administrador'){
+                        window.location.href="./materiales";
+                    }else{
+                        window.location.href="./solicitudesodep";
+                    }
+
+                }else{
+                    if(this.state.form.username === "" || this.state.form.password === ""){
+
+                    }else{
+                        alert('El usuario y/o contraseña son incorrectos');
+                    }
+                    
+                }
+        })
+        .catch(error=>{
+            console.log(error);
+        })
+    }
+
+    /**
+     * Alert para el link de "Aun no tengo una cuenta"
+     */
+    aunnotengocuenta=async()=>{
+        alert("Favor de pasar al departamento de Recursos Materiales a registrarse.");        
+    }
+
+    /**
+     * Alert para el link de "Olvidé mi contraseña"
+     */
+    olvidecontraseña=async()=>{
+        alert("Favor de pasar al departamento de Recursos Materiales a solicitar la información correspondiente.");
+   
+    }
+
+    /**
+     * Ciclo del vida: se ejecuta siempre.
+     * Valída los permisos de usuario
+     */
+    componentDidMount(){  
+        if (cookies.get('username')){
+            if(cookies.get('userType') === 'Usuario'){
+                window.location.href="./materialesodep";
+               
+            }else if(cookies.get('userType') === 'Administrador'){
+                window.location.href="./materiales";     
+            } 
+        }
+    }
+
+    render(){
+        return(
+            // Estructura Login
+            &lt;div className="container1">
+                &lt;div className="containerPrincipal">
+                    &lt;div className="containerSecundario">
+                        &lt;div className="form-group">
+                            &lt;h2 color="white">Iniciar Sesión&lt;/h2>
+                            &lt;br/>
+                            &lt;label>Usuario:&lt;/label>
+                            &lt;br/>
+                            &lt;input
+                                class="inputPassUs"
+                                type="text"
+                                className="form-control"
+                                placeholder="Ingresa tu nombre de usuario"
+                                name="username"
+                                onChange={this.handleChange}
+                            required/>
+                            &lt;br/>
+                            &lt;label>Contraseña:&lt;/label>
+                            &lt;br/>
+
+                              
+                                &lt;input
+                                    class="inputPassUs"
+                                    type="password"
+                                    className="form-control"
+                                    placeholder="Ingresa tu contraseña"
+                                    name="password"
+                                    onChange={this.handleChange} 
+                                required/>
+                               
+                            
+                            &lt;Button className="buttoncss"  onClick={()=> this.iniciarSesion() }>Iniciar Sesión&lt;/Button>
+                            &lt;br/> &lt;br/>
+                            &lt;a href="/" onClick={()=> this.aunnotengocuenta()}>Aún no tengo una cuenta&lt;/a>
+                            &lt;br/>
+                            &lt;a href="/" onClick={()=> this.olvidecontraseña()}>Olvidé mi contraseña&lt;/a>
+
+                        &lt;/div>
+
+                    &lt;/div>
+                    
+                    
+                &lt;/div>
+                &lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>
+                &lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>&lt;br/>
+                &lt;footer class="footer">
+                   &lt;a class= "a" href="https://github.com/JacquelineLeal"> Jacqueline Leal  | 2021© &lt;/a>
+                &lt;/footer>
+            &lt;/div>
+            
+
+        );
+    }
+}
+export default Login;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#aggEntradaMate">aggEntradaMate</a></li><li><a href="global.html#aggmaterial">aggmaterial</a></li><li><a href="global.html#aggmatesoli">aggmatesoli</a></li><li><a href="global.html#aggsolicitud">aggsolicitud</a></li><li><a href="global.html#agguser">agguser</a></li><li><a href="global.html#cookies">cookies</a></li><li><a href="global.html#deleteuser">deleteuser</a></li><li><a href="global.html#dpsidmaterial">dpsidmaterial</a></li><li><a href="global.html#existencianueva">existencianueva</a></li><li><a href="global.html#i">i</a></li><li><a href="global.html#loginurl">loginurl</a></li><li><a href="global.html#materialesSolicitados">materialesSolicitados</a></li><li><a href="global.html#newvector">newvector</a></li><li><a href="global.html#nombrematerialesArray">nombrematerialesArray</a></li><li><a href="global.html#nombresUsuariosArray">nombresUsuariosArray</a></li><li><a href="global.html#putmatesoli">putmatesoli</a></li><li><a href="global.html#putsoli">putsoli</a></li><li><a href="global.html#solicitudID">solicitudID</a></li><li><a href="global.html#today">today</a></li><li><a href="global.html#typesoli">typesoli</a></li><li><a href="global.html#usersurl">usersurl</a></li><li><a href="global.html#vecCanSol">vecCanSol</a></li><li><a href="global.html#vecIdMatesoli">vecIdMatesoli</a></li><li><a href="global.html#vecMateid">vecMateid</a></li><li><a href="global.html#vector">vector</a></li><li><a href="global.html#vermaterial">vermaterial</a></li><li><a href="global.html#vermateriales">vermateriales</a></li><li><a href="global.html#vermaterialesentradas">vermaterialesentradas</a></li><li><a href="global.html#vermaterialsoli">vermaterialsoli</a></li><li><a href="global.html#versolicitud">versolicitud</a></li><li><a href="global.html#versolicitudes">versolicitudes</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Dec 06 2021 12:04:08 GMT-0700 (hora estándar del Pacífico de México)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
