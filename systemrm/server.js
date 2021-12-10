@@ -35,7 +35,6 @@ mongoose.connect(
     (err, res) => {
         err && console.log("Error de conexión con la base de datos");
         app.listen(port,() => {
-            //console.log("Servidor está corriendo en el puerto 4000");
             console.log(`Api rest corriendo en http://localhost:${port}`)
 
         });
