@@ -41,7 +41,7 @@ const postUser = (req, res) =>{
         user.departamento = req.body.departamento,
         user.municipio = req.body.municipio,
         user.userType = req.body.userType,
-        user.stateUser = req.body.stateUser
+        user.estado = req.body.estado
 
         user.save((err, usrstored) =>{
             if(err) res.status(500).send({message:`Error al salvar en la base de datos:${err}`})

@@ -74,7 +74,7 @@ class ConfigRM extends Component{
             password: '',
             departamento:'',
             userType:'',
-            stateUser: ''
+            estado: true
         }
     }
 
@@ -196,16 +196,7 @@ class ConfigRM extends Component{
             tipoModal:'actualizar',
             form:{
                 _id: usuario._id,
-                stateUser: 0
-              /*  nombres: usuario.nombres,
-                apellidoP:usuario.apellidoP,
-                apellidoM:usuario.apellidoM,
-                municipio: usuario.municipio,
-                username: usuario.username,
-                password: usuario.password,
-                departamento: usuario.departamento,
-                userType: usuario.userType,*/
-    
+                estado: false
             }
         })
     }
@@ -220,7 +211,7 @@ class ConfigRM extends Component{
             form:{
                 ...this.state.form,
                 [e.target.name]: e.target.value
-                //stateUser: 1
+                
             }
             
         });
@@ -320,7 +311,7 @@ class ConfigRM extends Component{
                         password: '',
                         departamento:'',
                         userType:'',
-                        stateUser:'1'
+                        estado:true
                     }
                     }); 
                     this.listausers(); 
@@ -344,7 +335,7 @@ class ConfigRM extends Component{
                     </thead>
                     <tbody>
                         {this.state.data.map(usuarios=>{
-                            if(usuarios.stateUser === "1"){
+                            if(usuarios.estado === true){
 
                                 if(this.state.busqueda ==="" ){
                                     return(

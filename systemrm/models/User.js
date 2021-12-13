@@ -11,7 +11,7 @@ const UserSchema =  Schema({
     departamento:{type: String,required:true},
     municipio:{type: String,required:true},
     userType:{type: String,required:true, enum: ['Administrador', 'Usuario']},
-    stateUser:{type: String, enum:['0','1']}
+    estado:{type: Boolean,required:true}
 });
 
 module.exports = mongoose.model('User', UserSchema)
