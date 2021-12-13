@@ -74,6 +74,7 @@ class ConfigRM extends Component{
             password: '',
             departamento:'',
             userType:'',
+            stateUser: ''
         }
     }
 
@@ -129,8 +130,9 @@ class ConfigRM extends Component{
     /**
      * Petición post a url "agguser" para registrar usuario 
      */
-    peticionPost=async()=>{
-        await axios.post(agguser, this.state.form).then(response=>{
+    peticionPost=()=>{
+        console.log(this.state.form);
+        axios.post(agguser, this.state.form).then(response=>{
             this.modalInsertar();
             this.peticionGet();
         }).catch(error=>{
@@ -141,12 +143,12 @@ class ConfigRM extends Component{
     }
 
     /**
-     * Petición delete a url "deleteuser" para eliminar el usuario
+     * Petición put  a url "deleteuser" para cambien el estado del usuario a 0
      */
     peticionDelete=()=>{
-        axios.delete(deleteuser+this.state.form._id).then(response =>{
+        axios.put(deleteuser+this.state.form._id, this.state.form).then(response =>{
             this.setState({modalEliminar:false});
-            this.peticionGet()       
+            this.peticionGet();       
          }).catch(error=>{
             console.log(error.message);
             alert("Error al Eliminar");
@@ -186,7 +188,7 @@ class ConfigRM extends Component{
     }
 
     /**
-     * Cambia los variables del usuario por el usuario seleccionado
+     * Cambia los variables del usuario por el usuario seleccionado para eliminarlo
      * @param {String}  usuario Guarda todos los datos del usuario seleccionado
      */
     seleccionarUsuario = (usuario)=>{
@@ -194,14 +196,15 @@ class ConfigRM extends Component{
             tipoModal:'actualizar',
             form:{
                 _id: usuario._id,
-                nombres: usuario.nombres,
+                stateUser: 0
+              /*  nombres: usuario.nombres,
                 apellidoP:usuario.apellidoP,
                 apellidoM:usuario.apellidoM,
                 municipio: usuario.municipio,
                 username: usuario.username,
                 password: usuario.password,
                 departamento: usuario.departamento,
-                userType: usuario.userType,
+                userType: usuario.userType,*/
     
             }
         })
@@ -217,6 +220,7 @@ class ConfigRM extends Component{
             form:{
                 ...this.state.form,
                 [e.target.name]: e.target.value
+                //stateUser: 1
             }
             
         });
@@ -316,6 +320,7 @@ class ConfigRM extends Component{
                         password: '',
                         departamento:'',
                         userType:'',
+                        stateUser:'1'
                     }
                     }); 
                     this.listausers(); 
@@ -339,28 +344,9 @@ class ConfigRM extends Component{
                     </thead>
                     <tbody>
                         {this.state.data.map(usuarios=>{
-                            if(this.state.busqueda ===""){
-                                return(
-                                    <tr>
-                                        <td>{usuarios.nombres}</td>
-                                        <td>{usuarios.apellidoP}</td>
-                                        <td>{usuarios.apellidoM}</td>
-                                        <td>{usuarios.username}</td>
-                                        <td>{usuarios.departamento}</td>
-                                        <td>{usuarios.municipio}</td>
-                                        <td>{usuarios.userType}</td>
-                                        <td>
-                                            <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
-                                        </td>
-                                    </tr>  
-                                )
-                            }else if(usuarios.nombres.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
-                                usuarios.apellidoP.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
-                                usuarios.apellidoM.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
-                                usuarios.username.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
-                                usuarios.departamento.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
-                                usuarios.userType.toLowerCase().includes(this.state.busqueda.toLowerCase())){
+                            if(usuarios.stateUser === "1"){
 
+                                if(this.state.busqueda ==="" ){
                                     return(
                                         <tr>
                                             <td>{usuarios.nombres}</td>
@@ -370,11 +356,37 @@ class ConfigRM extends Component{
                                             <td>{usuarios.departamento}</td>
                                             <td>{usuarios.municipio}</td>
                                             <td>{usuarios.userType}</td>
+                                            
                                             <td>
                                                 <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
                                             </td>
                                         </tr>  
                                     )
+                                }else if(usuarios.nombres.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                    usuarios.apellidoP.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                    usuarios.apellidoM.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                    usuarios.username.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                    usuarios.departamento.toLowerCase().includes(this.state.busqueda.toLowerCase()) || 
+                                    usuarios.userType.toLowerCase().includes(this.state.busqueda.toLowerCase())){
+
+                                        return(
+                                            <tr>
+                                                <td>{usuarios.nombres}</td>
+                                                <td>{usuarios.apellidoP}</td>
+                                                <td>{usuarios.apellidoM}</td>
+                                                <td>{usuarios.username}</td>
+                                                <td>{usuarios.departamento}</td>
+                                                <td>{usuarios.municipio}</td>
+                                                <td>{usuarios.userType}</td>
+                                                
+                                                <td>
+                                                    <Button color="danger btn-sm" onClick ={()=> {this.seleccionarUsuario(usuarios); this.setState({modalEliminar :true})}} >Eliminar</Button>
+                                                </td>
+                                            </tr>  
+                                        )
+
+                                }
+                            }else{
 
                             }
 
@@ -508,6 +520,12 @@ class ConfigRM extends Component{
 
                             </select>
                             <br/>
+
+                           
+
+
+                           
+
                         </div>
                     </ModalBody>
 

@@ -235,8 +235,9 @@ class SoliRMExterna extends Component{
      * Petición delete a url "putsoli" para eliminar la solicitud
      */
     peticionDelete=()=>{
-        axios.delete(putsoli+this.state.form._id).then(response =>{
-            this.setState({modalCancelarsoli:false});
+        axios.put(putsoli+this.state.form._id, this.state.form).then(response =>{
+            this.modalCancelarsoli();
+            //this.setState({modalCancelarsoli:false});
             this.peticionGet()       
         }).catch(error=>{
             console.log(error.message);
@@ -252,7 +253,8 @@ class SoliRMExterna extends Component{
     selecSoliCancelar=(solicitudes)=>{
         this.setState({
             form:{
-                _id: solicitudes._id
+                _id: solicitudes._id,
+                estado: 'Cancelada'
                
             }
         })

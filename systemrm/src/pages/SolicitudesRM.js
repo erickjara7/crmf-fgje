@@ -206,11 +206,12 @@ class SolicitudesRM extends Component{
     }
 
     /**
-     * Petición delete a url "putsoli" para eliminar la solicitud
+     * Petición put a url "putsoli" para cambiar estado de la solicitud a cancelada
      */
     peticionDelete=()=>{
-        axios.delete(putsoli+this.state.form._id).then(response =>{
-            this.setState({modalCancelarsoli:false});
+        axios.put(putsoli+this.state.form._id, this.state.form).then(response =>{
+            this.modalCancelarsoli();
+            //this.setState({modalCancelarsoli:false});
             this.peticiongetsoli();       
         }).catch(error=>{
             console.log(error.message);
@@ -227,8 +228,8 @@ class SolicitudesRM extends Component{
     selecSoliCancelar=(solicitudes)=>{
         this.setState({
             form:{
-                _id: solicitudes._id
-               
+                _id: solicitudes._id,
+                estado: 'Cancelada' 
             }
         })
         console.log(this.state.form._id)

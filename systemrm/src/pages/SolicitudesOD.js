@@ -200,10 +200,11 @@ class SolicitudesOD extends Component{
     }
 
     /**
-     * Petición delete a url "putsoli" para eliminar la solicitud
+     * Petición put a url "putsoli" para cambiar estado la solicitud
      */
-    peticionDelete=()=>{
+  /*  peticionDelete=()=>{
         axios.delete(putsoli+this.state.form._id).then(response =>{
+            console.log(`estado: ${this.state.form.estado}`);
             this.setState({modalCancelarsoli:false});
             this.peticionGet()       
         }).catch(error=>{
@@ -211,7 +212,7 @@ class SolicitudesOD extends Component{
             alert("Error al Eliminar");
     
         })
-    }
+    }*/
 
     /**
      * Cambia el valor de las variables del usuario por el usuario seleccionado 
@@ -221,7 +222,7 @@ class SolicitudesOD extends Component{
         this.setState({
             form:{
                 _id: solicitudes._id,
-              //  estado: 'Cancelada'
+                estado: 'Cancelada'
             }
         })
         console.log(this.state.form._id)
@@ -496,7 +497,7 @@ class SolicitudesOD extends Component{
                         La solicitud será eliminada permanentemente
                     </ModalBody>
                     <ModalFooter>
-                        <button className="btn btn-success"  onClick={()=>this.peticionDelete()} >Si</button>
+                        <button className="btn btn-success"  onClick={()=>this.peticionputcancelarSoli()} >Si</button>
                         <button className="btn btn-danger"  onClick={()=> this.modalCancelarsoli()}>No</button>
                     </ModalFooter>
                 </Modal>
