@@ -23,7 +23,7 @@ const agguser = "http://localhost:4000/users/add";
 const deleteuser = "http://localhost:4000/users/";
 
 /**
- * Arreglo para almacenar nombres de usuarios Nombre+ApellidoP+ApellidoM
+ * Arreglo para almacenar nombres de usuarios Nombre+ApellidoP+ApellidoM 
  */
 const nombresUsuariosArray = [];
 
